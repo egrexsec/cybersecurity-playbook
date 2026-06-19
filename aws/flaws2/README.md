@@ -1,8 +1,8 @@
 # AWS Flaws2
 
-Document each challenge as an investigation.
+Document each challenge as a detection-first investigation using the shared DetLab markdown schema.
 
-## Recommended Format
+## Recommended Sections
 
 - Objective
 - Findings
@@ -12,3 +12,5 @@ Document each challenge as an investigation.
 - Incident Response Actions
 - ATT&CK Mapping
 - Lessons Learned
+
+Use `../../templates/detlab-detection-template.md` for frontmatter and graph-friendly fields.
