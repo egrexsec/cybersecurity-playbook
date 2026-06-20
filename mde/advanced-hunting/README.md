@@ -1,6 +1,8 @@
 # Microsoft Defender Advanced Hunting
 
-Focus Areas:
+DetLab-backed markdown detections and hunts for MDE live under `detections/`.
+
+## Focus Areas
 
 - DeviceProcessEvents
 - DeviceNetworkEvents
@@ -10,4 +12,15 @@ Focus Areas:
 - AlertInfo
 - AlertEvidence
 
-Store hunting queries, investigations, and detections here.
+## Authoring
+
+Use `../../templates/detlab-detection-template.md` as the base schema.
+
+Each entry should include:
+
+- stable `DET-####` frontmatter ID
+- primary ATT&CK mapping
+- executable KQL under `## Query`
+- triage and investigation steps
+- artifacts and response actions
+- related detection graph edges
