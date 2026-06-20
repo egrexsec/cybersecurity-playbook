@@ -65,6 +65,10 @@ cloud_telemetry:
       - AttachUserPolicy
       - PutUserPolicy
     notes: Review the full IAM change window before and after key creation.
+related_detections:
+  - detection_id: DET-0202
+    relationship: investigate_next
+    rationale: Attackers often attach additional IAM policies after establishing key-based persistence.
 response_actions:
   - title: Disable or delete the new key if it cannot be tied to approved IAM administration.
     priority: high
@@ -84,9 +88,18 @@ Treats access-key creation as a detection-first cloud investigation so analysts 
 
 ## Query
 
-```text
-CloudTrail EventName=CreateAccessKey
-Pivot fields: userIdentity.arn, requestParameters.userName, sourceIPAddress, userAgent, accessKey.accessKeyId
+```sql
+SELECT
+  eventTime,
+  userIdentity.arn AS actor_arn,
+  requestParameters.userName AS target_user,
+  responseElements.accessKey.accessKeyId AS access_key_id,
+  sourceIPAddress,
+  userAgent
+FROM cloudtrail_logs
+WHERE eventSource = 'iam.amazonaws.com'
+  AND eventName = 'CreateAccessKey'
+ORDER BY eventTime DESC;
 ```
 
 ## Triage Guidance
