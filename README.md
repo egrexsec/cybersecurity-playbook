@@ -127,4 +127,4 @@ See [SECURITY.md](SECURITY.md).
 
 ## License
 
-No `LICENSE` file is currently committed in this repository. Until one is added, the default legal position is **all rights reserved**.
+This repository includes a [LICENSE](LICENSE) file.
