@@ -29,4 +29,4 @@ The Sigma rule is behavioral within the current lab constraints:
 - remains quiet on BITS inventory and service-state inspection
 
 ## Caveat
-BITS transfer completion did not occur because the host reported no active network connections for BITS. This did not prevent validated job creation telemetry through Sysmon and local BITS Operational records.
+BITS transfer completion did not occur because the host reported no active network connections for BITS. This did not prevent validated job-creation telemetry through Sysmon and local BITS Operational records.
