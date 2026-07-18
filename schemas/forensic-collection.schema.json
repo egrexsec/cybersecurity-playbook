@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Forensic Collection",
+  "type": "object",
+  "required": [
+    "id",
+    "profile",
+    "target",
+    "collector",
+    "artifacts",
+    "output_paths",
+    "hashes"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^DFIR-\\d{4}-\\d{3}$"
+    },
+    "profile": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "collector": {
+      "type": "string"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "output_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hashes": {
+      "type": "object"
+    }
+  }
+}

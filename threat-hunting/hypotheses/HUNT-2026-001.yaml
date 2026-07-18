@@ -1,0 +1,36 @@
+id: HUNT-2026-001
+title: Suspicious PowerShell decode-and-execute behavior on approved endpoint
+status: active
+hypothesis: >-
+  If an operator or adversary uses PowerShell to decode base64 content and execute it in memory,
+  the victim should produce correlated PowerShell, process creation, and Sysmon telemetry that can be
+  generalized into a detection beyond the exact Atomic command.
+attack:
+  - T1059.001
+  - T1027
+required_data:
+  - Microsoft-Windows-PowerShell/Operational
+  - Security 4688
+  - Sysmon Event ID 1
+  - Wazuh alerts for validation
+  - Velociraptor process inventory
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-powershell-counts
+hunt_query: powershell-base64-and-invoke-expression-correlation
+investigation_pivots:
+  - parent-child relationships
+  - script block contents
+  - file writes in temp or Windows temp paths
+  - registry-backed payload staging
+known_legitimate_activity:
+  - benign administrative PowerShell without decode-and-execute behavior
+  - standard read-only PowerShell maintenance commands
+success_criteria:
+  - telemetry shows both execution intent and process context
+  - a behavior-based rule can detect positive and variant tests
+  - benign negative tests do not trigger the detection
+detection_opportunity: >-
+  PowerShell process creation or script block activity containing base64 decode plus in-memory execution semantics.
+results: []
+conclusion: pending

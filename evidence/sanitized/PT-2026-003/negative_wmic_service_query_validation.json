@@ -1,0 +1,9 @@
+{
+  "scenario_id": "PT-2026-003",
+  "test_case": "negative_wmic_service_query",
+  "expected_rule_ids": ["100205", "100206"],
+  "custom_alert_count": 0,
+  "custom_alerts": [],
+  "result": "pass",
+  "notes": "Benign Get-WmiObject service query completed without custom PT alerts."
+}

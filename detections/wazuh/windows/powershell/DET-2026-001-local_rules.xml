@@ -1,0 +1,16 @@
+<!-- PT-2026-001 test-scope rules -->
+<group name="local,windows,powershell,pt2026001,">
+  <rule id="100201" level="12">
+    <if_sid>92041</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)AtomicRedTeam.+/v ART</field>
+    <description>PT-2026-001 original Atomic registry-backed PowerShell execution detected</description>
+    <group>attack.execution,attack.t1059.001,attack.defense-evasion,attack.t1027,attack.t1112,</group>
+  </rule>
+
+  <rule id="100202" level="12">
+    <if_sid>91809</if_sid>
+    <field name="win.eventdata.scriptBlockText" type="pcre2">(?i)(Invoke-Expression|\biex\b)</field>
+    <description>PT-2026-001 suspicious PowerShell decode-and-execute behavior detected</description>
+    <group>attack.execution,attack.t1059.001,attack.defense-evasion,attack.t1027,</group>
+  </rule>
+</group>

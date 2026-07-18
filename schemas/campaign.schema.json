@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Campaign",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "status",
+    "scenario_ids"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^CAMPAIGN-\\d{4}-\\d{3}$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "completed"
+      ]
+    },
+    "scenario_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^PT-\\d{4}-\\d{3}$"
+      }
+    }
+  }
+}

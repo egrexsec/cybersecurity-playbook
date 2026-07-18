@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Purple Team Scenario",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "description",
+    "status",
+    "created",
+    "updated",
+    "owner",
+    "attack",
+    "targets",
+    "safety",
+    "telemetry",
+    "baseline",
+    "execution",
+    "collection",
+    "hunts",
+    "forensics",
+    "detections",
+    "validation",
+    "reporting"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^PT-\\d{4}-\\d{3}$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "approved",
+        "in_progress",
+        "validated",
+        "completed",
+        "deprecated"
+      ]
+    },
+    "created": {
+      "type": "string"
+    },
+    "updated": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "attack": {
+      "type": "object",
+      "required": [
+        "framework",
+        "technique_ids",
+        "test_ids",
+        "commands",
+        "prerequisites"
+      ],
+      "properties": {
+        "framework": {
+          "type": "string"
+        },
+        "technique_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "test_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "targets": {
+      "type": "object",
+      "required": [
+        "approved_hosts",
+        "approved_networks"
+      ],
+      "properties": {
+        "approved_hosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "approved_networks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": [
+        "risk_level",
+        "snapshot_required",
+        "isolation_required",
+        "internet_access",
+        "cleanup_required",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "risk_level": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "snapshot_required": {
+          "type": "boolean"
+        },
+        "isolation_required": {
+          "type": "boolean"
+        },
+        "internet_access": {
+          "enum": [
+            "none",
+            "lab_only",
+            "controlled",
+            "required"
+          ]
+        },
+        "cleanup_required": {
+          "type": "boolean"
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "telemetry": {
+      "type": "object",
+      "required": [
+        "required",
+        "optional"
+      ],
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optional": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "required": [
+        "duration_minutes",
+        "queries"
+      ],
+      "properties": {
+        "duration_minutes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "queries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "runner",
+        "arguments"
+      ],
+      "properties": {
+        "runner": {
+          "type": "string"
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "collection": {
+      "type": "object",
+      "required": [
+        "before",
+        "after"
+      ],
+      "properties": {
+        "before": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "after": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "hunts": {
+      "type": "object",
+      "required": [
+        "hypothesis_ids"
+      ],
+      "properties": {
+        "hypothesis_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^HUNT-\\d{4}-\\d{3}$"
+          }
+        }
+      }
+    },
+    "forensics": {
+      "type": "object",
+      "required": [
+        "collection_profiles"
+      ],
+      "properties": {
+        "collection_profiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "detections": {
+      "type": "object",
+      "required": [
+        "expected_rules"
+      ],
+      "properties": {
+        "expected_rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "positive_tests",
+        "negative_tests"
+      ],
+      "properties": {
+        "positive_tests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "negative_tests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "reporting": {
+      "type": "object",
+      "required": [
+        "evidence_paths",
+        "output_paths"
+      ],
+      "properties": {
+        "evidence_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "output_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

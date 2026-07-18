@@ -1,0 +1,64 @@
+assets:
+  - id: VM-100
+    name: daily
+    role: windows-daily-use
+    network: vmbr0
+    ip: unknown
+    approved_target: false
+    notes:
+      - Never use as an attack target.
+  - id: VM-110
+    name: firewall
+    role: opnsense-firewall
+    network: vmbr0,vmbr10,vmbr20,vmbr30
+    ip: 10.10.10.1
+    approved_target: false
+    notes:
+      - Management plane is out of scope.
+      - Current Proxmox status reports the VM as stopped.
+  - id: VM-120
+    name: DC01
+    role: active-directory-domain-controller
+    network: vmbr10
+    ip: 10.10.10.10
+    approved_target: false
+    notes:
+      - Low-risk identity telemetry only unless explicitly approved.
+  - id: VM-130
+    name: VICTIM-MAYURI
+    role: windows-enterprise-endpoint
+    network: vmbr10
+    ip: 10.10.10.101
+    approved_target: true
+    notes:
+      - Primary target for PT-2026-001.
+      - Domain joined to mayuri.lab.
+  - id: VM-140
+    name: soc-mayuri
+    role: soc-siem-automation
+    network: vmbr10
+    ip: 10.10.10.20
+    approved_target: true
+    notes:
+      - Use only for controlled infrastructure and detection validation.
+  - id: VM-150
+    name: kali
+    role: attacker-system
+    network: vmbr20
+    ip: 10.20.20.10
+    approved_target: true
+    notes:
+      - Keep attacks primarily focused on approved victim workflows.
+  - id: VM-160
+    name: mayuri-dfir
+    role: dfir-and-velociraptor
+    network: vmbr30,vmbr10
+    ip: 10.30.30.10
+    approved_target: true
+    notes:
+      - Enterprise-side Velociraptor frontend currently exposed on 10.10.10.30:8000.
+
+approved_networks:
+  - 10.10.10.0/24
+  - 10.20.20.0/24
+  - 10.30.30.0/24

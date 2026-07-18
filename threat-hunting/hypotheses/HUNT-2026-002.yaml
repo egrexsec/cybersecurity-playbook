@@ -1,0 +1,38 @@
+id: HUNT-2026-002
+title: Suspicious Windows Command Shell execution on approved endpoint
+status: completed
+hypothesis: >-
+  If an operator or adversary uses cmd.exe to run batch content or a suspicious
+  invocation pattern, the victim should produce correlated process creation and
+  file creation telemetry that can be generalized into a practical detection.
+attack:
+  - T1059.003
+required_data:
+  - Sysmon Event ID 1
+  - Security 4688
+  - Sysmon file creation where applicable
+  - Wazuh alerts for validation
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-cmd-counts
+hunt_query: suspicious-cmd-invocation-correlation
+investigation_pivots:
+  - parent-child relationships
+  - batch or temp file creation
+  - local environment variable expansion abuse
+known_legitimate_activity:
+  - benign administrative cmd dir usage
+  - simple echo or file display commands
+success_criteria:
+  - telemetry shows suspicious cmd execution intent and process context
+  - a behavior-based rule can detect positive tests
+  - benign negative tests do not trigger the custom detection
+detection_opportunity: >-
+  Suspicious or unusual cmd.exe execution patterns, especially batch-file execution,
+  temporary-file writes, or environment-variable-based obfuscation that differ from
+  routine administrative command-shell use.
+results:
+  - batch-script cmd execution produced the expected custom alert 100203
+  - environment-variable-based cmd indirection produced the expected custom alert 100204
+  - benign cmd dir and echo tests did not trigger the custom detection
+conclusion: validated on approved Windows victim with low-risk test scope

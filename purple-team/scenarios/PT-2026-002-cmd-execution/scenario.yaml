@@ -1,0 +1,96 @@
+id: PT-2026-002
+title: Windows Command Shell Execution Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates endpoint telemetry, hunting,
+  forensic collection, and baseline detection design for suspicious cmd.exe
+  execution on the approved Windows victim.
+status: validated
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T02:45:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1059.003
+  test_ids:
+    - 9e8894c0-50bd-4525-a96c-d4ac78ece388
+    - 127b4afe-2346-4192-815c-69042bec570e
+    - d0eb3597-a1b3-4d65-b33b-2cda8d397f20
+  commands:
+    - create and execute a simple batch script
+    - write a file with cmd.exe and display it
+    - suspicious cmd invocation pattern from local environment variable expansion
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - Wazuh agent is running and forwarding
+    - Sysmon and Security process creation telemetry are queryable
+    - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
+    - Velociraptor client is enrolled
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - Security Event ID 4688 process creation with command line
+    - Wazuh agent forwarding
+  optional:
+    - Sysmon file creation events
+    - Velociraptor Windows.System.Pslist
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-cmd-counts
+    - windows-baseline-process-creation-counts
+    - wazuh-recent-victim-alerts
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - cmd.exe
+    - powershell.exe -NoProfile -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - latest related Windows event records
+  after:
+    - process tree reconstruction
+    - file creation artifacts
+    - targeted endpoint collection
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-002
+forensics:
+  collection_profiles:
+    - process-execution
+    - cmd-activity
+    - file-write-activity
+    - user-activity
+    - malware-triage-light
+detections:
+  expected_rules:
+    - DET-2026-002
+validation:
+  positive_tests:
+    - create-and-execute-batch-script
+    - suspicious-localappdata-derived-cmd-execution
+  negative_tests:
+    - benign-cmd-dir
+    - benign-cmd-echo
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-002/
+    - investigations/endpoint/DFIR-2026-002/
+  output_paths:
+    - purple-team/scenarios/PT-2026-002-cmd-execution/
+    - detections/validation/

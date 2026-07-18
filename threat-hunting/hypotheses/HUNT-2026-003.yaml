@@ -1,0 +1,37 @@
+id: HUNT-2026-003
+title: Suspicious Windows WMI-backed process execution on approved endpoint
+status: completed
+hypothesis: >-
+  If an operator or adversary uses WMI to create a local process, the victim
+  should produce correlated process creation telemetry involving WMI-related
+  execution paths that can be generalized into a practical detection.
+attack:
+  - T1047
+required_data:
+  - Sysmon Event ID 1
+  - Security 4688
+  - Wazuh alerts for validation
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-wmi-process-counts
+hunt_query: suspicious-wmi-process-create-correlation
+investigation_pivots:
+  - WmiPrvSE parent/child relationships
+  - wmic.exe or PowerShell WMI invocation patterns
+  - spawned child process identity
+known_legitimate_activity:
+  - benign CIM/WMI inventory queries
+  - standard administrative service queries
+success_criteria:
+  - telemetry shows suspicious WMI-backed process execution intent and context
+  - a behavior-based rule can detect positive tests
+  - benign negative tests do not trigger the custom detection
+detection_opportunity: >-
+  Suspicious use of WMI process creation or indirect local execution behavior
+  that differs from read-only administrative WMI queries.
+results:
+  - positive [wmiclass] WMI initiation produced custom alert 100205
+  - positive Invoke-WmiMethod process creation produced custom alert 100206
+  - benign Get-CimInstance query produced no custom PT alert
+  - benign Get-WmiObject service query produced no custom PT alert
+conclusion: validated

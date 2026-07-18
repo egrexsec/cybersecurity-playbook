@@ -1,0 +1,90 @@
+id: PT-2026-003
+title: Windows Management Instrumentation Execution Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates endpoint telemetry, hunting,
+  forensic collection, and baseline detection design for suspicious WMI-backed
+  process execution on the approved Windows victim.
+status: validated
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T11:20:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1047
+  test_ids:
+    - b3bdfc91-b33e-4c6d-a5c8-d64bee0276b3
+    - 7db7a7f9-9531-4840-9b30-46220135441c
+  commands:
+    - wmic process call create on the local host
+    - PowerShell WMI method invocation to create a local process
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - Wazuh agent is running and forwarding
+    - Sysmon process creation telemetry is queryable
+    - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
+    - Velociraptor client is enrolled
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - Sysmon WmiPrvSE-related process activity
+    - Security Event ID 4688 process creation with command line
+    - Wazuh agent forwarding
+  optional:
+    - Velociraptor Windows.System.Pslist
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-wmi-process-counts
+    - wazuh-recent-victim-alerts
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - powershell.exe -NoProfile -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - latest related Windows event records
+  after:
+    - process tree reconstruction
+    - targeted endpoint collection
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-003
+forensics:
+  collection_profiles:
+    - process-execution
+    - wmi-activity
+    - user-activity
+    - malware-triage-light
+detections:
+  expected_rules:
+    - DET-2026-003
+validation:
+  positive_tests:
+    - wmic-local-process-create
+    - invoke-wmimethod-process-create
+  negative_tests:
+    - benign-get-ciminstance-query
+    - benign-wmic-service-query
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-003/
+    - investigations/endpoint/DFIR-2026-003/
+  output_paths:
+    - purple-team/scenarios/PT-2026-003-wmi-execution/
+    - detections/validation/

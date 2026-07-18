@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Threat Hunt Hypothesis",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "status",
+    "hypothesis",
+    "attack",
+    "required_data",
+    "target_systems",
+    "baseline_query",
+    "hunt_query",
+    "investigation_pivots",
+    "known_legitimate_activity",
+    "success_criteria",
+    "detection_opportunity",
+    "results",
+    "conclusion"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^HUNT-\\d{4}-\\d{3}$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "queued",
+        "active",
+        "completed"
+      ]
+    },
+    "hypothesis": {
+      "type": "string"
+    },
+    "attack": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_data": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "target_systems": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "baseline_query": {
+      "type": "string"
+    },
+    "hunt_query": {
+      "type": "string"
+    },
+    "investigation_pivots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "known_legitimate_activity": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "success_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "detection_opportunity": {
+      "type": "string"
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conclusion": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "scenario_id": "PT-2026-003",
+  "test_case": "negative_get_cim_instance",
+  "expected_rule_ids": ["100205", "100206"],
+  "custom_alert_count": 0,
+  "custom_alerts": [],
+  "result": "pass",
+  "notes": "Benign Get-CimInstance query completed without custom PT alerts."
+}

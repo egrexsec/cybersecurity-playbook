@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Run Record",
+  "type": "object",
+  "required": [
+    "run_id",
+    "scenario_id",
+    "operator",
+    "started_at",
+    "ended_at",
+    "target",
+    "target_ip",
+    "techniques",
+    "commands",
+    "exit_codes",
+    "snapshots",
+    "telemetry_status",
+    "collections",
+    "detections_triggered",
+    "cleanup_status",
+    "errors",
+    "evidence_hashes"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^PT-\\d{4}-\\d{3}$"
+    },
+    "operator": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string"
+    },
+    "ended_at": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "target_ip": {
+      "type": "string"
+    },
+    "techniques": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exit_codes": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "snapshots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "telemetry_status": {
+      "type": "object"
+    },
+    "collections": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "detections_triggered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "cleanup_status": {
+      "type": "string"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_hashes": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,94 @@
+id: PT-2026-001
+title: PowerShell Execution Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates endpoint telemetry, hunting,
+  forensic collection, and a first behavior-based detection for suspicious
+  PowerShell execution on the approved Windows victim.
+status: approved
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T00:00:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1059.001
+  test_ids:
+    - fa050f5e-bc75-4230-af73-b6fd7852cd73
+  commands:
+    - powershell registry-backed base64 decode and execution
+    - powershell base64 decode and invoke-expression variant
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - PowerShell Script Block Logging is enabled
+    - Wazuh agent is running and forwarding
+    - Snapshot baseline-ad-audit-defender-sysmon or later lineage exists
+    - Velociraptor client is enrolled
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - Security Event ID 4688 process creation with command line
+    - PowerShell Operational Event IDs 4103 and 4104
+    - Wazuh agent forwarding
+  optional:
+    - Velociraptor Windows.System.Pslist
+    - Velociraptor Windows.EventLogs.PowershellScriptblock
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-powershell-counts
+    - windows-baseline-process-creation-counts
+    - wazuh-recent-victim-alerts
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - powershell.exe -NoProfile -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - latest related Windows event records
+  after:
+    - process tree reconstruction
+    - PowerShell script block events
+    - Velociraptor targeted collection
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-001
+forensics:
+  collection_profiles:
+    - process-execution
+    - powershell-activity
+    - suspicious-download-or-decode
+    - user-activity
+    - network-connections
+    - malware-triage-light
+detections:
+  expected_rules:
+    - DET-2026-001
+validation:
+  positive_tests:
+    - atomic-registry-backed-fileless-execution
+    - modified-base64-invoke-expression-variant
+  negative_tests:
+    - benign-powershell-get-date
+    - benign-powershell-get-process
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-001/
+    - investigations/endpoint/DFIR-2026-001/
+  output_paths:
+    - purple-team/scenarios/PT-2026-001-powerShell-execution/
+    - detections/validation/
