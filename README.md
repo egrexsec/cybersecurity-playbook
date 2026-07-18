@@ -1,130 +1,149 @@
 # cybersecurity-playbook
 
-Companion content repository for **DetLab-DAC**. This repo stores reusable security documentation, templates, and playbook content for detection engineering, hunting, investigation, and response work without pretending to be a separate platform.
+[![Detection validation](https://github.com/egrexsec/cybersecurity-playbook/actions/workflows/detection-validation.yml/badge.svg)](https://github.com/egrexsec/cybersecurity-playbook/actions/workflows/detection-validation.yml)
 
-## Project summary
+A **lab-validated purple-team and detection-engineering repository** that turns controlled attack simulations into tested Sigma rules, platform-specific queries, threat-hunting artifacts, investigation documentation, and reusable validation evidence.
 
-`cybersecurity-playbook` is a markdown-first content library for reusable security material. It complements DetLab-DAC by holding templates, sample detections, structured notes, and platform-specific content that teams can adapt into their own workflows.
+Built for recruiters, hiring managers, detection engineers, and purple-team operators who want to see **evidence-backed security engineering** rather than a static rule dump.
 
-## Start here
+## Current validation status
 
-| Need | Go to | Use it for |
-| --- | --- | --- |
-| Write a detection brief | `templates/detlab-detection-template.md` | Canonical detection content for DetLab-DAC |
-| Write a hunt | `templates/hunt-template.md` | Hypothesis, telemetry, query, and follow-up structure |
-| Document an investigation | `templates/investigation-template.md` | Case notes, timeline, evidence, and outcome tracking |
-| Draft MDE Advanced Hunting content | `templates/kql-template.md` and `mde/` | KQL examples and Microsoft Defender content |
-| Capture Velociraptor work | `templates/velociraptor-template.md` and `velociraptor/` | Artifact notes and endpoint collection guidance |
-| Review AWS lab examples | `aws/` | Cloud-security investigation and learning content |
+| Scenario | ATT&CK technique | Behavior | Detection format | Validation status |
+|---|---|---|---|---|
+| PT-2026-001 | T1059.001 | PowerShell decode-and-execute | Sigma + Splunk/Wazuh evidence | **Live validated** |
+| PT-2026-002 | T1059.003 | Windows command shell execution | Sigma + Splunk/Wazuh evidence | **Live validated** |
+| PT-2026-003 | T1047 | WMI-backed process execution | Sigma + Splunk/Wazuh evidence | **Live validated** |
 
-## Who it is for
+**Meaning of statuses in this repo**
+- **Live validated**: replayed in the Mayuri lab with positive/negative evidence and cleanup confirmation.
+- **Fixture tested**: validated offline against sanitized positive/negative fixtures only.
+- **Conversion supported**: Sigma successfully converts to a backend target, but no live backend validation exists yet.
+- **Planned / partially ready**: documented or scaffolded, but not yet validated to the same standard.
 
-- detection engineers
-- threat hunters
-- SOC analysts
-- DFIR practitioners
-- defenders building internal markdown-based knowledge bases
-- contributors who want reusable security-content building blocks separate from app code
+## What this repository is
 
-## Problem it solves
+This repository is the **content and evidence companion** to **DetLab-DAC**.
 
-Security teams often need reusable content before they need another application. This repo provides structured, editable markdown artifacts that can be copied into playbooks, notes, detections, investigations, and validation workflows.
+- `cybersecurity-playbook` stores the reusable authored content: scenarios, Sigma rules, generated queries, fixtures, hunts, investigations, and validation records.
+- **DetLab-DAC** is the companion platform/workflow that can consume, display, or operationalize this content.
 
-## Current status
+This repository is **not** a standalone SIEM product, not a production detection deployment framework, and not a replacement for environment-specific engineering review.
 
-**Active companion repository.**
+## Detection lifecycle
 
-Confirmed in the repository today:
-- markdown templates for detections, hunts, investigations, KQL, and Velociraptor content
-- MDE Advanced Hunting detection examples
-- AWS FLAWS2-oriented content examples
-- Velociraptor artifact notes
+The current implemented workflow is:
 
-## What it contains
+1. controlled adversary simulation on an approved lab endpoint
+2. Windows and Sysmon telemetry collection
+3. Splunk-based investigation and field review
+4. Sigma rule development
+5. Splunk and Elastic query generation
+6. positive and negative fixture testing
+7. live replay validation in the Mayuri lab
+8. hunt, investigation, and validation record publication
 
-- detection templates
-- hunt templates
-- investigation templates
-- KQL templates
-- Velociraptor templates
-- reusable markdown standards for structured security content
-- sample content that can feed or complement DetLab-DAC
-
-## What it is not
-
-- not a competing standalone platform
-- not a SIEM or case-management product
-- not an automated detection deployment system
-- not a replacement for environment-specific engineering review
+```mermaid
+flowchart LR
+    A[Controlled attack simulation
+Atomic Red Team / lab scripts] --> B[Windows victim
+Sysmon + Windows event logs]
+    B --> C[Splunk Forwarder]
+    C --> D[SOC01 / Splunk]
+    B --> E[Local evidence review]
+    D --> F[Threat hunting queries]
+    D --> G[Live validation records]
+    B --> H[Sigma rule authoring]
+    H --> I[Generated Splunk SPL]
+    H --> J[Generated Elastic EQL]
+    H --> K[Fixture tests
+positive + negative]
+    F --> L[Investigation + DFIR notes]
+    G --> L
+    H --> M[DetLab-DAC companion workflow]
+    I --> M
+    J --> M
+    K --> M
+```
 
 ## Repository map
 
-```text
-templates/               Reusable authoring templates
-mde/                     Microsoft Defender / Advanced Hunting examples
-aws/                     AWS-oriented lab and investigation examples
-velociraptor/            Velociraptor notes and artifact references
-```
+| Path | Purpose | Content type | Validation model |
+|---|---|---|---|
+| `purple-team/scenarios/` | Canonical purple-team scenario definitions | Human-authored YAML + notes | Schema validation + linked live evidence |
+| `detections/sigma/` | Canonical authored Sigma rules | Human-authored YAML | Sigma lint + conversion + fixtures + live validation where available |
+| `detections/generated/` | Backend-specific generated output | Generated SPL/EQL | Regenerated from canonical Sigma; do not edit by hand |
+| `detections/validation/live/` | Sanitized lab execution records | Generated JSON evidence | Parsed in repo validation; sourced from Mayuri lab runs |
+| `detections/validation/` | Human-readable validation summaries | Human-authored Markdown | Linked to fixtures and live validation JSON |
+| `tests/fixtures/` | Positive/negative rule fixtures | Sanitized JSON fixtures | Offline fixture test harness |
+| `automation/` | Validation and orchestration tooling | Python + PowerShell | Repo-side command execution and content validation |
+| `docs/current-state/` | Program status, readiness, timeline, portfolio metrics | Human-authored Markdown | Updated from repo/lab evidence |
+| `docs/detection-engineering/` | Detection engineering implementation notes | Human-authored Markdown | Documentation-only |
+| `docs/data-sources/` | Source-system and field-mapping notes | Human-authored Markdown | Documentation-only |
+| `templates/` | Authoring templates for detections, hunts, investigations | Human-authored Markdown templates | Manual review + template consistency checks |
+| `case-studies/` | End-to-end, recruiter-friendly technical walk-throughs | Human-authored Markdown | Sourced from validated scenarios only |
 
-## Recommended workflow
+## Quick-start validation
 
-1. Pick the closest template from `templates/`.
-2. Copy it into the target domain folder.
-3. Adapt telemetry, ATT&CK, triage, validation, and response content to the environment.
-4. Keep examples public-safe: no tenant names, secrets, customer hostnames, or private telemetry.
-5. Review it in Git like any other content artifact.
-6. Reference or import the resulting content into DetLab-DAC or an internal documentation flow.
-
-## Features
-
-- markdown-first authoring
-- structured frontmatter examples
-- reusable templates for multiple security-content types
-- simple directory organization by domain/source
-- easy Git review and reuse
-- companion content model for DetLab-DAC
-
-## Tech stack
-
-- Markdown
-- YAML frontmatter conventions
-- Git / GitHub review workflow
-
-## Quick start
+These commands currently work from the repository root:
 
 ```bash
-git clone https://github.com/egrexsec/cybersecurity-playbook.git
-cd cybersecurity-playbook
+python3 playbook validate
+python3 playbook --json sigma lint
+python3 playbook --json sigma convert --target all
+python3 playbook --json test fixtures
+python3 playbook --json validate previous-scenarios
+python3 playbook --json status
+python3 playbook --json timeline
+python3 playbook --json metrics
+python3 automation/validators/check_markdown.py
 ```
 
-Open the markdown files in your editor of choice.
+## Current capabilities
 
-## Testing
+Implemented today:
+- schema validation for scenarios and hunt hypotheses
+- Sigma metadata linting
+- Sigma conversion to Splunk and Elastic outputs
+- positive and negative fixture testing
+- sanitized live validation record parsing
+- live-validated scenarios for three execution techniques
+- generated Splunk SPL and generated Elastic EQL separation
+- GitHub Actions validation workflow
+- secret scanning in CI
+- public-safe evidence handling and sanitized repo artifacts
 
-There is no automated test suite in this repository today.
+## Current limitations
 
-Current validation is content-focused:
-- review markdown rendering
-- validate structure and frontmatter manually
-- check cross-references before merge
-- confirm examples are sanitized for public release
+Be explicit about current limits:
+- Elastic conversion exists, but **no live Elastic backend is deployed or validated**
+- Splunk live validation currently relies on **raw XML matching** in places where normalized fields/CIM remain incomplete
+- durable Splunk saved searches / alerts are **not yet verified as deployed objects**
+- current live coverage is concentrated on **Windows execution techniques**
+- broader DFIR, cloud, network, and memory-forensics coverage remains incomplete
+- this repository is **not** a production deployment platform
 
-## Deployment
+## Case study
 
-No application deployment is required. This is a content repository.
+Start with the end-to-end PowerShell case study:
+- [PowerShell Encoded Command Case Study](case-studies/powershell-encoded-command/README.md)
 
-## Roadmap
+## What this project demonstrates
 
-See [ROADMAP.md](ROADMAP.md).
+This repository demonstrates evidence-backed security engineering skills in:
+- detection engineering
+- purple-team validation
+- threat hunting
+- SIEM investigation
+- ATT&CK mapping
+- Python automation
+- CI/CD for security content
+- fixture-driven rule testing
+- technical writing and evidence handling
 
-## Contributing
+## Additional repository documentation
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Security
-
-See [SECURITY.md](SECURITY.md).
-
-## License
-
-This repository includes a [LICENSE](LICENSE) file.
+- [Roadmap](ROADMAP.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
+- [Current program status](docs/current-state/PURPLE_TEAM_PROGRAM_STATUS.md)
+- [Portfolio metrics](docs/current-state/PORTFOLIO_METRICS.md)

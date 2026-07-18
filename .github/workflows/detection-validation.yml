@@ -31,16 +31,22 @@ jobs:
         run: python3 playbook validate
 
       - name: Sigma metadata lint
-        run: python3 automation/validators/sigma_ops.py lint --json
+        run: python3 playbook --json sigma lint
 
       - name: Sigma conversion
-        run: python3 automation/validators/sigma_ops.py convert --target all --json
+        run: python3 playbook --json sigma convert --target all
 
       - name: Sigma fixture tests
-        run: python3 automation/validators/sigma_ops.py test-fixtures --json
+        run: python3 playbook --json test fixtures
 
-      - name: Validation summary command
-        run: python3 playbook --json validate previous-scenarios || true
+      - name: Previous-scenario validation record check
+        run: python3 playbook --json validate previous-scenarios
+
+      - name: Metrics generation check
+        run: python3 playbook --json metrics
+
+      - name: Markdown link check
+        run: python3 automation/validators/check_markdown.py
 
       - name: Secret scanning
         uses: gitleaks/gitleaks-action@v2
