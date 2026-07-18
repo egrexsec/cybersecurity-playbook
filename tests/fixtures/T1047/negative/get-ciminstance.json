@@ -1,0 +1,9 @@
+{
+  "rule_id": "497cb8cc-c62d-4a90-b2ae-69b33b8048f7",
+  "technique_id": "T1047",
+  "scenario_id": "PT-2026-003",
+  "expected_match": false,
+  "event": {
+    "ScriptBlockText": "Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version"
+  }
+}

@@ -1,0 +1,1 @@
+Channel IN ("Microsoft-Windows-PowerShell/Operational", "PowerShellCore/Operational") EventID=4104 (ScriptBlockText="*[wmiclass]*" ScriptBlockText="*Win32_Process*" ScriptBlockText="*Create(*") OR (ScriptBlockText="*Invoke-WmiMethod*" ScriptBlockText="*Win32_Process*" ScriptBlockText="*Create*")

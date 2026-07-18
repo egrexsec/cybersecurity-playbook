@@ -1,0 +1,1 @@
+search index=main source="WinEventLog:Microsoft-Windows-PowerShell/Operational" _raw="*<EventID>4104</EventID>*" (_raw="*<Data Name='ScriptBlockText'>*FromBase64String*") AND ((_raw="*<Data Name='ScriptBlockText'>*Invoke-Expression*" OR _raw="*<Data Name='ScriptBlockText'>*iex *"))

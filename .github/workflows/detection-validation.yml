@@ -1,0 +1,46 @@
+name: detection-validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - feat/**
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install jsonschema PyYAML sigma-cli
+          sigma plugin install splunk elasticsearch windows sysmon
+
+      - name: Schema validation
+        run: python3 playbook validate
+
+      - name: Sigma metadata lint
+        run: python3 automation/validators/sigma_ops.py lint --json
+
+      - name: Sigma conversion
+        run: python3 automation/validators/sigma_ops.py convert --target all --json
+
+      - name: Sigma fixture tests
+        run: python3 automation/validators/sigma_ops.py test-fixtures --json
+
+      - name: Validation summary command
+        run: python3 playbook --json validate previous-scenarios || true
+
+      - name: Secret scanning
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
