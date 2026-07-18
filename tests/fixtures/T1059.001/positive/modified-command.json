@@ -1,0 +1,6 @@
+{
+  "scenario_id": "PT-2026-001",
+  "kind": "positive",
+  "name": "modified-base64-invoke-expression-variant",
+  "behavior": ["powershell", "base64 decode", "Invoke-Expression"]
+}

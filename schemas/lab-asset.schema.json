@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lab Asset",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "role",
+    "network",
+    "ip",
+    "approved_target"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "network": {
+      "type": "string"
+    },
+    "ip": {
+      "type": "string"
+    },
+    "approved_target": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Detection Validation",
+  "type": "object",
+  "required": [
+    "id",
+    "detection_id",
+    "scenario_id",
+    "status",
+    "rule_version",
+    "positive_tests",
+    "negative_tests",
+    "latency_seconds",
+    "required_events_received",
+    "known_blind_spots"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^DET-\\d{4}-\\d{3}$"
+    },
+    "detection_id": {
+      "type": "string"
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^PT-\\d{4}-\\d{3}$"
+    },
+    "status": {
+      "enum": [
+        "experimental",
+        "test",
+        "validated",
+        "deployed",
+        "tuned",
+        "deprecated"
+      ]
+    },
+    "rule_version": {
+      "type": "string"
+    },
+    "positive_tests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "negative_tests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "latency_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "required_events_received": {
+      "type": "boolean"
+    },
+    "known_blind_spots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Analysis Result",
+  "type": "object",
+  "required": [
+    "summary",
+    "observations",
+    "candidate_findings",
+    "candidate_iocs",
+    "candidate_attack_mappings",
+    "candidate_detection_opportunities",
+    "recommended_hunt_pivots",
+    "missing_evidence",
+    "unsupported_claims",
+    "confidence"
+  ],
+  "properties": {
+    "summary": {
+      "type": "string"
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "candidate_findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "candidate_iocs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "candidate_attack_mappings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "candidate_detection_opportunities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommended_hunt_pivots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "missing_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unsupported_claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confidence": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
+  }
+}

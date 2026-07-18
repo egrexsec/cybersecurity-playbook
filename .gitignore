@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Evidence and generated outputs
+evidence/raw/**
+*.evtx
+*.pcap
+*.pcapng
+*.raw
+*.bin
+*.zip
+*.7z
+*.dmp
+*.vhd*
+*.E01
+
+# Sanitized and processed outputs may be committed selectively
+!evidence/raw/.gitkeep
+
+# Local tool state
+.venv/
+venv/
+.env
+.env.*
+
+# Temporary notes
+*.tmp
+*.bak

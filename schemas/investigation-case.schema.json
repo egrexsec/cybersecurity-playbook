@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Investigation Case",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "status",
+    "scope",
+    "questions",
+    "evidence",
+    "timeline",
+    "findings",
+    "related_ids"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^DFIR-\\d{4}-\\d{3}$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "completed"
+      ]
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "timeline": {
+      "type": "string"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "related_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z]+-\\d{4}-\\d{3}$"
+      }
+    }
+  }
+}
