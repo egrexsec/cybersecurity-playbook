@@ -1,0 +1,35 @@
+title: Suspicious BITS Job Creation Via bitsadmin Or Start-BitsTransfer
+id: 76f36ef1-89af-4f11-85fc-cf54c3454941
+status: test
+description: >-
+  Detects BITS job creation through bitsadmin.exe transfer syntax or PowerShell Start-BitsTransfer
+  as observed during PT-2026-008 validation.
+references:
+  - https://attack.mitre.org/techniques/T1197/
+author: mell0wx
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  sel_bitsadmin_img:
+    Image|endswith: '\bitsadmin.exe'
+  sel_bitsadmin_cli:
+    CommandLine|contains|all:
+      - '/transfer'
+      - '/download'
+  sel_ps_img:
+    Image|endswith: '\powershell.exe'
+  sel_ps_cli:
+    CommandLine|contains|all:
+      - 'Start-BitsTransfer'
+      - '127.0.0.1'
+  condition: (sel_bitsadmin_img and sel_bitsadmin_cli) or (sel_ps_img and sel_ps_cli)
+falsepositives:
+  - Controlled validation activity
+  - Administrative BITS testing in lab-only contexts
+date: 2026-07-18
+level: high
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.t1197
