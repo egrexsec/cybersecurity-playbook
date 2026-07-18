@@ -1,0 +1,10 @@
+{
+  "rule_id": "3f9d4c53-a7cb-4e6a-82a2-0b57a6ef58bb",
+  "technique_id": "T1547.001",
+  "scenario_id": "PT-2026-006",
+  "expected_match": true,
+  "event": {
+    "Image": "C:\\Windows\\System32\\reg.exe",
+    "CommandLine": "reg.exe add \"HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\" /v \"PT-2026-006-Original\" /t REG_SZ /f /d \"cmd.exe /c echo PT-2026-006-ORIGINAL > C:\\Windows\\Temp\\pt-2026-006-original.txt\""
+  }
+}

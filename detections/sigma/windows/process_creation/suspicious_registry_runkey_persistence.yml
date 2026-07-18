@@ -1,0 +1,39 @@
+title: Suspicious Registry Run-Key Persistence Via Script Interpreter Or Temporary Path
+id: 3f9d4c53-a7cb-4e6a-82a2-0b57a6ef58bb
+status: test
+description: >-
+  Detects reg.exe or PowerShell modifications of HKCU Run keys when the stored value launches
+  cmd.exe or powershell.exe and points to temporary path activity observed during PT-2026-006.
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+author: mell0wx
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  sel_reg_img:
+    Image|endswith: '\reg.exe'
+  sel_reg_cli:
+    CommandLine|contains|all:
+      - 'CurrentVersion'
+      - 'Run'
+      - 'cmd.exe'
+      - 'Temp'
+  sel_ps_img:
+    Image|endswith: '\powershell.exe'
+  sel_ps_cli:
+    CommandLine|contains|all:
+      - 'Set-ItemProperty'
+      - 'CurrentVersion'
+      - 'Run'
+      - 'powershell.exe'
+      - 'Temp'
+  condition: (sel_reg_img and sel_reg_cli) or (sel_ps_img and sel_ps_cli)
+falsepositives:
+  - Controlled validation activity
+  - Administrative startup persistence testing that intentionally stages interpreter-backed temporary commands
+date: 2026-07-18
+level: high
+tags:
+  - attack.persistence
+  - attack.t1547.001

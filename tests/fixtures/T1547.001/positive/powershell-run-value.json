@@ -1,0 +1,10 @@
+{
+  "rule_id": "3f9d4c53-a7cb-4e6a-82a2-0b57a6ef58bb",
+  "technique_id": "T1547.001",
+  "scenario_id": "PT-2026-006",
+  "expected_match": true,
+  "event": {
+    "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "CommandLine": "powershell.exe -NoProfile -Command \"Set-ItemProperty -Path HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run -Name PT-2026-006-Variant -Value powershell.exe -NoProfile -WindowStyle Hidden -Command \"Set-Content -Path C:\\Windows\\Temp\\pt-2026-006-variant.txt -Value PT-2026-006-VARIANT\"\""
+  }
+}

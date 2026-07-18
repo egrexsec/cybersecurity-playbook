@@ -1,0 +1,1 @@
+(Image="*\\reg.exe" CommandLine="*CurrentVersion*" CommandLine="*Run*" CommandLine="*cmd.exe*" CommandLine="*Temp*") OR (Image="*\\powershell.exe" CommandLine="*Set-ItemProperty*" CommandLine="*CurrentVersion*" CommandLine="*Run*" CommandLine="*powershell.exe*" CommandLine="*Temp*")
