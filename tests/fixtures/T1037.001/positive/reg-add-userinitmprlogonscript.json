@@ -1,0 +1,10 @@
+{
+  "rule_id": "22da6a1c-f0f2-4a4d-a322-c2da4c8ba2a5",
+  "technique_id": "T1037.001",
+  "scenario_id": "PT-2026-007",
+  "expected_match": true,
+  "event": {
+    "Image": "C:\\Windows\\System32\\reg.exe",
+    "CommandLine": "reg.exe add HKU\\PT2026007\\Environment /v UserInitMprLogonScript /t REG_SZ /f /d C:\\Windows\\Temp\\pt-2026-007-original.bat"
+  }
+}

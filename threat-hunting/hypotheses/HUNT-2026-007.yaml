@@ -1,0 +1,36 @@
+id: HUNT-2026-007
+title: Hunt for Suspicious Windows Logon Script Registry Persistence
+status: completed
+hypothesis: >-
+  If an adversary establishes Windows logon script persistence by setting UserInitMprLogonScript,
+  the victim should emit process creation telemetry that distinguishes suspicious script-backed
+  logon initialization from benign environment inspection.
+attack:
+  - T1037.001
+required_data:
+  - Sysmon Event ID 1
+  - loaded user-hive registry state
+  - optional Sysmon registry set events
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-logonscript-counts
+hunt_query: suspicious-userinitmprlogonscript-correlation
+investigation_pivots:
+  - reg.exe add command lines targeting UserInitMprLogonScript
+  - PowerShell Set-ItemProperty targeting UserInitMprLogonScript
+  - resulting batch path and user hive value
+known_legitimate_activity:
+  - administrator inspection of user environment values
+success_criteria:
+  - positive logon-script persistence paths are visible in Sysmon and loaded-hive state
+  - a behavior-based rule detects both positive variants
+  - benign environment inspection and benign calc environment values stay quiet
+detection_opportunity: >-
+  Detect UserInitMprLogonScript persistence when the stored value points to temp-path batch files or other suspicious script-backed logon actions.
+results:
+  - positive reg.exe add UserInitMprLogonScript path triggered the Sigma detection in Splunk
+  - positive PowerShell Set-ItemProperty UserInitMprLogonScript path triggered the Sigma detection in Splunk
+  - benign environment query did not trigger the detection
+  - benign reg.exe query did not trigger the detection
+  - benign calc environment value creation did not trigger the detection
+conclusion: validated

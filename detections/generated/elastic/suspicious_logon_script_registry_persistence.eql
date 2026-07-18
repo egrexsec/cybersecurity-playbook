@@ -1,0 +1,1 @@
+any where (process.executable:"*\\reg.exe" and (process.command_line:"*UserInitMprLogonScript*" and process.command_line:"*.bat*" and process.command_line:"*Temp*")) or (process.executable:"*\\powershell.exe" and (process.command_line:"*Set-ItemProperty*" and process.command_line:"*UserInitMprLogonScript*" and process.command_line:"*.bat*" and process.command_line:"*Temp*"))

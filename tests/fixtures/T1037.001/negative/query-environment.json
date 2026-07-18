@@ -1,0 +1,10 @@
+{
+  "rule_id": "22da6a1c-f0f2-4a4d-a322-c2da4c8ba2a5",
+  "technique_id": "T1037.001",
+  "scenario_id": "PT-2026-007",
+  "expected_match": false,
+  "event": {
+    "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "CommandLine": "powershell.exe -NoProfile -Command \"Get-ItemProperty -Path Registry::HKEY_USERS\\PT2026007\\Environment\""
+  }
+}
