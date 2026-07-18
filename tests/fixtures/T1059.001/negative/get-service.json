@@ -4,6 +4,6 @@
   "scenario_id": "PT-2026-001",
   "expected_match": false,
   "event": {
-    "ScriptBlockText": "Get-Service | Where-Object {$_.Status -eq 'Running'} | Select-Object -First 3 Name,Status"
+    "ScriptBlockText": "Get-Service | Select-Object -First 5 Name,Status | Out-File -FilePath \"$env:TEMP\\pt-2026-001-negative-service.txt\" -Encoding utf8"
   }
 }

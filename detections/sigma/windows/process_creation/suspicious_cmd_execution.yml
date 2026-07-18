@@ -1,7 +1,9 @@
-title: Suspicious Windows Command Shell Execution
-id: 6e90d85e-4476-4a9f-ac12-pt2026002
-status: experimental
-description: Detects suspicious cmd.exe execution patterns validated in PT-2026-002.
+title: Suspicious Windows Command Shell Execution From Temporary Or Obfuscated Context
+id: 6e90d85e-4476-4a9f-ac12-9f983cadc5c1
+status: test
+description: >-
+  Detects cmd.exe execution from temporary script paths or obfuscated environment-variable
+  substring expansion patterns observed during PT-2026-002 validation.
 references:
   - https://attack.mitre.org/techniques/T1059/003/
 author: mell0wx
@@ -9,17 +11,22 @@ logsource:
   product: windows
   category: process_creation
 detection:
+  selection_img:
+    Image|endswith: '\cmd.exe'
   selection_batch:
-    Image|endswith: '\cmd.exe'
-    CommandLine|contains:
-      - 'pt-2026-002-positive.cmd'
+    CommandLine|contains|all:
+      - '\Temp\'
+      - '.cmd'
+      - ' /c '
   selection_variant:
-    Image|endswith: '\cmd.exe'
-    CommandLine|contains:
-      - '%LOCALAPPDATA:~-3,1%md /c'
-  condition: selection_batch or selection_variant
+    CommandLine|contains|all:
+      - ':~-'
+      - 'md /c'
+  condition: selection_img and (selection_batch or selection_variant)
 falsepositives:
   - Controlled validation activity
+  - Administrative batch files launched from temporary staging paths during software maintenance
+date: 2026-07-18
 level: high
 tags:
   - attack.execution

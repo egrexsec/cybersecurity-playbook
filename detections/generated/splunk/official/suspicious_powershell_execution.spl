@@ -1,0 +1,1 @@
+Channel IN ("Microsoft-Windows-PowerShell/Operational", "PowerShellCore/Operational") EventID=4104 ScriptBlockText="*FromBase64String*" ScriptBlockText IN ("*Invoke-Expression*", "*iex *")

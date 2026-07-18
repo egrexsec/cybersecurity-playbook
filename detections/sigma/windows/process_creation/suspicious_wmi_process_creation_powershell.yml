@@ -1,0 +1,32 @@
+title: Suspicious PowerShell WMI Process Creation Behavior
+id: 497cb8cc-c62d-4a90-b2ae-69b33b8048f7
+status: test
+description: >-
+  Detects PowerShell-driven WMI process creation behavior through either direct
+  [wmiclass] Win32_Process Create invocation or Invoke-WmiMethod against Win32_Process.
+author: mell0wx
+date: 2026-07-18
+references:
+  - https://attack.mitre.org/techniques/T1047/
+logsource:
+  product: windows
+  category: ps_script
+detection:
+  selection_wmiclass:
+    ScriptBlockText|contains|all:
+      - '[wmiclass]'
+      - 'Win32_Process'
+      - 'Create('
+  selection_invokewmi:
+    ScriptBlockText|contains|all:
+      - 'Invoke-WmiMethod'
+      - 'Win32_Process'
+      - 'Create'
+  condition: selection_wmiclass or selection_invokewmi
+falsepositives:
+  - Approved detection engineering tests
+  - Administrative automation that intentionally creates processes through WMI
+level: high
+tags:
+  - attack.execution
+  - attack.t1047

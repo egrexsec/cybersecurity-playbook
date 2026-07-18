@@ -1,0 +1,10 @@
+{
+  "rule_id": "6e90d85e-4476-4a9f-ac12-9f983cadc5c1",
+  "technique_id": "T1059.003",
+  "scenario_id": "PT-2026-002",
+  "expected_match": false,
+  "event": {
+    "Image": "C:\\Windows\\System32\\cmd.exe",
+    "CommandLine": "cmd.exe /c dir C:\\Windows"
+  }
+}

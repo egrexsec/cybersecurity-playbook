@@ -1,6 +1,9 @@
 {
+  "rule_id": "0b77858e-3f9f-4a0e-bc4c-8f0ac4b2b0d1",
+  "technique_id": "T1059.001",
   "scenario_id": "PT-2026-001",
-  "kind": "negative",
-  "name": "benign-powershell-get-date",
-  "behavior": ["powershell", "read-only admin"]
+  "expected_match": false,
+  "event": {
+    "ScriptBlockText": "Get-ChildItem C:\\Windows | Select-Object -First 5 Name | Out-File -FilePath \"$env:TEMP\\approved-admin-script.txt\" -Encoding utf8"
+  }
 }

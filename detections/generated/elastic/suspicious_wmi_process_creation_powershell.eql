@@ -1,0 +1,1 @@
+any where (powershell.file.script_block_text:"*[wmiclass]*" and powershell.file.script_block_text:"*Win32_Process*" and powershell.file.script_block_text:"*Create(*") or (powershell.file.script_block_text:"*Invoke-WmiMethod*" and powershell.file.script_block_text:"*Win32_Process*" and powershell.file.script_block_text:"*Create*")

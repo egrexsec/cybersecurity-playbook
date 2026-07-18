@@ -1,0 +1,1 @@
+Image="*\\cmd.exe" (CommandLine="*\\Temp\\*" CommandLine="*.cmd*" CommandLine="* /c *") OR (CommandLine="*:~-*" CommandLine="*md /c*")

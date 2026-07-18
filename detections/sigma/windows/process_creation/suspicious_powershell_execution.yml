@@ -1,5 +1,5 @@
 title: Suspicious PowerShell Decode And Execute Behavior
-id: 0b77858e-3f9f-4a0e-bc4c-pt2026001
+id: 0b77858e-3f9f-4a0e-bc4c-8f0ac4b2b0d1
 status: test
 description: >-
   Detects PowerShell execution that combines base64 decoding with immediate execution semantics,
@@ -11,20 +11,16 @@ references:
   - https://attack.mitre.org/techniques/T1027/
 logsource:
   product: windows
-  category: process_creation
+  category: ps_script
 detection:
-  selection_img:
-    Image|endswith:
-      - '\powershell.exe'
-      - '\pwsh.exe'
   selection_decode:
-    CommandLine|contains:
+    ScriptBlockText|contains:
       - 'FromBase64String'
   selection_exec:
-    CommandLine|contains:
+    ScriptBlockText|contains:
       - 'Invoke-Expression'
       - 'iex '
-  condition: selection_img and selection_decode and selection_exec
+  condition: selection_decode and selection_exec
 falsepositives:
   - Approved detection engineering tests
   - Rare administrative scripts that intentionally decode and immediately execute in memory
@@ -32,5 +28,4 @@ level: high
 tags:
   - attack.execution
   - attack.t1059.001
-  - attack.defense-evasion
   - attack.t1027
