@@ -1,0 +1,14 @@
+{
+  "scenario_id": "PT-2026-003",
+  "test_case": "positive_wmic",
+  "expected_rule_ids": ["100205"],
+  "custom_alert_count": 1,
+  "custom_alerts": [
+    {
+      "rid": "100205",
+      "desc": "PT-2026-003 WMI initiation via [wmiclass] PowerShell detected"
+    }
+  ],
+  "result": "pass",
+  "notes": "Validated via Wazuh alert 100205 on 2026-07-18 during [wmiclass] Win32_Process initiation."
+}

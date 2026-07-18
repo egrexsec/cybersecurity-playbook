@@ -1,0 +1,14 @@
+{
+  "scenario_id": "PT-2026-003",
+  "test_case": "positive_invoke_wmi",
+  "expected_rule_ids": ["100206"],
+  "custom_alert_count": 1,
+  "custom_alerts": [
+    {
+      "rid": "100206",
+      "desc": "PT-2026-003 WMI local process creation via Invoke-WmiMethod detected"
+    }
+  ],
+  "result": "pass",
+  "notes": "Validated via Wazuh alert 100206 on 2026-07-18 for cmd.exe launched by WmiPrvSE.exe from Invoke-WmiMethod."
+}
