@@ -1,0 +1,18 @@
+<!-- PT-2026-002 test-scope rules -->
+<group name="local,windows,cmd,pt2026002,">
+  <rule id="100203" level="12">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\cmd\.exe</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)pt-2026-002-positive\.cmd</field>
+    <description>PT-2026-002 batch-script cmd execution detected</description>
+    <group>attack.execution,attack.t1059.003,</group>
+  </rule>
+
+  <rule id="100204" level="12">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\cmd\.exe</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)LOCALAPPDATA:~\-3,1.*md\s+/c</field>
+    <description>PT-2026-002 suspicious environment-variable-based cmd execution detected</description>
+    <group>attack.execution,attack.t1059.003,attack.defense-evasion,</group>
+  </rule>
+</group>

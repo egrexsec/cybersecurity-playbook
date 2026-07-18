@@ -1,6 +1,6 @@
 id: HUNT-2026-002
 title: Suspicious Windows Command Shell execution on approved endpoint
-status: draft
+status: completed
 hypothesis: >-
   If an operator or adversary uses cmd.exe to run batch content or a suspicious
   invocation pattern, the victim should produce correlated process creation and
@@ -31,5 +31,8 @@ detection_opportunity: >-
   Suspicious or unusual cmd.exe execution patterns, especially batch-file execution,
   temporary-file writes, or environment-variable-based obfuscation that differ from
   routine administrative command-shell use.
-results: []
-conclusion: pending
+results:
+  - batch-script cmd execution produced the expected custom alert 100203
+  - environment-variable-based cmd indirection produced the expected custom alert 100204
+  - benign cmd dir and echo tests did not trigger the custom detection
+conclusion: validated on approved Windows victim with low-risk test scope

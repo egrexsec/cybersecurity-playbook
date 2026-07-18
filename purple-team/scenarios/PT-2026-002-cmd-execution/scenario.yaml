@@ -4,9 +4,9 @@ description: >-
   Low-risk purple-team scenario that validates endpoint telemetry, hunting,
   forensic collection, and baseline detection design for suspicious cmd.exe
   execution on the approved Windows victim.
-status: draft
+status: validated
 created: '2026-07-18T00:00:00Z'
-updated: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T02:45:00Z'
 owner: mell0wx
 attack:
   framework: MITRE ATT&CK
