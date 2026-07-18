@@ -1,0 +1,94 @@
+id: PT-2026-004
+title: Scheduled Task Creation Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates endpoint telemetry, threat hunting,
+  forensic follow-up, and behavioral detection logic for suspicious scheduled task
+  creation and execution on the approved Windows victim.
+status: validated
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T15:29:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1053.005
+  test_ids:
+    - 42f53695-ad4a-4546-abb6-7d837f644a71
+    - af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
+  commands:
+    - schtasks.exe local scheduled task creation and launch under SYSTEM
+    - Register-ScheduledTask PowerShell cmdlet scheduled task creation and launch
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - Splunk forwarder is running
+    - Splunk process creation telemetry is queryable
+    - Task Scheduler operational log is enabled locally
+    - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - Task Scheduler operational events 106/140/200/201 locally on the victim
+    - Splunk ingestion of Sysmon process creation
+  optional:
+    - Security Event IDs 4698/4699/4702
+    - Sysmon registry events under TaskCache
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-schtasks-counts
+    - windows-baseline-process-creation-counts
+    - splunk-recent-sysmon-schtasks
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - schtasks.exe
+    - powershell.exe -NoProfile -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - latest related Task Scheduler operational records
+  after:
+    - task registration/execution records
+    - process creation artifacts
+    - task cache registry artifacts
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-004
+forensics:
+  collection_profiles:
+    - scheduled-task-activity
+    - process-execution
+    - registry-taskcache
+    - user-activity
+detections:
+  expected_rules:
+    - DET-2026-004
+validation:
+  positive_tests:
+    - scheduled-task-local-schtasks
+    - powershell-register-scheduledtask
+  negative_tests:
+    - benign-schtasks-query
+    - benign-get-scheduledtask
+    - benign-scheduled-task-create
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-004/
+    - investigations/endpoint/DFIR-2026-004/
+  output_paths:
+    - purple-team/scenarios/PT-2026-004-scheduled-task/
+    - detections/validation/

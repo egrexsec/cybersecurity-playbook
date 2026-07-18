@@ -1,0 +1,1 @@
+(Image="*\\schtasks.exe" CommandLine="*/Create*" CommandLine="*\\Temp\\*" CommandLine="*cmd.exe*") OR (Image="*\\powershell.exe" CommandLine="*Register-ScheduledTask*" CommandLine="*New-ScheduledTaskAction*" CommandLine="*\\Temp\\*")

@@ -1,0 +1,39 @@
+id: HUNT-2026-004
+title: Suspicious scheduled task creation and execution on approved endpoint
+status: completed
+hypothesis: >-
+  If an operator or adversary creates a scheduled task through schtasks.exe or
+  PowerShell scheduled-task cmdlets, the victim should emit process creation and
+  local task-scheduler records that support a behavioral detection for suspicious
+  task actions pointing to script interpreters or temporary paths.
+attack:
+  - T1053.005
+required_data:
+  - Sysmon Event ID 1
+  - Task Scheduler Operational events 106, 140, 200, 201, 325
+  - Splunk Sysmon search results for scheduled task creation
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-schtasks-counts
+hunt_query: suspicious-scheduled-task-create-correlation
+investigation_pivots:
+  - schtasks.exe process creation with /Create
+  - PowerShell Register-ScheduledTask command lines
+  - Task Scheduler operational records for registration and execution
+known_legitimate_activity:
+  - software updaters and management tooling
+  - benign administrator task queries and inventory actions
+success_criteria:
+  - positive scheduled task creation is visible in Sysmon and local scheduler logs
+  - a behavior-based Sigma rule detects both positive variants
+  - benign negative tests do not trigger the detection
+detection_opportunity: >-
+  Detect scheduled task creation when the action launches script interpreters from
+  temporary or suspicious staging paths rather than standard maintenance binaries.
+results:
+  - positive schtasks.exe /Create path triggered the Sigma detection in Splunk
+  - positive Register-ScheduledTask path triggered the Sigma detection in Splunk
+  - benign schtasks query did not trigger the detection
+  - benign Get-ScheduledTask inventory did not trigger the detection
+  - benign scheduled task creation launching notepad.exe did not trigger the detection
+conclusion: validated

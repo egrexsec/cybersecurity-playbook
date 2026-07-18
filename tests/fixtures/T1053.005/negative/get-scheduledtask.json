@@ -1,0 +1,10 @@
+{
+  "rule_id": "3dbcf00c-6ff4-45b3-b16c-f2f5c8678c9a",
+  "technique_id": "T1053.005",
+  "scenario_id": "PT-2026-004",
+  "expected_match": false,
+  "event": {
+    "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "CommandLine": "powershell.exe -NoProfile -Command \"Get-ScheduledTask -TaskName Registration -TaskPath \\Microsoft\\Windows\\PushToInstall\\ | Select-Object TaskName,TaskPath,State\""
+  }
+}

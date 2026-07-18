@@ -1,0 +1,10 @@
+{
+  "rule_id": "3dbcf00c-6ff4-45b3-b16c-f2f5c8678c9a",
+  "technique_id": "T1053.005",
+  "scenario_id": "PT-2026-004",
+  "expected_match": true,
+  "event": {
+    "Image": "C:\\Windows\\System32\\schtasks.exe",
+    "CommandLine": "schtasks.exe /Create /SC ONCE /TN PT-2026-004-Original /TR \"cmd.exe /c echo PT-2026-004-ORIGINAL> C:\\Windows\\Temp\\pt-2026-004-original.txt\" /ST 15:11 /RU SYSTEM /F"
+  }
+}
