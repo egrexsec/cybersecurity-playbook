@@ -1,0 +1,37 @@
+id: HUNT-2026-009
+title: Hunt for Suspicious PowerShell Profile Persistence
+status: completed
+hypothesis: >-
+  If an adversary appends execution content to a PowerShell profile, the victim should emit
+  process creation telemetry and local profile file changes that distinguish suspicious profile
+  persistence from benign profile inspection.
+attack:
+  - T1546.013
+required_data:
+  - Sysmon Event ID 1
+  - local profile file state
+  - optional PowerShell operational records
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-profile-counts
+hunt_query: suspicious-powershell-profile-correlation
+investigation_pivots:
+  - Add-Content or Set-Content targeting profile.ps1
+  - subsequent powershell.exe launch without -NoProfile
+  - resulting marker file behavior
+known_legitimate_activity:
+  - profile existence checks
+  - administrators reading existing profile content
+success_criteria:
+  - positive PowerShell profile persistence paths are visible in Sysmon and local profile state
+  - a behavior-based rule detects both positive variants
+  - benign profile inspection stays quiet
+detection_opportunity: >-
+  Detect suspicious modification of the PowerShell profile followed by normal PowerShell launch behavior.
+results:
+  - positive Add-Content profile modification path triggered the Sigma detection in Splunk
+  - positive profile append variant triggered the Sigma detection in Splunk
+  - benign Test-Path profile inspection did not trigger the detection
+  - benign Get-Content profile inspection did not trigger the detection
+  - benign profile note append did not trigger the detection
+conclusion: validated
