@@ -1,0 +1,33 @@
+title: Suspicious Rundll32 Proxy Execution Via FileProtocolHandler Or LaunchApplication
+id: 68f76492-b7f9-4cb4-8482-2410b0cf0a59
+status: test
+description: >-
+  Detects suspicious rundll32 proxy execution patterns using url.dll FileProtocolHandler or pcwutl.dll LaunchApplication as observed during PT-2026-010 validation.
+references:
+  - https://attack.mitre.org/techniques/T1218/011/
+author: mell0wx
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  sel_img:
+    Image|endswith: '\rundll32.exe'
+  sel_url:
+    CommandLine|contains|all:
+      - 'url.dll'
+      - 'FileProtocolHandler'
+      - 'calc.exe'
+  sel_pcwu:
+    CommandLine|contains|all:
+      - 'pcwutl.dll'
+      - 'LaunchApplication'
+      - 'calc.exe'
+  condition: sel_img and (sel_url or sel_pcwu)
+falsepositives:
+  - Controlled validation activity
+  - Rare administrative experiments with rundll32 proxy execution
+date: 2026-07-18
+level: high
+tags:
+  - attack.execution
+  - attack.t1218.011

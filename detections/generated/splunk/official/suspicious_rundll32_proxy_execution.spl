@@ -1,0 +1,1 @@
+Image="*\\rundll32.exe" (CommandLine="*url.dll*" CommandLine="*FileProtocolHandler*" CommandLine="*calc.exe*") OR (CommandLine="*pcwutl.dll*" CommandLine="*LaunchApplication*" CommandLine="*calc.exe*")
