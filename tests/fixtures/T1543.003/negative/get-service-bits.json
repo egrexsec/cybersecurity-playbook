@@ -1,0 +1,10 @@
+{
+  "rule_id": "b5bf95a5-e28f-48d3-aa87-d6fb6ad11d88",
+  "technique_id": "T1543.003",
+  "scenario_id": "PT-2026-005",
+  "expected_match": false,
+  "event": {
+    "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "CommandLine": "powershell.exe -NoProfile -Command \"Get-Service BITS | Select-Object Name,Status,StartType\""
+  }
+}
