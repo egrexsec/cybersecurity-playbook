@@ -1,0 +1,1 @@
+any where process.executable:"*\\regsvr32.exe" and ((process.command_line:"*scrobj.dll*" and process.command_line:"*.sct*") or (process.command_line:"*.jpg*" and process.command_line:"*regsvr32.exe*"))

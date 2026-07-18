@@ -1,0 +1,10 @@
+{
+  "rule_id": "5ab2ae3a-08af-4873-bd89-40fd84b79a7e",
+  "technique_id": "T1218.010",
+  "scenario_id": "PT-2026-011",
+  "expected_match": true,
+  "event": {
+    "Image": "C:\\Windows\\System32\\regsvr32.exe",
+    "CommandLine": "regsvr32.exe /s C:\\Windows\\Temp\\pt-2026-011-shell32.jpg"
+  }
+}

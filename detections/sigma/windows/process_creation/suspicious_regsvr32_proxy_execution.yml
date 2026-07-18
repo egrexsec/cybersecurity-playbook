@@ -1,0 +1,31 @@
+title: Suspicious Regsvr32 Proxy Execution Via Local SCT Or Non-DLL Extension
+id: 5ab2ae3a-08af-4873-bd89-40fd84b79a7e
+status: test
+description: >-
+  Detects regsvr32 proxy execution through local SCT/scrobj usage or a non-DLL extension target as observed during PT-2026-011 validation.
+references:
+  - https://attack.mitre.org/techniques/T1218/010/
+author: mell0wx
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  sel_img:
+    Image|endswith: '\regsvr32.exe'
+  sel_sct:
+    CommandLine|contains|all:
+      - 'scrobj.dll'
+      - '.sct'
+  sel_nondll:
+    CommandLine|contains|all:
+      - '.jpg'
+      - 'regsvr32.exe'
+  condition: sel_img and (sel_sct or sel_nondll)
+falsepositives:
+  - Controlled validation activity
+  - Rare administrative testing with regsvr32 and non-standard extensions
+date: 2026-07-18
+level: high
+tags:
+  - attack.execution
+  - attack.t1218.010
