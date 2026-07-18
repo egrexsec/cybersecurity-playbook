@@ -1,0 +1,1 @@
+any where (process.executable:"*\\schtasks.exe" and (process.command_line:"*/Create*" and process.command_line:"*\\Temp\\*" and process.command_line:"*cmd.exe*")) or (process.executable:"*\\powershell.exe" and (process.command_line:"*Register-ScheduledTask*" and process.command_line:"*New-ScheduledTaskAction*" and process.command_line:"*\\Temp\\*"))

@@ -1,0 +1,38 @@
+title: Suspicious Scheduled Task Creation From Temporary Or Script-Interpreter Context
+id: 3dbcf00c-6ff4-45b3-b16c-f2f5c8678c9a
+status: test
+description: >-
+  Detects scheduled task creation using schtasks.exe or Register-ScheduledTask when the
+  scheduled action points to temporary paths or script-interpreter driven execution observed
+  during PT-2026-004 validation.
+references:
+  - https://attack.mitre.org/techniques/T1053/005/
+author: mell0wx
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_schtasks_img:
+    Image|endswith: '\schtasks.exe'
+  selection_schtasks_cli:
+    CommandLine|contains|all:
+      - '/Create'
+      - '\Temp\'
+      - 'cmd.exe'
+  selection_ps_img:
+    Image|endswith: '\powershell.exe'
+  selection_ps_cli:
+    CommandLine|contains|all:
+      - 'Register-ScheduledTask'
+      - 'New-ScheduledTaskAction'
+      - '\Temp\'
+  condition: (selection_schtasks_img and selection_schtasks_cli) or (selection_ps_img and selection_ps_cli)
+falsepositives:
+  - Controlled validation activity
+  - Administrative task creation that legitimately launches script interpreters from temporary staging paths
+date: 2026-07-18
+level: high
+tags:
+  - attack.persistence
+  - attack.execution
+  - attack.t1053.005
