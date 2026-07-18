@@ -1,5 +1,7 @@
 # CYBER LAB ASSESSMENT
 
+> Historical snapshot: this document captures the initial Mayuri assessment at the start of the purple-team buildout. For the current repository-facing state, use `DETECTION_PLATFORM_READINESS.md`, `PROJECT_TIMELINE_ASSESSMENT.md`, and `PURPLE_TEAM_PROGRAM_STATUS.md`.
+
 - **Assessment timestamp (UTC):** 2026-07-18T01:18:00Z
 - **Operator:** Hermes Agent
 - **Repository:** `egrexsec/cybersecurity-playbook`

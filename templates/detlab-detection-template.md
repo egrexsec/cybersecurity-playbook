@@ -1,7 +1,7 @@
 ---
 id: DET-0000
 name: Detection Name
-content_kind: hunt
+content_kind: detection
 status: testing
 severity: medium
 author: mell0wx

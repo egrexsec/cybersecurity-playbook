@@ -302,6 +302,71 @@ def elastic_readiness(args: argparse.Namespace) -> int:
     return 0
 
 
+
+def metrics(args: argparse.Namespace) -> int:
+    scenarios = sorted(REPO_ROOT.glob('purple-team/scenarios/*/scenario.yaml'))
+    sigma_rules = sorted((REPO_ROOT / 'detections' / 'sigma').rglob('*.yml'))
+    fixture_files = sorted((REPO_ROOT / 'tests' / 'fixtures').rglob('*.json'))
+    live_records = sorted((REPO_ROOT / 'detections' / 'validation' / 'live').glob('VAL-*.json'))
+    techniques = set()
+    for path in scenarios:
+        doc = load_yaml(path)
+        techniques.update(doc.get('attack', {}).get('technique_ids', []))
+    positive = [p for p in fixture_files if 'positive' in p.parts]
+    negative = [p for p in fixture_files if 'negative' in p.parts]
+    data = {
+        'scenario_count': len(scenarios),
+        'sigma_rule_count': len(sigma_rules),
+        'fixture_file_count': len(fixture_files),
+        'positive_fixture_count': len(positive),
+        'negative_fixture_count': len(negative),
+        'live_validation_record_count': len(live_records),
+        'attack_techniques_covered': sorted(techniques),
+        'attack_technique_count': len(techniques),
+        'generated_splunk_detection_count': len(list((REPO_ROOT / 'detections' / 'generated' / 'splunk' / 'official').glob('*.spl'))),
+        'generated_elastic_detection_count': len(list((REPO_ROOT / 'detections' / 'generated' / 'elastic').glob('*.eql'))),
+    }
+    dump(data, args.json)
+    return 0
+
+
+def render_metrics_markdown() -> str:
+    class A: json=False
+    import io
+    scenarios = sorted(REPO_ROOT.glob('purple-team/scenarios/*/scenario.yaml'))
+    sigma_rules = sorted((REPO_ROOT / 'detections' / 'sigma').rglob('*.yml'))
+    fixture_files = sorted((REPO_ROOT / 'tests' / 'fixtures').rglob('*.json'))
+    live_records = sorted((REPO_ROOT / 'detections' / 'validation' / 'live').glob('VAL-*.json'))
+    techniques = set()
+    for path in scenarios:
+        doc = load_yaml(path)
+        techniques.update(doc.get('attack', {}).get('technique_ids', []))
+    positive = [p for p in fixture_files if 'positive' in p.parts]
+    negative = [p for p in fixture_files if 'negative' in p.parts]
+    lines = [
+        '# Portfolio Metrics',
+        '',
+        '| Metric | Value |',
+        '|---|---:|',
+        f'| Purple-team scenarios | {len(scenarios)} |',
+        f'| Canonical Sigma rules | {len(sigma_rules)} |',
+        f'| Fixture files | {len(fixture_files)} |',
+        f'| Positive fixtures | {len(positive)} |',
+        f'| Negative fixtures | {len(negative)} |',
+        f'| Live validation records | {len(live_records)} |',
+        f'| ATT&CK techniques covered | {len(techniques)} |',
+        f'| Generated Splunk detections | {len(list((REPO_ROOT / "detections" / "generated" / "splunk" / "official").glob("*.spl")))} |',
+        f'| Generated Elastic detections | {len(list((REPO_ROOT / "detections" / "generated" / "elastic").glob("*.eql")))} |',
+        '',
+        '## ATT&CK techniques currently represented',
+        '',
+        ', '.join(sorted(techniques)) or 'none',
+        '',
+        '> Generated from repository content. Rebuild with `python3 playbook metrics`.',
+    ]
+    return '\n'.join(lines) + '\n'
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog='playbook')
     parser.add_argument('--json', action='store_true', help='emit JSON')
@@ -315,6 +380,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_timeline = sub.add_parser('timeline')
     p_timeline.set_defaults(func=show_timeline)
+
+    p_metrics = sub.add_parser('metrics')
+    p_metrics.set_defaults(func=metrics)
 
     p_preflight = sub.add_parser('preflight')
     p_preflight.add_argument('scenario')

@@ -3,34 +3,37 @@
 ## Milestone matrix
 | Capability | Status | Evidence | Blocking Issue | Next Action |
 |---|---|---|---|---|
-| Lab readiness | Partially ready | `PROJECT_TIMELINE_ASSESSMENT.md`, `DETECTION_PLATFORM_READINESS.md` | host capacity margin is not ideal | keep changes small and reversible |
-| Windows telemetry | Ready | victim/DC01 service checks, Splunk counts, live validation JSON files | field normalization incomplete | normalize XML fields later |
-| Splunk ingestion | Ready | listeners `8000/8089/9997`; 24h counts for victim/DC01 | CIM/field extraction not normalized | maintain Splunk as primary backend |
-| Atomic scenario 1 | Validated | `VAL-2026-001-PT-2026-001.json` | latency not numerically computed | compute ingestion/detection latency later |
-| Atomic scenario 2 | Validated | `VAL-2026-002-PT-2026-002.json` | rule is lab-tuned rather than universal | broaden behavioral rule carefully |
-| Atomic scenario 3 | Validated | `VAL-2026-003-PT-2026-003.json` | forensic refresh still partial | add fuller case pack |
-| Threat hunts | Partially ready | HUNT-2026-001/002/003 files exist | not yet reworked into broader behavioral hunt packs | expand hunt queries |
-| Forensics | Partially ready | historical DFIR README files exist | fresh replay focused on telemetry, not full evidence packs | add refreshed investigation artifacts |
-| Sigma source rules | Ready | `detections/sigma/windows/process_creation/` | none for current three scenarios | add next scenario when ready |
-| Splunk conversions | Ready | `detections/generated/splunk/official/` | official SPL is not yet the live execution path | normalize fields |
-| Offline EVTX testing | Missing / staged | `OFFLINE_EVTX_DETECTION_TESTING.md` | tools not operationalized | add Chainsaw/Hayabusa |
-| Positive fixtures | Ready | `tests/fixtures/T1059.001`, `T1059.003`, `T1047` | none | maintain with every new rule |
-| Negative fixtures | Ready | same fixture directories | none | expand with future scenarios |
-| Live detection validation | Ready | `detections/validation/live/VAL-2026-001...003.json` | latency values uncomputed | add numeric latency extraction |
-| GitHub CI | Missing | no `.github/workflows` verified | no enforced PR gate | add workflow next |
-| Elastic readiness | Deferred | `ELASTIC_READINESS_DECISION.md` | normalization/capacity/CI gaps | revisit after Splunk hardening |
-| Elastic deployment | Not started | none | intentionally deferred | none until readiness gate passes |
+| Lab readiness | Partially ready | `DETECTION_PLATFORM_READINESS.md`, `PROJECT_TIMELINE_ASSESSMENT.md` | limited to current Mayuri lab assumptions | keep evidence-scoped and public-safe |
+| Windows telemetry | Ready | Sysmon + PowerShell + Splunk evidence in live validation JSON | field normalization incomplete | improve normalized field model |
+| Splunk ingestion | Ready | generated Splunk queries + `VAL-2026-001..003` | raw XML matching still used in places | normalize fields where practical |
+| Atomic scenario 1 | Validated | `VAL-2026-001-PT-2026-001.json` | latency not yet standardized | add numeric latency fields |
+| Atomic scenario 2 | Validated | `VAL-2026-002-PT-2026-002.json` | still lab-tuned | broaden behavioral coverage carefully |
+| Atomic scenario 3 | Validated | `VAL-2026-003-PT-2026-003.json` | broader ATT&CK coverage still limited | add next scenarios over time |
+| Threat hunts | Partially ready | `HUNT-2026-001..003` | could be broader and more standardized | expand hunt packs |
+| Forensics | Partially ready | `investigations/endpoint/DFIR-2026-001..003/` | not yet full DFIR suite | enrich case studies and artifacts |
+| Sigma source rules | Ready | `detections/sigma/windows/process_creation/` | only three canonical rules on main | add more validated rules incrementally |
+| Splunk conversions | Ready | `detections/generated/splunk/official/` and `live/` | live path still partly XML-backed | improve normalization |
+| Offline EVTX testing | Staged | `docs/workflows/OFFLINE_EVTX_DETECTION_TESTING.md` | tooling not yet fully operationalized | add Chainsaw/Hayabusa workflow |
+| Positive fixtures | Ready | `tests/fixtures/` | coverage still limited to current techniques | expand with each new scenario |
+| Negative fixtures | Ready | `tests/fixtures/` | same as above | expand with each new scenario |
+| Live detection validation | Ready | `detections/validation/live/` | currently three scenarios on main | continue scenario-by-scenario growth |
+| GitHub CI | Ready | `.github/workflows/detection-validation.yml` | live Mayuri connectivity intentionally excluded | keep CI offline-focused |
+| Elastic readiness | Deferred | `ELASTIC_READINESS_DECISION.md` | no live backend deployment | keep conversion-only for now |
+| Elastic deployment | Not started | none | intentionally deferred | revisit only after stronger maturity |
 
 ## Current verified maturity level
 **Level 4 — Detection as Code**
 
-### Why not lower
-- Telemetry is collected and searchable.
-- The three approved attacks replay reliably and clean up successfully.
-- Sigma rules, conversions, fixtures, and live validation artifacts now exist.
+### Why this level is supported
+- telemetry-backed scenarios exist
+- authored Sigma rules exist
+- backend conversions exist
+- offline fixture tests exist
+- live validation records exist
+- CI validates content structure and generated artifacts
 
-### Why not higher yet
-- Threat hunting and forensic workflows are not yet revalidated to the same standard across all three scenarios.
-- Offline EVTX testing is documented but not operational.
-- GitHub CI enforcement is still missing.
-- Splunk live detections rely on raw XML matching rather than normalized field extraction.
+### Why it is not yet Level 5 or 6
+- live validated coverage is still narrow
+- field normalization remains incomplete in Splunk
+- offline EVTX workflow is documented but not fully operationalized
+- Elastic conversion exists, but no live Elastic backend validation is present

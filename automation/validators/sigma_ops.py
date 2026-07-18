@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import uuid
@@ -91,6 +92,28 @@ def run(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subproce
     return proc
 
 
+def resolve_sigma_bin() -> str:
+    candidates = []
+    env_value = os.environ.get('SIGMA_BIN')
+    if env_value:
+        candidates.append(env_value)
+    candidates.extend([
+        'sigma',
+        str(Path.home() / '.venvs' / 'sigma-platform' / 'bin' / 'sigma'),
+        str(REPO_ROOT / '.venv' / 'bin' / 'sigma'),
+        str(REPO_ROOT / 'venv' / 'bin' / 'sigma'),
+    ])
+    for candidate in candidates:
+        if not candidate:
+            continue
+        if Path(candidate).is_absolute() and Path(candidate).exists():
+            return candidate
+        found = shutil.which(candidate)
+        if found:
+            return found
+    raise SigmaOpsError('sigma binary not found; set SIGMA_BIN or install sigma-cli')
+
+
 def lint_rules() -> tuple[list[LintIssue], list[RuleDoc]]:
     issues: list[LintIssue] = []
     rules = iter_rules()
@@ -135,13 +158,14 @@ def ensure_dirs() -> None:
 
 
 def official_convert(rule: RuleDoc, target: str) -> str:
-    cmd = [SIGMA_BIN, 'convert', '-t', target]
+    sigma_bin = resolve_sigma_bin()
+    cmd = [sigma_bin, 'convert', '-t', target]
     if target == 'splunk':
         cmd += ['-p', 'windows-logsources']
     elif target == 'elasticsearch':
         cmd += ['-p', 'ecs_windows']
         target = 'eql'
-        cmd = [SIGMA_BIN, 'convert', '-t', target, '-p', 'ecs_windows']
+        cmd = [sigma_bin, 'convert', '-t', target, '-p', 'ecs_windows']
     cmd.append(str(rule.path))
     proc = run(cmd, cwd=REPO_ROOT)
     return proc.stdout.strip() + ('\n' if proc.stdout and not proc.stdout.endswith('\n') else '')
@@ -215,7 +239,7 @@ def write_generated(name: str, content: str, path: Path) -> None:
 
 
 def command_check(_: argparse.Namespace) -> int:
-    proc = run([SIGMA_BIN, 'check', *[str(r.path) for r in iter_rules()]], cwd=REPO_ROOT, check=False)
+    proc = run([resolve_sigma_bin(), 'check', *[str(r.path) for r in iter_rules()]], cwd=REPO_ROOT, check=False)
     sys.stdout.write(proc.stdout)
     sys.stderr.write(proc.stderr)
     return proc.returncode
