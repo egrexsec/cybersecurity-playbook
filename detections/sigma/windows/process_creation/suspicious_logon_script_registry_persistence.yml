@@ -1,0 +1,37 @@
+title: Suspicious Windows Logon Script Persistence Via UserInitMprLogonScript
+id: 22da6a1c-f0f2-4a4d-a322-c2da4c8ba2a5
+status: test
+description: >-
+  Detects reg.exe or PowerShell modification of the UserInitMprLogonScript value when it points
+  to temp-path batch files as observed during PT-2026-007 validation.
+references:
+  - https://attack.mitre.org/techniques/T1037/001/
+author: mell0wx
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  sel_reg_img:
+    Image|endswith: '\reg.exe'
+  sel_reg_cli:
+    CommandLine|contains|all:
+      - 'UserInitMprLogonScript'
+      - '.bat'
+      - 'Temp'
+  sel_ps_img:
+    Image|endswith: '\powershell.exe'
+  sel_ps_cli:
+    CommandLine|contains|all:
+      - 'Set-ItemProperty'
+      - 'UserInitMprLogonScript'
+      - '.bat'
+      - 'Temp'
+  condition: (sel_reg_img and sel_reg_cli) or (sel_ps_img and sel_ps_cli)
+falsepositives:
+  - Controlled validation activity
+  - Administrative testing of logon-script behavior using temporary batch files
+date: 2026-07-18
+level: high
+tags:
+  - attack.persistence
+  - attack.t1037.001

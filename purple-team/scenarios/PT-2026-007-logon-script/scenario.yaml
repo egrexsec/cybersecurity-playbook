@@ -1,0 +1,90 @@
+id: PT-2026-007
+title: Logon Script Registry Persistence Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates telemetry, hunting, forensic follow-up,
+  and behavioral detection logic for Windows logon script persistence through the
+  UserInitMprLogonScript registry value on the approved victim.
+status: validated
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T19:12:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1037.001
+  test_ids:
+    - d6042746-07d4-4c92-9ad8-e644c114a231
+  commands:
+    - reg.exe add UserInitMprLogonScript under a loaded user hive
+    - PowerShell Set-ItemProperty UserInitMprLogonScript under a loaded user hive
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - Splunk forwarder is healthy
+    - Splunk process creation telemetry is queryable
+    - target user profile hive C:\Users\mell0wx\NTUSER.DAT is available for safe temporary load
+    - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - local loaded-hive value confirmation for UserInitMprLogonScript
+  optional:
+    - Sysmon Event IDs 12/13 for registry changes under loaded user hive
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-logonscript-counts
+    - splunk-recent-userinitmprlogonscript-patterns
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - reg.exe
+    - powershell.exe -NoProfile -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - latest Sysmon registry-related records
+  after:
+    - loaded-hive registry confirmation
+    - process creation artifacts
+    - marker-file evidence
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-007
+forensics:
+  collection_profiles:
+    - registry-logon-script
+    - process-execution
+    - user-profile-hive
+    - user-activity
+detections:
+  expected_rules:
+    - DET-2026-007
+validation:
+  positive_tests:
+    - reg-add-userinitmprlogonscript
+    - powershell-set-itemproperty-userinitmprlogonscript
+  negative_tests:
+    - benign-environment-query
+    - benign-reg-query-environment
+    - benign-calc-environment-value
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-007/
+    - investigations/endpoint/DFIR-2026-007/
+  output_paths:
+    - purple-team/scenarios/PT-2026-007-logon-script/
+    - detections/validation/

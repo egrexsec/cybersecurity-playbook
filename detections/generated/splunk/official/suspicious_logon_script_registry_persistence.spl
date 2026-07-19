@@ -1,0 +1,1 @@
+(Image="*\\reg.exe" CommandLine="*UserInitMprLogonScript*" CommandLine="*.bat*" CommandLine="*Temp*") OR (Image="*\\powershell.exe" CommandLine="*Set-ItemProperty*" CommandLine="*UserInitMprLogonScript*" CommandLine="*.bat*" CommandLine="*Temp*")
