@@ -1,0 +1,88 @@
+id: PT-2026-009
+title: PowerShell Profile Persistence Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates telemetry, hunting, forensic follow-up,
+  and behavioral detection logic for PowerShell profile persistence on the approved victim.
+status: validated
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T20:01:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1546.013
+  test_ids:
+    - 090e5aa5-32b6-473b-a49b-21e843a56896
+  commands:
+    - append malicious Set-Content line to PowerShell profile
+    - append variant line to PowerShell profile and trigger profile load
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - Splunk forwarder is healthy
+    - Splunk process creation telemetry is queryable
+    - PowerShell profile path under systemprofile is writable in this execution context
+    - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - local PowerShell profile file confirmation
+  optional:
+    - PowerShell operational records showing profile-related commands
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-profile-counts
+    - splunk-recent-profile-patterns
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - powershell.exe -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - profile path existence state
+  after:
+    - profile file contents
+    - process creation artifacts
+    - marker-file evidence
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-009
+forensics:
+  collection_profiles:
+    - powershell-profile
+    - process-execution
+    - file-write-activity
+    - user-activity
+detections:
+  expected_rules:
+    - DET-2026-009
+validation:
+  positive_tests:
+    - addcontent-profile
+    - append-profile-variant
+  negative_tests:
+    - benign-testpath-profile
+    - benign-getcontent-profile
+    - benign-profile-note
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-009/
+    - investigations/endpoint/DFIR-2026-009/
+  output_paths:
+    - purple-team/scenarios/PT-2026-009-powershell-profile/
+    - detections/validation/
