@@ -1,0 +1,10 @@
+{
+  "rule_id": "68f76492-b7f9-4cb4-8482-2410b0cf0a59",
+  "technique_id": "T1218.011",
+  "scenario_id": "PT-2026-010",
+  "expected_match": false,
+  "event": {
+    "Image": "C:\\Windows\\System32\\rundll32.exe",
+    "CommandLine": "rundll32.exe shell32.dll,Control_RunDLL appwiz.cpl"
+  }
+}

@@ -1,0 +1,34 @@
+id: HUNT-2026-010
+title: Hunt for Suspicious Rundll32 Proxy Execution
+status: completed
+hypothesis: >-
+  If an adversary uses rundll32.exe as a signed proxy execution primitive, the victim should emit
+  process creation telemetry that distinguishes suspicious proxy-execution argument patterns from benign control-panel usage.
+attack:
+  - T1218.011
+required_data:
+  - Sysmon Event ID 1
+  - optional local process/marker confirmation
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-rundll32-counts
+hunt_query: suspicious-rundll32-proxy-execution
+investigation_pivots:
+  - url.dll,FileProtocolHandler
+  - pcwutl.dll,LaunchApplication
+  - loaded library context when available
+known_legitimate_activity:
+  - control panel launches through Control_RunDLL
+  - standard shell applet invocation
+success_criteria:
+  - positive rundll32 proxy-execution paths are visible in Sysmon
+  - a behavior-based rule detects both positive variants
+  - benign control-panel style rundll32 activity stays quiet
+detection_opportunity: >-
+  Detect rundll32 command lines that proxy execution of local binaries through suspicious DLL export invocation patterns rather than standard control-panel applets.
+results:
+  - positive url.dll,FileProtocolHandler path triggered the Sigma detection in Splunk
+  - positive pcwutl.dll,LaunchApplication path triggered the Sigma detection in Splunk
+  - benign Control_RunDLL patterns did not trigger the detection
+  - benign control.exe applet launch did not trigger the detection
+conclusion: validated

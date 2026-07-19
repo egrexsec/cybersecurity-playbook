@@ -1,0 +1,87 @@
+id: PT-2026-010
+title: Rundll32 Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates telemetry, hunting, forensic follow-up,
+  and behavioral detection logic for suspicious rundll32 proxy execution on the approved victim.
+status: validated
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T20:22:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1218.011
+  test_ids:
+    - f3ad3c5b-1db1-45c1-81bf-d3370ebab6c8
+    - 8a7f56ee-10e7-444c-a139-0109438288eb
+  commands:
+    - rundll32.exe url.dll,FileProtocolHandler calc.exe
+    - rundll32.exe pcwutl.dll,LaunchApplication calc.exe
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - Splunk forwarder is healthy
+    - Splunk process creation telemetry is queryable
+    - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - local process observation or marker confirmation
+  optional:
+    - Sysmon image-load and registry activity around rundll32
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-rundll32-counts
+    - splunk-recent-rundll32-counts
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - rundll32.exe
+    - powershell.exe -NoProfile -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - latest rundll32-related records
+  after:
+    - rundll32 process creation artifacts
+    - marker-file evidence
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-010
+forensics:
+  collection_profiles:
+    - rundll32-activity
+    - process-execution
+    - user-activity
+detections:
+  expected_rules:
+    - DET-2026-010
+validation:
+  positive_tests:
+    - rundll32-url-fileprotocolhandler
+    - rundll32-pcwutl-launchapplication
+  negative_tests:
+    - benign-rundll32-control-rundll
+    - benign-rundll32-controlpanel-cmd
+    - benign-control-exe-launch
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-010/
+    - investigations/endpoint/DFIR-2026-010/
+  output_paths:
+    - purple-team/scenarios/PT-2026-010-rundll32/
+    - detections/validation/

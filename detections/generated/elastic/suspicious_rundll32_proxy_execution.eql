@@ -1,0 +1,1 @@
+any where process.executable:"*\\rundll32.exe" and ((process.command_line:"*url.dll*" and process.command_line:"*FileProtocolHandler*" and process.command_line:"*calc.exe*") or (process.command_line:"*pcwutl.dll*" and process.command_line:"*LaunchApplication*" and process.command_line:"*calc.exe*"))
