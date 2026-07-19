@@ -1,0 +1,88 @@
+id: PT-2026-006
+title: Registry Run Keys Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates telemetry, hunting, forensic follow-up,
+  and behavioral detection logic for suspicious Registry Run-key persistence on the approved victim.
+status: validated
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T18:36:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1547.001
+  test_ids:
+    - e55be3fd-3521-4610-9d1a-e210e42dcf05
+    - 9dc7767b-30c1-4cc4-b999-50cab5e27891
+  commands:
+    - reg.exe add HKLM Run value pointing to cmd.exe temp marker path
+    - PowerShell Set-ItemProperty HKLM Run value pointing to hidden powershell temp marker path
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - Splunk forwarder is healthy
+    - Splunk process creation telemetry is queryable
+    - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - local registry value confirmation in HKLM Run
+  optional:
+    - Sysmon Event IDs 12/13 for registry changes
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-runkey-counts
+    - splunk-recent-registry-runkey-patterns
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - reg.exe
+    - powershell.exe -NoProfile -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - latest Sysmon registry-related records
+  after:
+    - registry run-key values
+    - process creation artifacts
+    - marker-file evidence
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-006
+forensics:
+  collection_profiles:
+    - registry-runkeys
+    - process-execution
+    - user-activity
+detections:
+  expected_rules:
+    - DET-2026-006
+validation:
+  positive_tests:
+    - reg-add-run-cmd
+    - powershell-set-itemproperty-run
+  negative_tests:
+    - benign-get-itemproperty-run
+    - benign-reg-query-run
+    - benign-calc-run-value
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-006/
+    - investigations/endpoint/DFIR-2026-006/
+  output_paths:
+    - purple-team/scenarios/PT-2026-006-run-keys/
+    - detections/validation/

@@ -1,0 +1,37 @@
+id: HUNT-2026-006
+title: Hunt for Suspicious Registry Run-Key Persistence
+status: completed
+hypothesis: >-
+  If an adversary establishes Run-key persistence through reg.exe or PowerShell registry
+  modification, the victim should emit process creation telemetry that distinguishes
+  suspicious interpreter-backed Run values from benign inventory or standard executables.
+attack:
+  - T1547.001
+required_data:
+  - Sysmon Event ID 1
+  - local registry Run value state
+  - optional Sysmon registry set events
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-runkey-counts
+hunt_query: suspicious-runkey-create-correlation
+investigation_pivots:
+  - reg.exe add command lines targeting CurrentVersion\Run
+  - PowerShell Set-ItemProperty targeting CurrentVersion\Run
+  - resulting Run value data and payload path
+known_legitimate_activity:
+  - software installers setting benign startup entries
+  - administrator inspection of Run values
+success_criteria:
+  - positive Run-key persistence paths are visible in Sysmon and local registry state
+  - a behavior-based rule detects both positive variants
+  - benign run-key inspection and benign calc.exe run values stay quiet
+detection_opportunity: >-
+  Detect Run-key persistence when the stored value launches script interpreters or clearly suspicious temporary-path commands.
+results:
+  - positive reg.exe add Run-key path triggered the Sigma detection in Splunk
+  - positive PowerShell Set-ItemProperty Run-key path triggered the Sigma detection in Splunk
+  - benign Get-ItemProperty run-key inspection did not trigger the detection
+  - benign reg.exe query did not trigger the detection
+  - benign calc Run value creation did not trigger the detection
+conclusion: validated
