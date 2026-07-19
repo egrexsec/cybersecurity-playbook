@@ -1,0 +1,37 @@
+id: HUNT-2026-008
+title: Hunt for Suspicious BITS Job Creation
+status: completed
+hypothesis: >-
+  If an adversary creates BITS jobs through bitsadmin.exe or Start-BitsTransfer, the victim
+  should emit process creation telemetry and local BITS operational records that distinguish
+  suspicious job creation from benign service inspection.
+attack:
+  - T1197
+required_data:
+  - Sysmon Event ID 1
+  - local BITS Operational events
+  - optional transferred file evidence
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-bits-job-counts
+hunt_query: suspicious-bits-job-create-correlation
+investigation_pivots:
+  - bitsadmin.exe command lines
+  - PowerShell Start-BitsTransfer command lines
+  - local BITS job creation records
+known_legitimate_activity:
+  - administrator inspection of BITS jobs
+  - BITS service state checks
+success_criteria:
+  - positive BITS job creation paths are visible in Sysmon and local BITS logs
+  - a behavior-based rule detects both positive variants
+  - benign BITS inspection stays quiet
+detection_opportunity: >-
+  Detect BITS job creation when command lines establish explicit transfer activity or PowerShell-based transfer initiation.
+results:
+  - positive bitsadmin transfer path triggered the Sigma detection in Splunk
+  - positive Start-BitsTransfer path triggered the Sigma detection in Splunk
+  - benign Get-BitsTransfer did not trigger the detection
+  - benign Get-Service BITS did not trigger the detection
+  - benign bitsadmin list did not trigger the detection
+conclusion: validated

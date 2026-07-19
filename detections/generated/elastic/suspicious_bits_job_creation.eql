@@ -1,0 +1,1 @@
+any where (process.executable:"*\\bitsadmin.exe" and (process.command_line:"*/transfer*" and process.command_line:"*/download*")) or (process.executable:"*\\powershell.exe" and (process.command_line:"*Start-BitsTransfer*" and process.command_line:"*127.0.0.1*"))

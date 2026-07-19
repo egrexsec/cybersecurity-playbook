@@ -1,0 +1,10 @@
+{
+  "rule_id": "76f36ef1-89af-4f11-85fc-cf54c3454941",
+  "technique_id": "T1197",
+  "scenario_id": "PT-2026-008",
+  "expected_match": false,
+  "event": {
+    "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "CommandLine": "powershell.exe -NoProfile -Command \"Get-BitsTransfer -AllUsers\""
+  }
+}

@@ -1,0 +1,89 @@
+id: PT-2026-008
+title: BITS Job Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates telemetry, hunting, forensic follow-up,
+  and behavioral detection logic for suspicious BITS job creation on the approved victim.
+status: validated
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T19:27:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1197
+  test_ids:
+    - 3c73d728-75fb-4180-a12f-6712864d7421
+    - f63b8bc4-07e5-4112-acba-56f646f3f0bc
+  commands:
+    - bitsadmin transfer using localhost administrative share source
+    - PowerShell Start-BitsTransfer using localhost administrative share source
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - Splunk forwarder is healthy
+    - Splunk process creation telemetry is queryable
+    - BITS service is available
+    - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - local BITS Operational job creation records
+  optional:
+    - local transferred file artifact when network adapters permit completion
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-bits-job-counts
+    - splunk-recent-bits-process-counts
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - bitsadmin.exe
+    - powershell.exe -NoProfile -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - latest BITS operational records
+  after:
+    - BITS job records
+    - process creation artifacts
+    - transferred file evidence if present
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-008
+forensics:
+  collection_profiles:
+    - bits-job-activity
+    - process-execution
+    - user-activity
+detections:
+  expected_rules:
+    - DET-2026-008
+validation:
+  positive_tests:
+    - bitsadmin-transfer
+    - start-bitstransfer
+  negative_tests:
+    - benign-get-bitstransfer
+    - benign-get-service-bits
+    - benign-bitsadmin-list
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-008/
+    - investigations/endpoint/DFIR-2026-008/
+  output_paths:
+    - purple-team/scenarios/PT-2026-008-bits-jobs/
+    - detections/validation/
