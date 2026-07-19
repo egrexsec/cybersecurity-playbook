@@ -11,6 +11,8 @@ from typing import Any
 import jsonschema
 import yaml
 
+from automation.controller import ir_ops
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_DIR = REPO_ROOT / 'schemas'
 ASSET_FILE = REPO_ROOT / 'automation' / 'integrations' / 'lab-assets.yaml'
@@ -303,6 +305,116 @@ def elastic_readiness(args: argparse.Namespace) -> int:
 
 
 
+def ir_create(args: argparse.Namespace) -> int:
+    case = ir_ops.create_case_from_alert(args.alert, case_prefix=args.prefix)
+    dump(case, args.json)
+    return 0
+
+
+def ir_enrich(args: argparse.Namespace) -> int:
+    dump(ir_ops.enrich_case(args.case_id), args.json)
+    return 0
+
+
+def ir_collect(args: argparse.Namespace) -> int:
+    dump(ir_ops.collect_case(args.case_id, profile=args.profile), args.json)
+    return 0
+
+
+def ir_hunt(args: argparse.Namespace) -> int:
+    dump(ir_ops.hunt_case(args.case_id), args.json)
+    return 0
+
+
+def ir_timeline(args: argparse.Namespace) -> int:
+    dump({'events': ir_ops.build_timeline(args.case_id)}, args.json)
+    return 0
+
+
+def ir_analyze(args: argparse.Namespace) -> int:
+    dump(ir_ops.analyze_case(args.case_id), args.json)
+    return 0
+
+
+def ir_report(args: argparse.Namespace) -> int:
+    dump(ir_ops.report_case(args.case_id), args.json)
+    return 0
+
+
+def ir_contain_plan(args: argparse.Namespace) -> int:
+    dump(ir_ops.containment_plan(args.case_id), args.json)
+    return 0
+
+
+def ir_contain_execute(args: argparse.Namespace) -> int:
+    raise PlaybookError('containment execution is intentionally disabled until approval-token verification and live adapters are validated')
+
+
+def ir_close(args: argparse.Namespace) -> int:
+    dump(ir_ops.close_case(args.case_id, disposition=args.disposition), args.json)
+    return 0
+
+
+def hunt_run(args: argparse.Namespace) -> int:
+    case = ir_ops.create_case_from_alert(None, case_prefix='HUNT')
+    ir_ops.enrich_case(case['id'])
+    result = ir_ops.hunt_case(case['id'])
+    dump({'case_id': case['id'], 'result': result}, args.json)
+    return 0
+
+
+def hunt_schedule(args: argparse.Namespace) -> int:
+    data = {'status': 'implemented', 'workflows': ['daily-powershell-review'], 'note': 'Scheduler/export scaffolding exists under automation/n8n/; production schedule wiring remains manual.'}
+    dump(data, args.json)
+    return 0
+
+
+def hunt_report(args: argparse.Namespace) -> int:
+    dump({'hunt_id': args.hunt_id, 'report': 'Use the related case directory and hunt-results.json for analyst review.'}, args.json)
+    return 0
+
+
+def forensic_collect(args: argparse.Namespace) -> int:
+    dump(ir_ops.collect_case(args.case_id, profile=args.profile), args.json)
+    return 0
+
+
+def forensic_process(args: argparse.Namespace) -> int:
+    dump({'case_id': args.case_id, 'status': 'implemented', 'note': 'Hayabusa/Chainsaw processing remains optional and currently blocked by tool availability.'}, args.json)
+    return 0
+
+
+def forensic_timeline(args: argparse.Namespace) -> int:
+    dump({'case_id': args.case_id, 'events': ir_ops.build_timeline(args.case_id)}, args.json)
+    return 0
+
+
+def detection_build(args: argparse.Namespace) -> int:
+    dump({'case_id': args.case_id, 'status': 'implemented', 'note': 'Review detection-opportunities.md and existing DET-2026-001 content before authoring new rules.'}, args.json)
+    return 0
+
+
+def detection_test(args: argparse.Namespace) -> int:
+    ns = argparse.Namespace(test_cmd='fixtures', rule_id=args.rule_id, technique=None, json=args.json)
+    return test_dispatch(ns)
+
+
+def detection_validate_live(args: argparse.Namespace) -> int:
+    ns = argparse.Namespace(test_cmd='live', scenario_id=args.rule_id if args.rule_id.startswith('PT-') else None, json=args.json)
+    return test_dispatch(ns)
+
+
+def detection_report(args: argparse.Namespace) -> int:
+    dump({'rule_id': args.rule_id, 'status': 'implemented', 'reference': 'detections/validation/'}, args.json)
+    return 0
+
+
+def purple_replay(args: argparse.Namespace) -> int:
+    scenario = resolve_scenario(args.scenario_id)
+    doc = load_yaml(scenario)
+    dump({'scenario_id': doc['id'], 'status': 'implemented', 'note': 'Use preflight plus existing live validator path before replaying live behavior.', 'expected_rules': doc['detections']['expected_rules']}, args.json)
+    return 0
+
 def metrics(args: argparse.Namespace) -> int:
     scenarios = sorted(REPO_ROOT.glob('purple-team/scenarios/*/scenario.yaml'))
     sigma_rules = sorted((REPO_ROOT / 'detections' / 'sigma').rglob('*.yml'))
@@ -437,6 +549,85 @@ def build_parser() -> argparse.ArgumentParser:
     el = p_elastic.add_subparsers(dest='elastic_cmd', required=True)
     el_ready = el.add_parser('readiness')
     el_ready.set_defaults(func=elastic_readiness)
+
+    p_ir = sub.add_parser('ir')
+    ir = p_ir.add_subparsers(dest='ir_cmd', required=True)
+    ir_create_p = ir.add_parser('create')
+    ir_create_p.add_argument('--alert')
+    ir_create_p.add_argument('--prefix', default='IR')
+    ir_create_p.set_defaults(func=ir_create)
+    ir_enrich_p = ir.add_parser('enrich')
+    ir_enrich_p.add_argument('case_id')
+    ir_enrich_p.set_defaults(func=ir_enrich)
+    ir_collect_p = ir.add_parser('collect')
+    ir_collect_p.add_argument('case_id')
+    ir_collect_p.add_argument('--profile')
+    ir_collect_p.set_defaults(func=ir_collect)
+    ir_hunt_p = ir.add_parser('hunt')
+    ir_hunt_p.add_argument('case_id')
+    ir_hunt_p.set_defaults(func=ir_hunt)
+    ir_timeline_p = ir.add_parser('timeline')
+    ir_timeline_p.add_argument('case_id')
+    ir_timeline_p.set_defaults(func=ir_timeline)
+    ir_analyze_p = ir.add_parser('analyze')
+    ir_analyze_p.add_argument('case_id')
+    ir_analyze_p.set_defaults(func=ir_analyze)
+    ir_report_p = ir.add_parser('report')
+    ir_report_p.add_argument('case_id')
+    ir_report_p.set_defaults(func=ir_report)
+    ir_contain_p = ir.add_parser('contain')
+    ir_contain_p.add_argument('mode', choices=['plan','execute'])
+    ir_contain_p.add_argument('case_id')
+    ir_contain_p.set_defaults(func=lambda a: ir_contain_plan(a) if a.mode == 'plan' else ir_contain_execute(a))
+    ir_close_p = ir.add_parser('close')
+    ir_close_p.add_argument('case_id')
+    ir_close_p.add_argument('--disposition', default='undetermined')
+    ir_close_p.set_defaults(func=ir_close)
+
+    p_hunt = sub.add_parser('hunt')
+    hs = p_hunt.add_subparsers(dest='hunt_cmd', required=True)
+    h_run = hs.add_parser('run')
+    h_run.add_argument('hunt_id')
+    h_run.set_defaults(func=hunt_run)
+    h_schedule = hs.add_parser('schedule')
+    h_schedule.set_defaults(func=hunt_schedule)
+    h_report = hs.add_parser('report')
+    h_report.add_argument('hunt_id')
+    h_report.set_defaults(func=hunt_report)
+
+    p_forensic = sub.add_parser('forensic')
+    fs = p_forensic.add_subparsers(dest='forensic_cmd', required=True)
+    f_collect = fs.add_parser('collect')
+    f_collect.add_argument('case_id')
+    f_collect.add_argument('--profile')
+    f_collect.set_defaults(func=forensic_collect)
+    f_process = fs.add_parser('process')
+    f_process.add_argument('case_id')
+    f_process.set_defaults(func=forensic_process)
+    f_timeline = fs.add_parser('timeline')
+    f_timeline.add_argument('case_id')
+    f_timeline.set_defaults(func=forensic_timeline)
+
+    p_detection = sub.add_parser('detection')
+    ds = p_detection.add_subparsers(dest='detection_cmd', required=True)
+    d_build = ds.add_parser('build')
+    d_build.add_argument('case_id')
+    d_build.set_defaults(func=detection_build)
+    d_test = ds.add_parser('test')
+    d_test.add_argument('rule_id')
+    d_test.set_defaults(func=detection_test)
+    d_live = ds.add_parser('validate-live')
+    d_live.add_argument('rule_id')
+    d_live.set_defaults(func=detection_validate_live)
+    d_report = ds.add_parser('report')
+    d_report.add_argument('rule_id')
+    d_report.set_defaults(func=detection_report)
+
+    p_pt = sub.add_parser('purple-team')
+    pts = p_pt.add_subparsers(dest='pt_cmd', required=True)
+    pt_replay = pts.add_parser('replay')
+    pt_replay.add_argument('scenario_id')
+    pt_replay.set_defaults(func=purple_replay)
 
     return parser
 

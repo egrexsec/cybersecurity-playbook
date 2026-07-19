@@ -1,0 +1,20 @@
+{
+  "case_id": "IR-2026-001",
+  "nodes": [
+    {
+      "name": "qmguestagent-hosted execution",
+      "type": "parent"
+    },
+    {
+      "name": "powershell.exe",
+      "type": "process",
+      "command_line": "$ErrorActionPreference='Stop'; $encoded='...'; Invoke-Expression (...) ; Get-Item \"$env:SystemRoot\\Temp\\art-marker.txt\""
+    }
+  ],
+  "edges": [
+    {
+      "from": "qmguestagent-hosted execution",
+      "to": "powershell.exe"
+    }
+  ]
+}

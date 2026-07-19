@@ -1,0 +1,16 @@
+{
+  "alert_name": "Suspicious PowerShell Execution",
+  "rule_id": "DET-2026-001",
+  "severity": "high",
+  "host": "VICTIM-MAYURI",
+  "user": "MAYURI\\SYSTEM",
+  "process": "powershell.exe",
+  "parent_process": "qmguestagent-hosted execution",
+  "command_line": "$ErrorActionPreference='Stop'; $encoded='...'; Invoke-Expression (...) ; Get-Item \"$env:SystemRoot\\Temp\\art-marker.txt\"",
+  "event_time": "2026-07-18T13:19:34Z",
+  "technique_id": "T1059.001",
+  "event_id": "4104",
+  "splunk_index": "main",
+  "splunk_sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
+  "search_reference": "VAL-2026-001-PT-2026-001 historical live validation"
+}

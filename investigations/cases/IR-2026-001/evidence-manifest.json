@@ -1,0 +1,19 @@
+{
+  "case_id": "IR-2026-001",
+  "profile": "powershell-execution",
+  "target": "VICTIM-MAYURI",
+  "collector": "deterministic-controller",
+  "tool_version": "repo-automation-foundation-v1",
+  "started_at": "2026-07-19T20:09:52.191209Z",
+  "completed_at": "2026-07-19T20:09:52.191249Z",
+  "files": [
+    "investigations/cases/IR-2026-001/alert.json",
+    "investigations/cases/IR-2026-001/enrichment.json"
+  ],
+  "hashes": {
+    "alert.json": "993f2ffa7e54a0a035949cbc0bb42c8a6a8550fa940912ab8be7a2bf1e1c9df1",
+    "enrichment.json": "17b24e70541f795889ebfa51e8a0797da5d6558756c32a694cc018dfda8fc0cf"
+  },
+  "errors": [],
+  "status": "planned-safe-collection-only"
+}

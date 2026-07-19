@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Splunk Alert Intake",
+  "type": "object",
+  "required": [
+    "alert_name",
+    "rule_id",
+    "severity",
+    "host",
+    "user",
+    "process",
+    "parent_process",
+    "command_line",
+    "event_time",
+    "technique_id",
+    "event_id",
+    "splunk_index",
+    "splunk_sourcetype",
+    "search_reference"
+  ],
+  "properties": {
+    "alert_name": {
+      "type": "string"
+    },
+    "rule_id": {
+      "type": "string"
+    },
+    "severity": {
+      "type": "string"
+    },
+    "host": {
+      "type": "string"
+    },
+    "user": {
+      "type": "string"
+    },
+    "process": {
+      "type": "string"
+    },
+    "parent_process": {
+      "type": "string"
+    },
+    "command_line": {
+      "type": "string"
+    },
+    "event_time": {
+      "type": "string"
+    },
+    "technique_id": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "splunk_index": {
+      "type": "string"
+    },
+    "splunk_sourcetype": {
+      "type": "string"
+    },
+    "search_reference": {
+      "type": "string"
+    }
+  }
+}

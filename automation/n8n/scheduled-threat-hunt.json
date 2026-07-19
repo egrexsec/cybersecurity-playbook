@@ -1,0 +1,37 @@
+{
+  "name": "Scheduled Threat Hunt",
+  "active": false,
+  "nodes": [
+    {
+      "id": "trigger",
+      "name": "Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        260,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "note",
+      "name": "Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        520,
+        300
+      ],
+      "parameters": {
+        "content": "Template export for Scheduled Threat Hunt. Credentials intentionally omitted. Import and wire manually."
+      }
+    }
+  ],
+  "connections": {},
+  "settings": {},
+  "pinData": {},
+  "versionId": "00000000-0000-0000-0000-000000000000",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

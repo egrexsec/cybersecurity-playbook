@@ -1,0 +1,32 @@
+id: HUNT-2026-IR-001
+name: suspicious-powershell-daily-review
+title: Suspicious PowerShell execution and follow-on behavior
+description: >-
+  Hunt for PowerShell execution that resembles decode/execute behavior or leads to persistence,
+  outbound communication, or suspicious follow-on actions on approved systems.
+status: implemented
+trigger_rules:
+  - DET-2026-001
+technique_ids:
+  - T1059.001
+required_data:
+  - Microsoft-Windows-PowerShell/Operational
+  - Sysmon Event ID 1
+  - Security 4688
+time_window: 24h
+queries:
+  - search index=main sourcetype="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" ("FromBase64String" OR "Invoke-Expression" OR "EncodedCommand")
+baseline_query: search index=main sourcetype="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" earliest=-7d@d latest=@d | stats count by host
+investigation_pivots:
+  - same user on other hosts
+  - temp-path file writes
+  - task creation after PowerShell
+  - service creation after PowerShell
+known_legitimate_activity:
+  - approved admin read-only PowerShell
+  - baseline maintenance scripts
+success_criteria:
+  - identify suspicious script-block/process combinations
+  - produce a case only when thresholds or alert evidence justify it
+detection_opportunities:
+  - script block decode + execution semantics

@@ -3,18 +3,22 @@
   "title": "Forensic Collection",
   "type": "object",
   "required": [
-    "id",
+    "case_id",
     "profile",
     "target",
     "collector",
-    "artifacts",
-    "output_paths",
-    "hashes"
+    "tool_version",
+    "started_at",
+    "completed_at",
+    "files",
+    "hashes",
+    "errors",
+    "status"
   ],
   "properties": {
-    "id": {
+    "case_id": {
       "type": "string",
-      "pattern": "^DFIR-\\d{4}-\\d{3}$"
+      "pattern": "^(IR|HUNT|DFIR|PT|DET|VAL)-\\d{4}-\\d{3}$"
     },
     "profile": {
       "type": "string"
@@ -25,13 +29,16 @@
     "collector": {
       "type": "string"
     },
-    "artifacts": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
+    "tool_version": {
+      "type": "string"
     },
-    "output_paths": {
+    "started_at": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": "string"
+    },
+    "files": {
       "type": "array",
       "items": {
         "type": "string"
@@ -39,6 +46,15 @@
     },
     "hashes": {
       "type": "object"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string"
     }
   }
 }
