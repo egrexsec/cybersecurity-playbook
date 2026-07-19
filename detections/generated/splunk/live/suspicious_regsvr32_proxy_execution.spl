@@ -1,0 +1,1 @@
+search index=main source="WinEventLog:Microsoft-Windows-Sysmon/Operational" _raw="*<EventID>1</EventID>*" (_raw="*<Data Name='Image'>*\regsvr32.exe*</Data>*") AND ( ((_raw="*<Data Name='CommandLine'>*scrobj.dll*" AND _raw="*<Data Name='CommandLine'>*.sct*")) OR ((_raw="*<Data Name='CommandLine'>*.jpg*" AND _raw="*<Data Name='CommandLine'>*regsvr32.exe*")) )

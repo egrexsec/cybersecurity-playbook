@@ -1,0 +1,88 @@
+id: PT-2026-011
+title: Regsvr32 Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates telemetry, hunting, forensic follow-up,
+  and behavioral detection logic for suspicious regsvr32 proxy execution on the approved victim.
+status: validated
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T20:57:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1218.010
+  test_ids:
+    - 1ae5ea1f-0a4e-4e54-b2f5-4ac328a7f421
+    - 449aa403-6aba-47ce-8a37-247d21ef0306
+  commands:
+    - regsvr32.exe /s on a non-dll extension containing shell32.dll bytes
+    - regsvr32.exe /s /u /i:<local sct> scrobj.dll
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - Splunk forwarder is healthy
+    - Splunk process creation telemetry is queryable
+    - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - local file markers confirming staged proxy-execution setup
+  optional:
+    - Sysmon image-load telemetry for loaded DLL/scriptlet components
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-regsvr32-counts
+    - splunk-recent-regsvr32-counts
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - regsvr32.exe
+    - powershell.exe -NoProfile -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - latest regsvr32-related records
+  after:
+    - regsvr32 process creation artifacts
+    - marker-file evidence
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-011
+forensics:
+  collection_profiles:
+    - regsvr32-activity
+    - process-execution
+    - file-write-activity
+    - user-activity
+detections:
+  expected_rules:
+    - DET-2026-011
+validation:
+  positive_tests:
+    - regsvr32-jpg-proxy-execution
+    - regsvr32-local-sct-proxy-execution
+  negative_tests:
+    - benign-regsvr32-dll
+    - benign-regsvr32-help
+    - benign-reg-query
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-011/
+    - investigations/endpoint/DFIR-2026-011/
+  output_paths:
+    - purple-team/scenarios/PT-2026-011-regsvr32/
+    - detections/validation/

@@ -1,0 +1,1 @@
+Image="*\\regsvr32.exe" (CommandLine="*scrobj.dll*" CommandLine="*.sct*") OR (CommandLine="*.jpg*" CommandLine="*regsvr32.exe*")
