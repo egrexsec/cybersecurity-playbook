@@ -95,8 +95,21 @@ Status legend: Planned | Implemented | Executed | Partially tested | Validated |
 - gaps: CI validates offline content and evidence structure, not live Mayuri connectivity
 - recommended_action: keep CI focused on offline validation and preserve live lab work as structured evidence
 
+### 2026-07-18 to 2026-07-19 — PT-2026-004 through PT-2026-011 merged
+- date: 2026-07-18 to 2026-07-19
+- activity: scheduled-task, service-creation, run-key, logon-script, BITS, PowerShell-profile, rundll32, and regsvr32 scenarios were merged into main in sequence
+- scenario_id: PT-2026-004 / PT-2026-005 / PT-2026-006 / PT-2026-007 / PT-2026-008 / PT-2026-009 / PT-2026-010 / PT-2026-011
+- attack_technique: T1053.005 / T1543.003 / T1547.001 / T1037.001 / T1197 / T1546.013 / T1218.011 / T1218.010
+- systems_involved: victim, SOC01, repository
+- repository_commit: merge commits `4b7d31e`, `005bf4c`, `869c935`, `099a603`, `7a2bb10`, `3453068`, `93a6d88`, `d1b0d0f`
+- claimed_result: the repository expanded from three validated execution scenarios to eleven validated Windows execution/persistence scenarios on main
+- evidence_found: scenario YAML, Sigma rules, fixtures, validation markdown, live validation JSON, hunts, and investigation notes for PT-2026-004..011
+- validation_status: Validated
+- gaps: normalized-field maturity, durable alert objects, and broader non-Windows coverage still lag the scenario count growth
+- recommended_action: treat this as the current baseline for public status/metrics rather than the earlier three-scenario snapshot
+
 ## Verified current position
 - repository now supports authored Sigma + generated Splunk/Elastic + fixture tests + live validation records
-- three scenarios are currently represented as live-validated on main
+- eleven scenarios are currently represented as live-validated on main
 - GitHub Actions workflow exists and is part of the repository state
 - project maturity is suitable for portfolio showcase as a lab-validated detection-engineering repository, not a production SIEM platform

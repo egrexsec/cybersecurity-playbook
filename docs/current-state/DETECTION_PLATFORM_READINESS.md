@@ -1,7 +1,7 @@
 # Detection Platform Readiness
 
 ## Summary
-Critical telemetry prerequisites are currently sufficient to replay and validate the three known scenarios.
+Critical telemetry prerequisites are currently sufficient to replay and validate the current eleven live-validated Windows scenarios represented on main.
 
 ## Proxmox and VM state
 | Component | Status | Evidence | Notes |
@@ -52,10 +52,10 @@ Critical telemetry prerequisites are currently sufficient to replay and validate
 | Controller-side sigma venv | Ready | `/root/.venvs/sigma-platform` with working `sigma check/convert` | current authoritative build environment |
 | Splunk backend conversion | Ready | generated official + Mayuri live SPL files | repository-local |
 | Elastic conversion | Ready (conversion only) | generated EQL files | no live Elastic backend |
-| Fixture harness | Ready | `automation/validators/sigma_ops.py test-fixtures` passing | 3 rules / 15 fixtures |
+| Fixture harness | Ready | `automation/validators/sigma_ops.py test-fixtures` passing | 11 rules / 59 fixtures |
 
 ## Readiness decision
-- Critical telemetry for PT-2026-001 / PT-2026-002 / PT-2026-003: **Ready**
-- Critical telemetry for Scheduled Tasks / Service Creation future work: **Partially ready**
-- Safe to replay the three verified scenarios now: **Yes**
+- Critical telemetry for PT-2026-001 through PT-2026-011: **Ready**
+- Critical telemetry for the current Windows-safe execution/persistence set: **Ready with existing field-normalization caveats**
+- Safe to replay the eleven verified scenarios now: **Yes**
 - Safe to deploy Elastic now: **No**
