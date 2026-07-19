@@ -63,7 +63,7 @@
   - Acceptance: at least one cloud detection includes fixture or replay-based validation
 
 ## Portfolio acceptance goals
-- a recruiter can understand the repo in under 30 seconds
+- a visitor can understand the repo structure and current state quickly
 - a detection engineer can trace scenario -> rule -> query -> fixture -> live evidence
 - generated vs canonical content remains clearly separated
 - public-safe posture remains intact

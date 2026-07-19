@@ -32,6 +32,6 @@
 | Custom PT rule | `100201` fired | `100202` fired | none |
 
 ## Public-safe takeaways
-- A recruiter/public repo can demonstrate real detection engineering value **without** publishing raw EVTX, memory images, or secrets.
+- A public repository can demonstrate real detection engineering value **without** publishing raw EVTX, memory images, or secrets.
 - Platform-specific translation matters: the portable Sigma remained process-creation focused, while the live Wazuh rule chained from built-in script-block and registry detections for stronger validation in this environment.
 - Benign tests are essential because the stock ruleset still emits lower-severity noise during normal administrative PowerShell activity.

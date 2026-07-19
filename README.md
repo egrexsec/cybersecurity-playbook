@@ -4,7 +4,20 @@
 
 A **lab-validated purple-team and detection-engineering repository** that turns controlled attack simulations into tested Sigma rules, platform-specific queries, threat-hunting artifacts, investigation documentation, and reusable validation evidence.
 
-Built for recruiters, hiring managers, detection engineers, and purple-team operators who want to see **evidence-backed security engineering** rather than a static rule dump.
+Designed to showcase **evidence-backed security engineering skills** through repeatable validation, artifact traceability, and public-safe technical depth.
+
+## Explore
+
+- [Validation status](#current-validation-status)
+- [What this repository is](#what-this-repository-is)
+- [Detection lifecycle](#detection-lifecycle)
+- [Repository map](#repository-map)
+- [Quick-start validation](#quick-start-validation)
+- [Current capabilities](#current-capabilities)
+- [Current limitations](#current-limitations)
+- [Case study](#case-study)
+- [What this project demonstrates](#what-this-project-demonstrates)
+- [Additional repository documentation](#additional-repository-documentation)
 
 ## Current validation status
 
@@ -13,6 +26,14 @@ Built for recruiters, hiring managers, detection engineers, and purple-team oper
 | PT-2026-001 | T1059.001 | PowerShell decode-and-execute | Sigma + Splunk/Wazuh evidence | **Live validated** |
 | PT-2026-002 | T1059.003 | Windows command shell execution | Sigma + Splunk/Wazuh evidence | **Live validated** |
 | PT-2026-003 | T1047 | WMI-backed process execution | Sigma + Splunk/Wazuh evidence | **Live validated** |
+| PT-2026-004 | T1053.005 | Scheduled task creation | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-005 | T1543.003 | Windows service creation | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-006 | T1547.001 | Registry run key persistence | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-007 | T1037.001 | Logon script registry persistence | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-008 | T1197 | BITS job creation | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-009 | T1546.013 | PowerShell profile persistence | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-010 | T1218.011 | Rundll32 proxy execution | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-011 | T1218.010 | Regsvr32 proxy execution | Sigma + Splunk evidence | **Live validated** |
 
 **Meaning of statuses in this repo**
 - **Live validated**: replayed in the Mayuri lab with positive/negative evidence and cleanup confirmation.
@@ -80,7 +101,7 @@ positive + negative]
 | `docs/detection-engineering/` | Detection engineering implementation notes | Human-authored Markdown | Documentation-only |
 | `docs/data-sources/` | Source-system and field-mapping notes | Human-authored Markdown | Documentation-only |
 | `templates/` | Authoring templates for detections, hunts, investigations | Human-authored Markdown templates | Manual review + template consistency checks |
-| `case-studies/` | End-to-end, recruiter-friendly technical walk-throughs | Human-authored Markdown | Sourced from validated scenarios only |
+| `case-studies/` | End-to-end, skills-forward technical walk-throughs | Human-authored Markdown | Sourced from validated scenarios only |
 
 ## Quick-start validation
 
@@ -106,7 +127,7 @@ Implemented today:
 - Sigma conversion to Splunk and Elastic outputs
 - positive and negative fixture testing
 - sanitized live validation record parsing
-- live-validated scenarios for three execution techniques
+- live-validated scenarios across multiple Windows execution and persistence techniques
 - generated Splunk SPL and generated Elastic EQL separation
 - GitHub Actions validation workflow
 - secret scanning in CI
@@ -118,7 +139,7 @@ Be explicit about current limits:
 - Elastic conversion exists, but **no live Elastic backend is deployed or validated**
 - Splunk live validation currently relies on **raw XML matching** in places where normalized fields/CIM remain incomplete
 - durable Splunk saved searches / alerts are **not yet verified as deployed objects**
-- current live coverage is concentrated on **Windows execution techniques**
+- current live coverage is concentrated on **Windows endpoint execution and persistence behaviors**
 - broader DFIR, cloud, network, and memory-forensics coverage remains incomplete
 - this repository is **not** a production deployment platform
 

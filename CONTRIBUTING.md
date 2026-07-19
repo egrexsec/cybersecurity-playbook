@@ -8,7 +8,7 @@ This repo should stay:
 - technically accurate
 - public-safe
 - evidence-backed
-- understandable to both engineers and hiring managers
+- understandable to engineers while clearly showcasing applied security engineering skill
 - clearly scoped as the companion content repository for DetLab-DAC
 
 ## Good contributions
