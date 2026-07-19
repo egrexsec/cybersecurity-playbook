@@ -1,0 +1,38 @@
+title: Suspicious Windows Service Creation Via Script Interpreter Or Temporary Path
+id: b5bf95a5-e28f-48d3-aa87-d6fb6ad11d88
+status: test
+description: >-
+  Detects Windows service creation using sc.exe or PowerShell New-Service when the service
+  binary path launches script interpreters or writes to temporary paths as observed during
+  PT-2026-005 validation.
+references:
+  - https://attack.mitre.org/techniques/T1543/003/
+author: mell0wx
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  sel_sc_img:
+    Image|endswith: '\sc.exe'
+  sel_sc_cli:
+    CommandLine|contains|all:
+      - ' create '
+      - 'cmd.exe'
+      - '\Temp\'
+  sel_ps_img:
+    Image|endswith: '\powershell.exe'
+  sel_ps_cli:
+    CommandLine|contains|all:
+      - 'New-Service'
+      - 'powershell.exe'
+      - '\Temp\'
+  condition: (sel_sc_img and sel_sc_cli) or (sel_ps_img and sel_ps_cli)
+falsepositives:
+  - Controlled validation activity
+  - Administrative service creation that intentionally stages script-interpreter launches in temporary paths
+date: 2026-07-18
+level: high
+tags:
+  - attack.persistence
+  - attack.execution
+  - attack.t1543.003

@@ -1,0 +1,10 @@
+{
+  "rule_id": "b5bf95a5-e28f-48d3-aa87-d6fb6ad11d88",
+  "technique_id": "T1543.003",
+  "scenario_id": "PT-2026-005",
+  "expected_match": true,
+  "event": {
+    "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "CommandLine": "powershell.exe -NoProfile -Command \"New-Service -Name PT-2026-005-Variant -BinaryPathName \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -Command \\\"Set-Content -Path C:\\Windows\\Temp\\pt-2026-005-variant.txt -Value PT-2026-005-VARIANT\\\"\"\""
+  }
+}

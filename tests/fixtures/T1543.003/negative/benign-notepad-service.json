@@ -1,0 +1,10 @@
+{
+  "rule_id": "b5bf95a5-e28f-48d3-aa87-d6fb6ad11d88",
+  "technique_id": "T1543.003",
+  "scenario_id": "PT-2026-005",
+  "expected_match": false,
+  "event": {
+    "Image": "C:\\Windows\\System32\\sc.exe",
+    "CommandLine": "sc.exe create PT-2026-005-Benign binPath= \"C:\\Windows\\System32\\notepad.exe\" start= demand"
+  }
+}

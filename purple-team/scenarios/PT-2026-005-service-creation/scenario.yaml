@@ -1,0 +1,90 @@
+id: PT-2026-005
+title: Windows Service Creation Validation on Approved Windows Endpoint
+description: >-
+  Low-risk purple-team scenario that validates telemetry, hunting, forensic follow-up,
+  and behavioral detection logic for suspicious Windows service creation on the approved victim.
+status: validated
+created: '2026-07-18T00:00:00Z'
+updated: '2026-07-18T16:40:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1543.003
+  test_ids:
+    - ed366cde-7d12-49df-a833-671904770b9f
+    - 491a4af6-a521-4b74-b23b-f7b3f1ee9e77
+  commands:
+    - sc.exe create service pointing to cmd.exe marker path
+    - PowerShell New-Service path pointing to powershell.exe marker path
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon is running
+    - Splunk forwarder is healthy
+    - Splunk process creation and System log telemetry are queryable
+    - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: post-vr-enterprise-path-20260718
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - Splunk-visible System 7045 service installation records
+    - local System 7045/7000/7009 records
+  optional:
+    - Sysmon registry set events for service ImagePath
+baseline:
+  duration_minutes: 30
+  queries:
+    - windows-baseline-service-create-counts
+    - splunk-recent-service-install-events
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - sc.exe
+    - powershell.exe -NoProfile -ExecutionPolicy Bypass
+collection:
+  before:
+    - baseline telemetry counts
+    - latest service control manager records
+  after:
+    - service installation records
+    - service command line evidence
+    - registry-backed service configuration artifacts
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-005
+forensics:
+  collection_profiles:
+    - service-creation-activity
+    - process-execution
+    - registry-services
+    - user-activity
+detections:
+  expected_rules:
+    - DET-2026-005
+validation:
+  positive_tests:
+    - sc-create-cmd-service
+    - powershell-new-service
+  negative_tests:
+    - benign-sc-qc
+    - benign-get-service
+    - benign-notepad-service-create
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-005/
+    - investigations/endpoint/DFIR-2026-005/
+  output_paths:
+    - purple-team/scenarios/PT-2026-005-service-creation/
+    - detections/validation/

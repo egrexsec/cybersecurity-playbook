@@ -1,0 +1,1 @@
+(Image="*\\sc.exe" CommandLine="* create *" CommandLine="*cmd.exe*" CommandLine="*\\Temp\\*") OR (Image="*\\powershell.exe" CommandLine="*New-Service*" CommandLine="*powershell.exe*" CommandLine="*\\Temp\\*")

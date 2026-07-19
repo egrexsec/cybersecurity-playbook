@@ -1,0 +1,38 @@
+id: HUNT-2026-005
+title: Hunt for Suspicious Windows Service Creation
+status: completed
+hypothesis: >-
+  If an adversary creates or modifies a Windows service for persistence or execution,
+  the victim should emit service-control and process-creation telemetry that can distinguish
+  suspicious service ImagePath values from benign administration.
+attack:
+  - T1543.003
+required_data:
+  - Sysmon Event ID 1
+  - System Event ID 7045
+  - System Event IDs 7000 and 7009 when a non-service binary fails to start
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-service-create-counts
+hunt_query: suspicious-service-create-correlation
+investigation_pivots:
+  - sc.exe create / start command lines
+  - PowerShell New-Service command lines
+  - Service Control Manager 7045 install events
+known_legitimate_activity:
+  - software installation
+  - OS-managed service updates
+success_criteria:
+  - positive service creation paths are visible in Sysmon and System logs
+  - a behavior-based rule detects both positive variants
+  - benign service inspection and benign non-script service creation stay quiet
+detection_opportunity: >-
+  Detect service creation when the configured service binary is a script interpreter or
+  points to obviously suspicious temporary-path activity.
+results:
+  - positive sc.exe create path triggered the Sigma detection in Splunk
+  - positive PowerShell New-Service path triggered the Sigma detection in Splunk
+  - benign sc qc did not trigger the detection
+  - benign Get-Service did not trigger the detection
+  - benign service creation with notepad.exe did not trigger the detection
+conclusion: validated
