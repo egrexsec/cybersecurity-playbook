@@ -1,0 +1,171 @@
+name: opencti
+
+services:
+  redis:
+    image: redis:8.8.0
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.16
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      xpack.ml.enabled: "false"
+      xpack.security.enabled: "false"
+      thread_pool.search.queue_size: "5000"
+      ES_JAVA_OPTS: -Xms2g -Xmx2g
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 3g
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9200/_cluster/health?wait_for_status=yellow >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 60
+    security_opt:
+      - no-new-privileges:true
+
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    restart: unless-stopped
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - s3data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    security_opt:
+      - no-new-privileges:true
+
+  rabbitmq:
+    image: rabbitmq:4.3-management
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_NODENAME: rabbit01@localhost
+    volumes:
+      - amqpdata:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 15s
+      timeout: 15s
+      retries: 30
+    security_opt:
+      - no-new-privileges:true
+
+  opencti:
+    image: opencti/platform:7.260715.0
+    restart: unless-stopped
+    environment:
+      NODE_OPTIONS: --max-old-space-size=3072
+      APP__PORT: "8080"
+      APP__BASE_URL: ${OPENCTI_BASE_URL}
+      APP__ADMIN__EMAIL: ${OPENCTI_ADMIN_EMAIL}
+      APP__ADMIN__PASSWORD: ${OPENCTI_ADMIN_PASSWORD}
+      APP__ADMIN__TOKEN: ${OPENCTI_ADMIN_TOKEN}
+      APP__ENCRYPTION_KEY: ${OPENCTI_ENCRYPTION_KEY}
+      APP__HEALTH_ACCESS_KEY: ${OPENCTI_HEALTHCHECK_ACCESS_KEY}
+      APP__TELEMETRY__ENABLED: "false"
+      REDIS__HOSTNAME: redis
+      REDIS__PORT: "6379"
+      ELASTICSEARCH__URL: http://elasticsearch:9200
+      ELASTICSEARCH__NUMBER_OF_REPLICAS: "0"
+      MINIO__ENDPOINT: minio
+      MINIO__PORT: "9000"
+      MINIO__USE_SSL: "false"
+      MINIO__ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO__SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      RABBITMQ__HOSTNAME: rabbitmq
+      RABBITMQ__PORT: "5672"
+      RABBITMQ__PORT_MANAGEMENT: "15672"
+      RABBITMQ__MANAGEMENT_SSL: "false"
+      RABBITMQ__USERNAME: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ__PASSWORD: ${RABBITMQ_DEFAULT_PASS}
+      PROVIDERS__LOCAL__STRATEGY: LocalStrategy
+    ports:
+      - "${OPENCTI_BIND_IP}:8080:8080"
+    depends_on:
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    mem_limit: 4g
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health?health_access_key=${OPENCTI_HEALTHCHECK_ACCESS_KEY}"]
+      interval: 15s
+      timeout: 10s
+      retries: 60
+    security_opt:
+      - no-new-privileges:true
+
+  worker:
+    image: opencti/worker:7.260715.0
+    restart: unless-stopped
+    environment:
+      OPENCTI_URL: http://opencti:8080
+      OPENCTI_TOKEN: ${OPENCTI_ADMIN_TOKEN}
+      WORKER_LOG_LEVEL: info
+    depends_on:
+      opencti:
+        condition: service_healthy
+    mem_limit: 1g
+    security_opt:
+      - no-new-privileges:true
+
+  connector-shodan:
+    image: opencti/connector-shodan:7.260715.0
+    profiles: ["shodan"]
+    restart: unless-stopped
+    environment:
+      OPENCTI_URL: http://opencti:8080
+      OPENCTI_TOKEN: ${OPENCTI_ADMIN_TOKEN}
+      CONNECTOR_ID: ${SHODAN_CONNECTOR_ID}
+      CONNECTOR_NAME: Shodan
+      CONNECTOR_SCOPE: ipv4-addr,indicator
+      CONNECTOR_AUTO: "false"
+      CONNECTOR_LOG_LEVEL: info
+      SHODAN_TOKEN: ${SHODAN_TOKEN}
+      SHODAN_MAX_TLP: TLP:AMBER
+      SHODAN_DEFAULT_SCORE: "50"
+      SHODAN_IMPORT_SEARCH_RESULTS: "true"
+      SHODAN_CREATE_NOTE: "true"
+      SHODAN_USE_ISP_NAME_FOR_ASN: "false"
+    depends_on:
+      opencti:
+        condition: service_healthy
+    mem_limit: 512m
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  redisdata:
+  esdata:
+  s3data:
+  amqpdata:
