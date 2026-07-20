@@ -1,0 +1,23 @@
+{
+  "alert_name": "Suspicious PowerShell Execution",
+  "rule_id": "DET-2026-001",
+  "severity": "high",
+  "host": "VICTIM-MAYURI",
+  "user": "UNKNOWN / VERIFY",
+  "process": "powershell.exe",
+  "parent_process": "UNKNOWN / VERIFY",
+  "command_line": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4104</EventID><Version>1</Version><Level>5</Level><Task>2</Task><Opcode>15</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-20T16:17:34.2643622Z'/><EventRecordID>64039</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0001-8277-7f39fa15dd01}'/><Execution ProcessID='6268' ThreadID='2440'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='MessageNumber'>1</Data><Data Name='MessageTotal'>1</Data><Data Name='ScriptBlockText'>$ErrorActionPreference = 'Stop'\n$encoded = 'U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI='\nreg.exe add \"HKEY_CURRENT_USER\\Software\\Classes\\AtomicRedTeam\" /v ART /t REG_SZ /d $encoded /f\nInvoke-Expression ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKCU:\\Software\\Classes\\AtomicRedTeam').ART)))\nGet-Item \"$env:SystemRoot\\Temp\\art-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List\n</Data><Data Name='ScriptBlockId'>7b79abbe-d3b6-43bd-a3ee-e54af9a63f7c</Data><Data Name='Path'></Data></EventData></Event>",
+  "event_time": "2026-07-20T16:17:34.2643622Z",
+  "technique_id": "T1059.001",
+  "event_id": "4104",
+  "splunk_index": "main",
+  "splunk_sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
+  "search_reference": "http://soc-mayuri:8000/app/search/search?q=%7Cloadjob%20scheduler__nobody__search__RMD5e47ff8008a30139e_at_1784564520_1%20%7C%20head%201%20%7C%20tail%201&earliest=0&latest=now",
+  "splunk_context": {
+    "sid": "scheduler__nobody__search__RMD5e47ff8008a30139e_at_1784564520_1",
+    "search_name": "DET-2026-001-live-webhook",
+    "app": "search",
+    "owner": "nobody",
+    "results_link": "http://soc-mayuri:8000/app/search/search?q=%7Cloadjob%20scheduler__nobody__search__RMD5e47ff8008a30139e_at_1784564520_1%20%7C%20head%201%20%7C%20tail%201&earliest=0&latest=now"
+  }
+}

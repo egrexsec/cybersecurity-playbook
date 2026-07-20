@@ -1,37 +1,107 @@
 {
+  "id": "SplunkAlertToCase001",
   "name": "Splunk Alert to Case",
   "active": false,
   "nodes": [
     {
-      "id": "trigger",
-      "name": "Trigger",
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        260,
-        300
-      ],
-      "parameters": {}
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "splunk-alert-to-case",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "splunk-webhook",
+      "name": "Splunk Alert Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [0, 0],
+      "webhookId": "a3fe2ef4-7c3f-4b6a-9bf8-bd72b36d6fa0"
     },
     {
-      "id": "note",
-      "name": "Notes",
+      "parameters": {
+        "content": "Staged Splunk intake workflow. Intended path: Splunk webhook -> normalize -> authenticated IR receiver -> structured JSON response. Keep containment execution out of this workflow.",
+        "height": 220,
+        "width": 360,
+        "color": 6
+      },
+      "id": "stage-note",
+      "name": "Staging Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [
-        520,
-        300
-      ],
+      "position": [240, -220]
+    },
+    {
       "parameters": {
-        "content": "Template export for Splunk Alert to Case. Credentials intentionally omitted. Import and wire manually."
-      }
+        "jsCode": "const body = $json.body || $json;\nconst result = body.result || {};\nconst host = result.host || result.computer || result.Computer || body.host || 'UNKNOWN / VERIFY';\nconst eventTime = result.event_time || result._time || new Date().toISOString();\nconst commandLine = result.command_line || result.ScriptBlockText || result.script_block || result._raw || 'UNKNOWN / VERIFY';\nreturn [{ json: {\n  alert_name: result.alert_name || body.search_name || 'Suspicious PowerShell Execution',\n  rule_id: result.rule_id || 'DET-2026-001',\n  severity: result.severity || 'high',\n  host,\n  user: result.user || 'UNKNOWN / VERIFY',\n  process: result.process || 'powershell.exe',\n  parent_process: result.parent_process || 'UNKNOWN / VERIFY',\n  command_line: commandLine,\n  event_time: eventTime,\n  technique_id: result.technique_id || 'T1059.001',\n  event_id: String(result.event_id || '4104'),\n  splunk_index: result.splunk_index || 'main',\n  splunk_sourcetype: result.splunk_sourcetype || result.source || 'XmlWinEventLog:Microsoft-Windows-PowerShell/Operational',\n  search_reference: body.results_link || body.sid || body.search_name || 'Splunk webhook',\n  splunk_context: {\n    sid: body.sid || null,\n    search_name: body.search_name || null,\n    app: body.app || null,\n    owner: body.owner || null,\n    results_link: body.results_link || null\n  }\n}}];"
+      },
+      "id": "normalize-alert",
+      "name": "Normalize Splunk Alert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [280, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://100.90.16.73:8765/ir/splunk-alert",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-IR-Token",
+              "value": "TODO_SET_AT_IMPORT_TIME"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "forward-to-ir",
+      "name": "Forward to IR Receiver",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [580, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}"
+      },
+      "id": "respond",
+      "name": "Return Structured Case Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [860, 0]
     }
   ],
-  "connections": {},
-  "settings": {},
+  "connections": {
+    "Splunk Alert Webhook": {
+      "main": [[{ "node": "Normalize Splunk Alert", "type": "main", "index": 0 }]]
+    },
+    "Normalize Splunk Alert": {
+      "main": [[{ "node": "Forward to IR Receiver", "type": "main", "index": 0 }]]
+    },
+    "Forward to IR Receiver": {
+      "main": [[{ "node": "Return Structured Case Result", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "nodeGroups": [],
   "pinData": {},
-  "versionId": "00000000-0000-0000-0000-000000000000",
-  "meta": {
-    "templateCredsSetupCompleted": false
-  }
+  "versionId": "f1cbeb7c-e7e3-48b7-8b6d-53ff4de0ddf1",
+  "activeVersionId": null,
+  "versionCounter": 1,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "tags": []
 }
