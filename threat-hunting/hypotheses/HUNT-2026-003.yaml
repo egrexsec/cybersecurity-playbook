@@ -12,7 +12,7 @@ required_data:
   - Security 4688
   - Wazuh alerts for validation
 target_systems:
-  - VICTIM-MAYURI
+  - AUTHORIZED-LAB-ENDPOINT
 baseline_query: windows-baseline-wmi-process-counts
 hunt_query: suspicious-wmi-process-create-correlation
 investigation_pivots:

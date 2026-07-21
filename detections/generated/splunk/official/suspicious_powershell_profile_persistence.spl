@@ -1,1 +1,1 @@
-Image="*\\powershell.exe" (CommandLine="*Add-Content*" CommandLine="*pt-2026-009-original.txt*") OR (CommandLine="*Add-Content*" CommandLine="*pt-2026-009-variant.txt*")
+Image="*\\powershell.exe" CommandLine IN ("*$PROFILE*", "*profile.ps1*") CommandLine IN ("*Add-Content*", "*Set-Content*", "*Out-File*", "*>>*") CommandLine IN ("*Set-Content*", "*Invoke-Expression*", "*FromBase64String*", "*$payload*", "*DownloadString*", "*Start-Process*", "*Net.WebClient*")

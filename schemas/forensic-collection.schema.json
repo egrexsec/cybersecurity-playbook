@@ -3,18 +3,24 @@
   "title": "Forensic Collection",
   "type": "object",
   "required": [
-    "id",
+    "case_id",
     "profile",
     "target",
     "collector",
-    "artifacts",
-    "output_paths",
-    "hashes"
+    "tool_version",
+    "started_at",
+    "completed_at",
+    "files",
+    "hashes",
+    "errors",
+    "status",
+    "evidence_class",
+    "artifacts"
   ],
   "properties": {
-    "id": {
+    "case_id": {
       "type": "string",
-      "pattern": "^DFIR-\\d{4}-\\d{3}$"
+      "pattern": "^(IR|HUNT|DFIR|PT|DET|VAL)-\\d{4}-(\\d{3}|[A-F0-9]{12})$"
     },
     "profile": {
       "type": "string"
@@ -25,13 +31,16 @@
     "collector": {
       "type": "string"
     },
-    "artifacts": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
+    "tool_version": {
+      "type": "string"
     },
-    "output_paths": {
+    "started_at": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": "string"
+    },
+    "files": {
       "type": "array",
       "items": {
         "type": "string"
@@ -39,6 +48,76 @@
     },
     "hashes": {
       "type": "object"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "enum": [
+        "planned",
+        "fixture-collected",
+        "live-collected",
+        "partially-collected",
+        "collection-failed"
+      ]
+    },
+    "evidence_class": {
+      "enum": [
+        "plan",
+        "fixture",
+        "live"
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status",
+          "sha256",
+          "error"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "not-collected",
+              "collected",
+              "absent",
+              "collection-failed"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^$|^[a-f0-9]{64}$"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "name"
+            ]
+          },
+          {
+            "required": [
+              "path"
+            ]
+          }
+        ]
+      }
     }
-  }
+  },
+  "additionalProperties": false
 }

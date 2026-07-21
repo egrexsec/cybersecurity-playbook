@@ -23,8 +23,12 @@ FIXTURE_ROOT = REPO_ROOT / 'tests' / 'fixtures'
 SIGMA_BIN = os.environ.get('SIGMA_BIN', 'sigma')
 
 ALLOWED_STATUS = {'experimental', 'test', 'stable', 'deprecated', 'unsupported'}
-PROHIBITED_LAB_VALUES = [
-    '10.10.10.', '10.20.20.', '10.30.30.', 'mayuri.lab', 'VICTIM-MAYURI', 'DC01', 'SOC01',
+PROHIBITED_ENVIRONMENT_PATTERNS = [
+    re.compile(r'\b10(?:\.\d{1,3}){3}\b'),
+    re.compile(r'\b192\.168(?:\.\d{1,3}){2}\b'),
+    re.compile(r'\b172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}\b'),
+    re.compile(r'\b100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])(?:\.\d{1,3}){2}\b'),
+    re.compile(r'\b[a-z0-9-]+\.lab\b', re.IGNORECASE),
 ]
 ALLOWED_ATOMIC_MARK = {'atomic-specific', 'lab-specific'}
 FIELD_RAW_MAP = {
@@ -143,9 +147,15 @@ def lint_rules() -> tuple[list[LintIssue], list[RuleDoc]]:
             issues.append(LintIssue(rule.relpath, 'error', 'detection/condition missing'))
         text = rule.path.read_text(encoding='utf-8')
         if not any(mark in text for mark in ALLOWED_ATOMIC_MARK):
-            for bad in PROHIBITED_LAB_VALUES:
-                if bad in text:
-                    issues.append(LintIssue(rule.relpath, 'warning', f'lab-specific value found without explicit annotation: {bad}'))
+            for pattern in PROHIBITED_ENVIRONMENT_PATTERNS:
+                if pattern.search(text):
+                    issues.append(
+                        LintIssue(
+                            rule.relpath,
+                            'warning',
+                            'environment-specific value found without explicit annotation',
+                        )
+                    )
         for bad in ('Invoke-AtomicTest', 'AtomicRedTeam', 'pt-2026-00'):
             if bad in text and 'atomic-specific' not in text:
                 issues.append(LintIssue(rule.relpath, 'warning', f'atomic-specific string found without annotation: {bad}'))
@@ -226,10 +236,10 @@ def render_condition(detection: dict[str, Any]) -> str:
     return ' '.join(out)
 
 
-def mayuri_live_spl(rule: RuleDoc) -> str:
+def environment_live_spl(rule: RuleDoc) -> str:
     category = rule.doc.get('logsource', {}).get('category')
     if category not in BASE_SEARCH:
-        raise SigmaOpsError(f'unsupported logsource category for Mayuri live SPL generation: {category}')
+        raise SigmaOpsError(f'unsupported logsource category for environment live SPL generation: {category}')
     condition = render_condition(rule.doc['detection'])
     return f"{BASE_SEARCH[category]} {condition}"
 
@@ -273,7 +283,7 @@ def command_convert(args: argparse.Namespace) -> int:
             if target == 'splunk':
                 out = GEN_SPLUNK / 'official' / f'{stem}.spl'
                 write_generated(stem, official, out)
-                live = mayuri_live_spl(rule) + '\n'
+                live = environment_live_spl(rule) + '\n'
                 live_out = GEN_SPLUNK / 'live' / f'{stem}.spl'
                 write_generated(stem, live, live_out)
                 results.append({'rule': rule.relpath, 'target': target, 'path': str(out.relative_to(REPO_ROOT))})

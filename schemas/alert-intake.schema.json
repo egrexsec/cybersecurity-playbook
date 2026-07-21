@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Splunk Alert Intake",
+  "type": "object",
+  "required": [
+    "alert_name",
+    "rule_id",
+    "severity",
+    "host",
+    "user",
+    "process",
+    "parent_process",
+    "command_line",
+    "event_time",
+    "technique_id",
+    "event_id",
+    "splunk_index",
+    "splunk_sourcetype",
+    "search_reference"
+  ],
+  "properties": {
+    "alert_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "rule_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "severity": {
+      "enum": [
+        "informational",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "host": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "user": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "process": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "parent_process": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "command_line": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 16384
+    },
+    "event_time": {
+      "type": "string",
+      "format": "date-time",
+      "maxLength": 64
+    },
+    "technique_id": {
+      "type": "string",
+      "pattern": "^T\\d{4}(\\.\\d{3})?$"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "splunk_index": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "splunk_sourcetype": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "search_reference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "alert_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "indicators": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "value"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "ipv4",
+              "ipv6",
+              "domain",
+              "url",
+              "sha256"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

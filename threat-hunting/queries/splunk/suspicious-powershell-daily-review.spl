@@ -1,0 +1,1 @@
+search index=main sourcetype="XmlWinEventLog:Microsoft-Windows-PowerShell/Operational" ("FromBase64String" OR "Invoke-Expression" OR "EncodedCommand") | stats count by host user source

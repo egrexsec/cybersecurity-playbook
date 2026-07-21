@@ -1,101 +1,53 @@
 {
-  "scenario_id": "PT-2026-009",
+  "schema_version": "1.0.0",
   "validation_run_id": "VAL-2026-009",
+  "detection_id": "DET-2026-009",
+  "scenario_id": "PT-2026-009",
   "technique_id": "T1546.013",
-  "original": {
-    "start_time_utc": "2026-07-18T20:00:07.403277Z",
-    "end_time_utc": "2026-07-18T20:00:09.884473Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\Windows\\\\Temp\\\\pt-2026-009-original.txt\\r\\nLength        : 22\\r\\nLastWriteTime : 7/18/2026 1:00:16 PM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-    "detection_results": [
-      {
-        "_time": "2026-07-18 20:00:15.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T20:00:15.8571854Z'/><EventRecordID>46471</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1083,technique_name=File and Directory Discovery</Data><Data Name='UtcTime'>2026-07-18 20:00:15.848</Data><Data Name='ProcessGuid'>{1d66a19f-db4f-6a5b-af18-000000000d00}</Data><Data Name='ProcessId'>1916</Data><Data Name='Image'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='FileVersion'>10.0.26100.8875 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows PowerShell</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>PowerShell.EXE</Data><Data Name='CommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$profilePath = $PROFILE\n$marker = 'C:\\Windows\\Temp\\pt-2026-009-original.txt'\nNew-Item -ItemType Directory -Force -Path (Split-Path $profilePath) | Out-Null\nif (!(Test-Path $profilePath)) { New-Item -ItemType File -Path $profilePath -Force | Out-Null }\n$existing = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue\nSet-Content -Path $profilePath -Value $existing\nAdd-Content $profilePath -Value \\\"Set-Content -Path 'C:\\Windows\\Temp\\pt-2026-009-original.txt' -Value 'PT-2026-009-ORIGINAL'\\\"\npowershell.exe -Command exit\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=613000DC53E7EF0B048021F68DD06C101994DA29,MD5=E65ECCA3754249C00F50A035202F7591,SHA256=7600FFE12DA441FE89D035B13801E8E91D064BC544A27B19A5CF49F6AB8B18F5,IMPHASH=AFACF6DC9041114B198160AAB4D0AE77</Data><Data Name='ParentProcessGuid'>{1d66a19f-db4f-6a5b-ad18-000000000d00}</Data><Data Name='ParentProcessId'>5024</Data><Data Name='ParentImage'>C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe</Data><Data Name='ParentCommandLine'>\"C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe\" 8 9 z 4 6 - y y - - powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$profilePath = $PROFILE\n$marker = 'C:\\Windows\\Temp\\pt-2026-009-original.txt'\nNew-Item -ItemType Directory -Force -Path (Split-Path $profilePath) | Out-Null\nif (!(Test-Path $profilePath)) { New-Item -ItemType File -Path $profilePath -Force | Out-Null }\n$existing = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue\nSet-Content -Path $profilePath -Value $existing\nAdd-Content $profilePath -Value \\\"Set-Content -Path 'C:\\Windows\\Temp\\pt-2026-009-original.txt' -Value 'PT-2026-009-ORIGINAL'\\\"\npowershell.exe -Command exit\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 20:00:15.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T20:00:15.7990963Z'/><EventRecordID>46469</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1083,technique_name=File and Directory Discovery</Data><Data Name='UtcTime'>2026-07-18 20:00:15.796</Data><Data Name='ProcessGuid'>{1d66a19f-db4f-6a5b-ad18-000000000d00}</Data><Data Name='ProcessId'>5024</Data><Data Name='Image'>C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe</Data><Data Name='FileVersion'>-</Data><Data Name='Description'>-</Data><Data Name='Product'>-</Data><Data Name='Company'>-</Data><Data Name='OriginalFileName'>-</Data><Data Name='CommandLine'>\"C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe\" 8 9 z 4 6 - y y - - powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$profilePath = $PROFILE\n$marker = 'C:\\Windows\\Temp\\pt-2026-009-original.txt'\nNew-Item -ItemType Directory -Force -Path (Split-Path $profilePath) | Out-Null\nif (!(Test-Path $profilePath)) { New-Item -ItemType File -Path $profilePath -Force | Out-Null }\n$existing = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue\nSet-Content -Path $profilePath -Value $existing\nAdd-Content $profilePath -Value \\\"Set-Content -Path 'C:\\Windows\\Temp\\pt-2026-009-original.txt' -Value 'PT-2026-009-ORIGINAL'\\\"\npowershell.exe -Command exit\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=DD851003B4C1EFEE876DF77DA621F182F15BFDE9,MD5=F8612558E10260CD793256F80715A7D7,SHA256=4BFE48E0E7E33C48AAE24CEEF8DD34C8BE745D9403BF7B91E8F3862E710C4A7C,IMPHASH=9B364C5F1DC956260B17A16E05A4C2F7</Data><Data Name='ParentProcessGuid'>{1d66a19f-3eea-6a5a-4400-000000000d00}</Data><Data Name='ParentProcessId'>3376</Data><Data Name='ParentImage'>C:\\Program Files\\Qemu-ga\\qemu-ga.exe</Data><Data Name='ParentCommandLine'>\"C:\\Program Files\\Qemu-ga\\qemu-ga.exe\" -d --retry-path</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 20:00:16.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T20:00:16.1148660Z'/><EventRecordID>46483</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1059.001,technique_name=PowerShell</Data><Data Name='UtcTime'>2026-07-18 20:00:16.106</Data><Data Name='ProcessGuid'>{1d66a19f-db50-6a5b-b118-000000000d00}</Data><Data Name='ProcessId'>4528</Data><Data Name='Image'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='FileVersion'>10.0.26100.8875 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows PowerShell</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>PowerShell.EXE</Data><Data Name='CommandLine'>\"C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -Command exit</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=613000DC53E7EF0B048021F68DD06C101994DA29,MD5=E65ECCA3754249C00F50A035202F7591,SHA256=7600FFE12DA441FE89D035B13801E8E91D064BC544A27B19A5CF49F6AB8B18F5,IMPHASH=AFACF6DC9041114B198160AAB4D0AE77</Data><Data Name='ParentProcessGuid'>{1d66a19f-db4f-6a5b-af18-000000000d00}</Data><Data Name='ParentProcessId'>1916</Data><Data Name='ParentImage'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='ParentCommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$profilePath = $PROFILE\n$marker = 'C:\\Windows\\Temp\\pt-2026-009-original.txt'\nNew-Item -ItemType Directory -Force -Path (Split-Path $profilePath) | Out-Null\nif (!(Test-Path $profilePath)) { New-Item -ItemType File -Path $profilePath -Force | Out-Null }\n$existing = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue\nSet-Content -Path $profilePath -Value $existing\nAdd-Content $profilePath -Value \\\"Set-Content -Path 'C:\\Windows\\Temp\\pt-2026-009-original.txt' -Value 'PT-2026-009-ORIGINAL'\\\"\npowershell.exe -Command exit\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      }
-    ],
-    "profile_state": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"C:\\\\WINDOWS\\\\system32\\\\config\\\\systemprofile\\\\Documents\\\\WindowsPowerShell\\\\Microsoft.PowerShell_profile.ps1\\r\\nTrue\\r\\n\\r\\n\\r\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-original.txt' -Value 'PT-2026-009-ORIGINAL'\\r\\n\\r\\n\"\n}\n",
-    "detection_fired": true,
-    "detection_latency_seconds": "uncomputed-search-window"
+  "status": "historical-live-validated",
+  "validation_environment": {
+    "target_role": "authorized lab endpoint",
+    "siem_role": "internal SIEM service",
+    "sanitized": true
   },
-  "variant": {
-    "start_time_utc": "2026-07-18T20:00:19.813637Z",
-    "end_time_utc": "2026-07-18T20:00:22.115522Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\Windows\\\\Temp\\\\pt-2026-009-variant.txt\\r\\nLength        : 21\\r\\nLastWriteTime : 7/18/2026 1:00:28 PM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-    "detection_results": [
-      {
-        "_time": "2026-07-18 20:00:28.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T20:00:28.1051500Z'/><EventRecordID>46517</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1083,technique_name=File and Directory Discovery</Data><Data Name='UtcTime'>2026-07-18 20:00:28.096</Data><Data Name='ProcessGuid'>{1d66a19f-db5c-6a5b-ba18-000000000d00}</Data><Data Name='ProcessId'>4612</Data><Data Name='Image'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='FileVersion'>10.0.26100.8875 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows PowerShell</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>PowerShell.EXE</Data><Data Name='CommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$profilePath = $PROFILE\n$marker = 'C:\\Windows\\Temp\\pt-2026-009-variant.txt'\nNew-Item -ItemType Directory -Force -Path (Split-Path $profilePath) | Out-Null\nif (!(Test-Path $profilePath)) { New-Item -ItemType File -Path $profilePath -Force | Out-Null }\n$payload = \\\"`nSet-Content -Path 'C:\\Windows\\Temp\\pt-2026-009-variant.txt' -Value 'PT-2026-009-VARIANT'\\\"\n$payload | Add-Content -Path $profilePath\npowershell.exe -Command exit\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=613000DC53E7EF0B048021F68DD06C101994DA29,MD5=E65ECCA3754249C00F50A035202F7591,SHA256=7600FFE12DA441FE89D035B13801E8E91D064BC544A27B19A5CF49F6AB8B18F5,IMPHASH=AFACF6DC9041114B198160AAB4D0AE77</Data><Data Name='ParentProcessGuid'>{1d66a19f-db5c-6a5b-b818-000000000d00}</Data><Data Name='ParentProcessId'>3056</Data><Data Name='ParentImage'>C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe</Data><Data Name='ParentCommandLine'>\"C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe\" 8 9 z 4 6 - y y - - powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$profilePath = $PROFILE\n$marker = 'C:\\Windows\\Temp\\pt-2026-009-variant.txt'\nNew-Item -ItemType Directory -Force -Path (Split-Path $profilePath) | Out-Null\nif (!(Test-Path $profilePath)) { New-Item -ItemType File -Path $profilePath -Force | Out-Null }\n$payload = \\\"`nSet-Content -Path 'C:\\Windows\\Temp\\pt-2026-009-variant.txt' -Value 'PT-2026-009-VARIANT'\\\"\n$payload | Add-Content -Path $profilePath\npowershell.exe -Command exit\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 20:00:28.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T20:00:28.0485279Z'/><EventRecordID>46515</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1083,technique_name=File and Directory Discovery</Data><Data Name='UtcTime'>2026-07-18 20:00:28.045</Data><Data Name='ProcessGuid'>{1d66a19f-db5c-6a5b-b818-000000000d00}</Data><Data Name='ProcessId'>3056</Data><Data Name='Image'>C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe</Data><Data Name='FileVersion'>-</Data><Data Name='Description'>-</Data><Data Name='Product'>-</Data><Data Name='Company'>-</Data><Data Name='OriginalFileName'>-</Data><Data Name='CommandLine'>\"C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe\" 8 9 z 4 6 - y y - - powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$profilePath = $PROFILE\n$marker = 'C:\\Windows\\Temp\\pt-2026-009-variant.txt'\nNew-Item -ItemType Directory -Force -Path (Split-Path $profilePath) | Out-Null\nif (!(Test-Path $profilePath)) { New-Item -ItemType File -Path $profilePath -Force | Out-Null }\n$payload = \\\"`nSet-Content -Path 'C:\\Windows\\Temp\\pt-2026-009-variant.txt' -Value 'PT-2026-009-VARIANT'\\\"\n$payload | Add-Content -Path $profilePath\npowershell.exe -Command exit\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=DD851003B4C1EFEE876DF77DA621F182F15BFDE9,MD5=F8612558E10260CD793256F80715A7D7,SHA256=4BFE48E0E7E33C48AAE24CEEF8DD34C8BE745D9403BF7B91E8F3862E710C4A7C,IMPHASH=9B364C5F1DC956260B17A16E05A4C2F7</Data><Data Name='ParentProcessGuid'>{1d66a19f-3eea-6a5a-4400-000000000d00}</Data><Data Name='ParentProcessId'>3376</Data><Data Name='ParentImage'>C:\\Program Files\\Qemu-ga\\qemu-ga.exe</Data><Data Name='ParentCommandLine'>\"C:\\Program Files\\Qemu-ga\\qemu-ga.exe\" -d --retry-path</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 20:00:28.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T20:00:28.3592962Z'/><EventRecordID>46529</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1059.001,technique_name=PowerShell</Data><Data Name='UtcTime'>2026-07-18 20:00:28.347</Data><Data Name='ProcessGuid'>{1d66a19f-db5c-6a5b-bb18-000000000d00}</Data><Data Name='ProcessId'>2444</Data><Data Name='Image'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='FileVersion'>10.0.26100.8875 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows PowerShell</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>PowerShell.EXE</Data><Data Name='CommandLine'>\"C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -Command exit</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=613000DC53E7EF0B048021F68DD06C101994DA29,MD5=E65ECCA3754249C00F50A035202F7591,SHA256=7600FFE12DA441FE89D035B13801E8E91D064BC544A27B19A5CF49F6AB8B18F5,IMPHASH=AFACF6DC9041114B198160AAB4D0AE77</Data><Data Name='ParentProcessGuid'>{1d66a19f-db5c-6a5b-ba18-000000000d00}</Data><Data Name='ParentProcessId'>4612</Data><Data Name='ParentImage'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='ParentCommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$profilePath = $PROFILE\n$marker = 'C:\\Windows\\Temp\\pt-2026-009-variant.txt'\nNew-Item -ItemType Directory -Force -Path (Split-Path $profilePath) | Out-Null\nif (!(Test-Path $profilePath)) { New-Item -ItemType File -Path $profilePath -Force | Out-Null }\n$payload = \\\"`nSet-Content -Path 'C:\\Windows\\Temp\\pt-2026-009-variant.txt' -Value 'PT-2026-009-VARIANT'\\\"\n$payload | Add-Content -Path $profilePath\npowershell.exe -Command exit\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      }
-    ],
-    "profile_state": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"C:\\\\WINDOWS\\\\system32\\\\config\\\\systemprofile\\\\Documents\\\\WindowsPowerShell\\\\Microsoft.PowerShell_profile.ps1\\r\\nTrue\\r\\n\\r\\n\\r\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-original.txt' -Value 'PT-2026-009-ORIGINAL'\\r\\n\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-variant.txt' -Value 'PT-2026-009-VARIANT'\\r\\n\\r\\n\"\n}\n",
+  "validated_at": "2026-07-18T20:00:22.115522Z",
+  "source_record_sha256": "709bf753a9ac6d75f19922709b6bf42436ff65200c19ccb8fbdf22273ef7d49d",
+  "positive_test": {
     "detection_fired": true,
-    "detection_latency_seconds": "uncomputed-search-window"
+    "marker_found": null,
+    "latency_seconds": null,
+    "latency_status": "uncomputed"
   },
-  "negatives": [
+  "variant_test": {
+    "detection_fired": true,
+    "marker_found": null,
+    "latency_seconds": null,
+    "latency_status": "uncomputed"
+  },
+  "negative_tests": [
     {
-      "start_time_utc": "2026-07-18T20:00:32.000989Z",
-      "end_time_utc": "2026-07-18T20:00:34.264822Z",
-      "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"True\\r\\n\"\n}\n",
-      "detection_results": [],
-      "profile_state": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"C:\\\\WINDOWS\\\\system32\\\\config\\\\systemprofile\\\\Documents\\\\WindowsPowerShell\\\\Microsoft.PowerShell_profile.ps1\\r\\nTrue\\r\\n\\r\\n\\r\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-original.txt' -Value 'PT-2026-009-ORIGINAL'\\r\\n\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-variant.txt' -Value 'PT-2026-009-VARIANT'\\r\\n\\r\\n\"\n}\n",
+      "ordinal": 1,
       "detection_fired": false,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     },
     {
-      "start_time_utc": "2026-07-18T20:00:42.584334Z",
-      "end_time_utc": "2026-07-18T20:00:45.153928Z",
-      "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-original.txt' -Value 'PT-2026-009-ORIGINAL'\\r\\n\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-variant.txt' -Value 'PT-2026-009-VARIANT'\\r\\n\\r\\n\"\n}\n",
-      "detection_results": [],
-      "profile_state": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"C:\\\\WINDOWS\\\\system32\\\\config\\\\systemprofile\\\\Documents\\\\WindowsPowerShell\\\\Microsoft.PowerShell_profile.ps1\\r\\nTrue\\r\\n\\r\\n\\r\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-original.txt' -Value 'PT-2026-009-ORIGINAL'\\r\\n\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-variant.txt' -Value 'PT-2026-009-VARIANT'\\r\\n\\r\\n\"\n}\n",
+      "ordinal": 2,
       "detection_fired": false,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     },
     {
-      "start_time_utc": "2026-07-18T20:00:53.010802Z",
-      "end_time_utc": "2026-07-18T20:00:55.285817Z",
-      "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"C:\\\\WINDOWS\\\\system32\\\\config\\\\systemprofile\\\\Documents\\\\WindowsPowerShell\\\\Microsoft.PowerShell_profile.ps1\\r\\n\"\n}\n",
-      "detection_results": [],
-      "profile_state": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"C:\\\\WINDOWS\\\\system32\\\\config\\\\systemprofile\\\\Documents\\\\WindowsPowerShell\\\\Microsoft.PowerShell_profile.ps1\\r\\nTrue\\r\\n\\r\\n\\r\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-original.txt' -Value 'PT-2026-009-ORIGINAL'\\r\\n\\nSet-Content -Path 'C:\\\\Windows\\\\Temp\\\\pt-2026-009-variant.txt' -Value 'PT-2026-009-VARIANT'\\r\\n# benign note\\r\\n\\r\\n\"\n}\n",
+      "ordinal": 3,
       "detection_fired": false,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     }
   ],
   "cleanup": {
-    "start_time_utc": "2026-07-18T20:01:03.162963Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"cleanup complete\\r\\n\"\n}\n",
-    "end_time_utc": "2026-07-18T20:01:05.451400Z"
-  }
+    "status": "confirmed",
+    "confirmed_at": "2026-07-18T20:01:05.451400Z"
+  },
+  "limitations": [
+    "Historical authorized-lab result; current telemetry and deployment state require a fresh preflight.",
+    "Raw logs, commands, host identifiers, user identifiers, event identifiers, and environment-specific values are intentionally excluded.",
+    "Successful detection does not prove portability to other field mappings, indexes, tables, sourcetypes, or data models."
+  ]
 }

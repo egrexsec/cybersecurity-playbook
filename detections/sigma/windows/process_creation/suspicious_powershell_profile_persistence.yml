@@ -2,7 +2,7 @@ title: Suspicious PowerShell Profile Persistence Modification
 id: 86cd3d91-3ef6-4c72-99ab-1db6a4f74f29
 status: test
 description: >-
-  Detects PowerShell profile persistence when PowerShell modifies profile.ps1 and references staged marker execution content as observed during PT-2026-009 validation.
+  Detects PowerShell processes that modify a PowerShell profile script using common file-writing commands.
 references:
   - https://attack.mitre.org/techniques/T1546/013/
 author: mell0wx
@@ -12,15 +12,26 @@ logsource:
 detection:
   sel_ps_img:
     Image|endswith: '\powershell.exe'
-  sel_ps_cli_original:
-    CommandLine|contains|all:
+  sel_profile:
+    CommandLine|contains:
+      - '$PROFILE'
+      - 'profile.ps1'
+  sel_write:
+    CommandLine|contains:
       - 'Add-Content'
-      - 'pt-2026-009-original.txt'
-  sel_ps_cli_variant:
-    CommandLine|contains|all:
-      - 'Add-Content'
-      - 'pt-2026-009-variant.txt'
-  condition: sel_ps_img and (sel_ps_cli_original or sel_ps_cli_variant)
+      - 'Set-Content'
+      - 'Out-File'
+      - '>>'
+  sel_payload:
+    CommandLine|contains:
+      - 'Set-Content'
+      - 'Invoke-Expression'
+      - 'FromBase64String'
+      - '$payload'
+      - 'DownloadString'
+      - 'Start-Process'
+      - 'Net.WebClient'
+  condition: sel_ps_img and sel_profile and sel_write and sel_payload
 falsepositives:
   - Controlled validation activity
   - Intentional profile scripting experiments in a lab

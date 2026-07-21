@@ -3,22 +3,23 @@
   "title": "AI Analysis Result",
   "type": "object",
   "required": [
-    "summary",
-    "observations",
+    "executive_summary",
+    "confirmed_observations",
     "candidate_findings",
-    "candidate_iocs",
     "candidate_attack_mappings",
-    "candidate_detection_opportunities",
-    "recommended_hunt_pivots",
+    "scope_questions",
+    "recommended_hunts",
+    "recommended_collections",
+    "detection_opportunities",
     "missing_evidence",
-    "unsupported_claims",
+    "unsupported_assumptions",
     "confidence"
   ],
   "properties": {
-    "summary": {
+    "executive_summary": {
       "type": "string"
     },
-    "observations": {
+    "confirmed_observations": {
       "type": "array",
       "items": {
         "type": "string"
@@ -30,25 +31,31 @@
         "type": "string"
       }
     },
-    "candidate_iocs": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
     "candidate_attack_mappings": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "candidate_detection_opportunities": {
+    "scope_questions": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "recommended_hunt_pivots": {
+    "recommended_hunts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommended_collections": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "detection_opportunities": {
       "type": "array",
       "items": {
         "type": "string"
@@ -60,7 +67,7 @@
         "type": "string"
       }
     },
-    "unsupported_claims": {
+    "unsupported_assumptions": {
       "type": "array",
       "items": {
         "type": "string"

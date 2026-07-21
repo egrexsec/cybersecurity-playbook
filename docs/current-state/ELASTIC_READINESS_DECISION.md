@@ -1,24 +1,27 @@
-# Elastic Readiness Decision
+# Elastic readiness decision
 
-## Decision A — Defer Elastic
+## Decision — defer live Elastic
 
-## Evidence for deferral
-Elastic conversion is implemented, but the repository should still be presented as a **Splunk-first, lab-validated detection-engineering repository**.
+Elastic query generation is implemented, but the repository must describe that target as **conversion supported, not live deployed**.
 
-### What is complete
-- three live-validated scenarios on main
-- three canonical Sigma rules on main
-- generated Splunk and Elastic query output on main
-- offline fixture testing on main
-- GitHub Actions workflow for offline validation and secret scanning
+## Current repository evidence
 
-### Why Elastic is still deferred
-1. **No live Elastic backend is deployed or validated**
-2. **Splunk field normalization is still incomplete**, so even the primary backend retains lab-specific translation caveats
-3. **Offline EVTX workflow is documented but not fully operationalized**
-4. **Current portfolio value is stronger from honest Splunk-first validation than from claiming cross-SIEM parity without live evidence**
+- 11 canonical Sigma rules.
+- 59 passing positive and negative fixtures.
+- Generated Splunk SPL and Elastic EQL.
+- 11 sanitized historical validation summaries from an earlier Splunk-centered lab cycle.
+- GitHub Actions for offline validation, unit tests, public-safety checks, and secret scanning.
+
+## Why live Elastic remains deferred
+
+1. No live Elastic backend is deployed or validated by current repository evidence.
+2. Historical Splunk validation used environment-specific raw XML matching where normalized fields were unavailable.
+3. Generated query syntax does not prove index, table, parser, mapping, or data-model compatibility.
+4. The offline EVTX workflow is documented but not fully operationalized.
 
 ## Recommendation
-- keep Elastic conversion visible as a portability feature
-- describe it as **conversion supported, not live deployed**
-- revisit live Elastic only after broader scenario coverage, stronger field normalization, and more mature DFIR workflows
+
+- Keep Elastic EQL visible as a portability artifact.
+- Preserve canonical Sigma as the authored source.
+- Do not claim cross-SIEM parity from conversion alone.
+- Revisit live Elastic only after a separately authorized deployment and fixture-to-backend validation cycle.

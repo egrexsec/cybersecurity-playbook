@@ -12,7 +12,7 @@ required_data:
   - System Event ID 7045
   - System Event IDs 7000 and 7009 when a non-service binary fails to start
 target_systems:
-  - VICTIM-MAYURI
+  - AUTHORIZED-LAB-ENDPOINT
 baseline_query: windows-baseline-service-create-counts
 hunt_query: suspicious-service-create-correlation
 investigation_pivots:
