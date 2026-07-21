@@ -1,64 +1,57 @@
+# Public role-based inventory template.
+# Copy this file outside the repository and replace documentation-only values
+# with explicitly authorized runtime targets. Never commit the populated file.
 assets:
-  - id: VM-100
-    name: daily
+  - id: ROLE-DAILY-ENDPOINT
+    name: DAILY-USE-ENDPOINT
     role: windows-daily-use
-    network: vmbr0
-    ip: unknown
+    network: management
+    ip: 192.0.2.100
     approved_target: false
     notes:
       - Never use as an attack target.
-  - id: VM-110
-    name: firewall
-    role: opnsense-firewall
-    network: vmbr0,vmbr10,vmbr20,vmbr30
-    ip: 10.10.10.1
-    approved_target: false
-    notes:
-      - Management plane is out of scope.
-      - Current Proxmox status reports the VM as stopped.
-  - id: VM-120
-    name: DC01
+  - id: ROLE-IDENTITY
+    name: IDENTITY-SERVICE
     role: active-directory-domain-controller
-    network: vmbr10
-    ip: 10.10.10.10
+    network: identity
+    ip: 192.0.2.10
     approved_target: false
     notes:
-      - Low-risk identity telemetry only unless explicitly approved.
-  - id: VM-130
-    name: VICTIM-MAYURI
+      - Low-risk identity telemetry only unless separately authorized.
+  - id: ROLE-VICTIM
+    name: AUTHORIZED-LAB-ENDPOINT
     role: windows-enterprise-endpoint
-    network: vmbr10
-    ip: 10.10.10.101
+    network: enterprise
+    ip: 192.0.2.101
     approved_target: true
     notes:
-      - Primary target for PT-2026-001.
-      - Domain joined to mayuri.lab.
-  - id: VM-140
-    name: soc-mayuri
+      - Synthetic documentation value; live identity requires private preflight confirmation.
+  - id: ROLE-SIEM
+    name: INTERNAL-SIEM-SERVICE
     role: soc-siem-automation
-    network: vmbr10
-    ip: 10.10.10.20
-    approved_target: true
+    network: enterprise
+    ip: 192.0.2.20
+    approved_target: false
     notes:
-      - Use only for controlled infrastructure and detection validation.
-  - id: VM-150
-    name: kali
+      - Infrastructure is not an attack target.
+  - id: ROLE-ATTACKER
+    name: AUTHORIZED-TEST-RUNNER
     role: attacker-system
-    network: vmbr20
-    ip: 10.20.20.10
+    network: test
+    ip: 198.51.100.10
     approved_target: true
     notes:
-      - Keep attacks primarily focused on approved victim workflows.
-  - id: VM-160
-    name: mayuri-dfir
-    role: dfir-and-velociraptor
-    network: vmbr30,vmbr10
-    ip: 10.30.30.10
-    approved_target: true
+      - Keep validation focused on the approved lab endpoint.
+  - id: ROLE-DFIR
+    name: DFIR-WORKSTATION
+    role: dfir-and-collection
+    network: evidence
+    ip: 203.0.113.10
+    approved_target: false
     notes:
-      - Enterprise-side Velociraptor frontend currently exposed on 10.10.10.30:8000.
+      - Evidence storage and collection interfaces remain private.
 
 approved_networks:
-  - 10.10.10.0/24
-  - 10.20.20.0/24
-  - 10.30.30.0/24
+  - 192.0.2.0/24
+  - 198.51.100.0/24
+  - 203.0.113.0/24

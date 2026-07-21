@@ -10,7 +10,7 @@ required_data:
   - Sysmon Event ID 1
   - optional local process/marker confirmation
 target_systems:
-  - VICTIM-MAYURI
+  - AUTHORIZED-LAB-ENDPOINT
 baseline_query: windows-baseline-rundll32-counts
 hunt_query: suspicious-rundll32-proxy-execution
 investigation_pivots:

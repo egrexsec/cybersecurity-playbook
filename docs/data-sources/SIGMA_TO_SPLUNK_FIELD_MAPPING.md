@@ -12,8 +12,8 @@ The live Splunk environment ingests Windows data primarily as `XmlWinEventLog:*`
 | `ParentImage` | `_raw` XML `<Data Name='ParentImage'>...` | `XmlWinEventLog:Microsoft-Windows-Sysmon/Operational` | Yes | present in raw events; not yet used by current Sigma live queries |
 | `User` | `_raw` XML `<Data Name='User'>...` | Sysmon / PowerShell XML | Yes | verified in raw event samples |
 | `EventID` | `_raw` XML `<EventID>...</EventID>` | XML event body | Yes | base search constrains event family |
-| `Channel` | `source` plus XML `<Channel>...</Channel>` | XML event body | Yes | Mayuri live queries use `source=` first |
-| `host` | Splunk `host` field | all ingested Windows telemetry | Yes | `VICTIM-MAYURI`, `DC01` confirmed |
+| `Channel` | `source` plus XML `<Channel>...</Channel>` | XML event body | Yes | fixture and sanitized historical mappings use `source=` first |
+| `host` | Splunk `host` field | all ingested Windows telemetry | Yes | authorized endpoint and identity-service roles were historically observed |
 
 ## Official-field mapping target state
 | Sigma field | Desired Splunk field | CIM candidate | Current status |

@@ -1,67 +1,86 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Detection Validation",
+  "$id": "https://schemas.example.invalid/cybersecurity-playbook/detection-validation-v1.schema.json",
+  "title": "Sanitized Detection Validation Summary",
   "type": "object",
+  "additionalProperties": false,
   "required": [
-    "id",
+    "schema_version",
+    "validation_run_id",
     "detection_id",
     "scenario_id",
+    "technique_id",
     "status",
-    "rule_version",
-    "positive_tests",
+    "validation_environment",
+    "validated_at",
+    "source_record_sha256",
+    "positive_test",
+    "variant_test",
     "negative_tests",
-    "latency_seconds",
-    "required_events_received",
-    "known_blind_spots"
+    "cleanup",
+    "limitations"
   ],
   "properties": {
-    "id": {
-      "type": "string",
-      "pattern": "^DET-\\d{4}-\\d{3}$"
-    },
-    "detection_id": {
-      "type": "string"
-    },
-    "scenario_id": {
-      "type": "string",
-      "pattern": "^PT-\\d{4}-\\d{3}$"
-    },
-    "status": {
-      "enum": [
-        "experimental",
-        "test",
-        "validated",
-        "deployed",
-        "tuned",
-        "deprecated"
-      ]
-    },
-    "rule_version": {
-      "type": "string"
-    },
-    "positive_tests": {
-      "type": "array",
-      "items": {
-        "type": "string"
+    "schema_version": { "const": "1.0.0" },
+    "validation_run_id": { "type": "string", "pattern": "^VAL-\\d{4}-\\d{3}$" },
+    "detection_id": { "type": "string", "pattern": "^DET-\\d{4}-\\d{3}$" },
+    "scenario_id": { "type": "string", "pattern": "^PT-\\d{4}-\\d{3}$" },
+    "technique_id": { "type": "string", "pattern": "^T\\d{4}(\\.\\d{3})?$" },
+    "status": { "const": "historical-live-validated" },
+    "validation_environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_role", "siem_role", "sanitized"],
+      "properties": {
+        "target_role": { "const": "authorized lab endpoint" },
+        "siem_role": { "const": "internal SIEM service" },
+        "sanitized": { "const": true }
       }
     },
+    "validated_at": { "type": "string", "format": "date-time" },
+    "source_record_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "positive_test": { "$ref": "#/$defs/testResult" },
+    "variant_test": { "$ref": "#/$defs/testResult" },
     "negative_tests": {
       "type": "array",
-      "items": {
-        "type": "string"
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/negativeResult" }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "confirmed_at"],
+      "properties": {
+        "status": { "enum": ["confirmed", "failed", "unknown"] },
+        "confirmed_at": { "type": ["string", "null"], "format": "date-time" }
       }
     },
-    "latency_seconds": {
-      "type": "number",
-      "minimum": 0
-    },
-    "required_events_received": {
-      "type": "boolean"
-    },
-    "known_blind_spots": {
+    "limitations": {
       "type": "array",
-      "items": {
-        "type": "string"
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+    }
+  },
+  "$defs": {
+    "testResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detection_fired", "marker_found", "latency_seconds", "latency_status"],
+      "properties": {
+        "detection_fired": { "type": "boolean" },
+        "marker_found": { "type": ["boolean", "null"] },
+        "latency_seconds": { "type": ["number", "null"], "minimum": 0 },
+        "latency_status": { "enum": ["measured", "uncomputed", "not-applicable"] }
+      }
+    },
+    "negativeResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "detection_fired", "expected_quiet"],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 1 },
+        "detection_fired": { "type": "boolean" },
+        "expected_quiet": { "type": "boolean" }
       }
     }
   }

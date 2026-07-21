@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.example.invalid/cybersecurity-playbook/live-validation-adapter-result-v1.schema.json",
+  "title": "Live Validation Adapter Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "scenario_id",
+    "status",
+    "positive_detection_fired",
+    "negative_tests_quiet",
+    "cleanup_status",
+    "evidence_location",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "scenario_id": { "type": "string", "pattern": "^PT-\\d{4}-\\d{3}$" },
+    "status": { "enum": ["completed", "failed", "partial"] },
+    "positive_detection_fired": { "type": "boolean" },
+    "negative_tests_quiet": { "type": "boolean" },
+    "cleanup_status": { "enum": ["confirmed", "failed", "unknown"] },
+    "evidence_location": {
+      "type": "string",
+      "pattern": "^external-dfir-storage/",
+      "maxLength": 512
+    },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+    }
+  }
+}

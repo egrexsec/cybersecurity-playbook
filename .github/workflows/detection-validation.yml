@@ -24,17 +24,33 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install jsonschema PyYAML sigma-cli
-          sigma plugin install splunk elasticsearch windows sysmon
+          pip install \
+            jsonschema \
+            PyYAML \
+            sigma-cli==3.1.0 \
+            pySigma==1.4.0 \
+            pysigma-backend-splunk==2.1.0 \
+            pysigma-backend-elasticsearch==2.1.0 \
+            pysigma-pipeline-windows==2.0.0 \
+            pysigma-pipeline-sysmon==2.0.0
 
       - name: Schema validation
         run: python3 playbook validate
+
+      - name: Unit and security tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+
+      - name: Public-safety validation
+        run: python3 automation/validators/public_safety.py
 
       - name: Sigma metadata lint
         run: python3 playbook --json sigma lint
 
       - name: Sigma conversion
         run: python3 playbook --json sigma convert --target all
+
+      - name: Generated output freshness
+        run: git diff --exit-code -- detections/generated
 
       - name: Sigma fixture tests
         run: python3 playbook --json test fixtures

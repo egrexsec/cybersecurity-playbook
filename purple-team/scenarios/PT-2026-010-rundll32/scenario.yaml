@@ -25,9 +25,9 @@ attack:
     - Snapshot post-vr-enterprise-path-20260718 or later lineage exists
 targets:
   approved_hosts:
-    - VICTIM-MAYURI
+    - AUTHORIZED-LAB-ENDPOINT
   approved_networks:
-    - 10.10.10.0/24
+    - 192.0.2.0/24
 safety:
   risk_level: low
   snapshot_required: true

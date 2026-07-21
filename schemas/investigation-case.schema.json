@@ -24,7 +24,7 @@
   "properties": {
     "id": {
       "type": "string",
-      "pattern": "^(IR|HUNT|DFIR|PT|DET|VAL)-\\d{4}-\\d{3}$"
+      "pattern": "^(IR|HUNT|DFIR|PT|DET|VAL)-\\d{4}-(\\d{3}|[A-F0-9]{12})$"
     },
     "title": {
       "type": "string"
@@ -161,6 +161,14 @@
         "hunting_complete": {
           "type": "boolean"
         },
+        "hunting_status": {
+          "enum": [
+            "not-run",
+            "planned",
+            "fixture-executed",
+            "live-executed"
+          ]
+        },
         "timeline_complete": {
           "type": "boolean"
         },
@@ -264,6 +272,29 @@
       "items": {
         "type": "string"
       }
+    },
+    "intake": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fingerprint",
+        "duplicate_count",
+        "last_received_at"
+      ],
+      "properties": {
+        "fingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "duplicate_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "last_received_at": {
+          "type": "string"
+        }
+      }
     }
-  }
+  },
+  "additionalProperties": false
 }

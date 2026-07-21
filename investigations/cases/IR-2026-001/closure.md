@@ -1,3 +1,0 @@
-# Closure
-
-Case still open.

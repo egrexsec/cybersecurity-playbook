@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import argparse
-import ipaddress
+import hashlib
+import hmac
 import json
+import os
+import stat
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -18,7 +22,6 @@ SCHEMA_DIR = REPO_ROOT / 'schemas'
 ASSET_FILE = REPO_ROOT / 'automation' / 'integrations' / 'lab-assets.yaml'
 SCENARIO_ROOT = REPO_ROOT / 'purple-team' / 'scenarios'
 SIGMA_OPS = REPO_ROOT / 'automation' / 'validators' / 'sigma_ops.py'
-LIVE_VALIDATOR = REPO_ROOT / 'automation' / 'validators' / 'live_validate_previous_scenarios.py'
 LIVE_VALIDATION_DIR = REPO_ROOT / 'detections' / 'validation' / 'live'
 CURRENT_STATE_DIR = REPO_ROOT / 'docs' / 'current-state'
 
@@ -62,6 +65,41 @@ def validate_schema(doc: dict, schema_name: str) -> None:
     jsonschema.validate(doc, schema)
 
 
+def _parse_utc(value: str) -> datetime:
+    try:
+        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    except ValueError as exc:
+        raise PlaybookError('preflight timestamp is invalid') from exc
+    if parsed.tzinfo is None:
+        raise PlaybookError('preflight timestamp must include a timezone')
+    return parsed.astimezone(timezone.utc)
+
+
+def validate_live_preflight(doc: dict[str, Any], scenario_id: str) -> None:
+    validate_schema(doc, 'live-preflight.schema.json')
+    if doc['scenario_id'] != scenario_id:
+        raise PlaybookError('preflight scenario does not match requested scenario')
+    now = datetime.now(timezone.utc)
+    if _parse_utc(doc['validated_at']) > now:
+        raise PlaybookError('preflight validation time is in the future')
+    if _parse_utc(doc['expires_at']) <= now:
+        raise PlaybookError('preflight has expired')
+
+
+def verify_approval_token(path: Path) -> None:
+    if not path.is_file():
+        raise PlaybookError('approval token file not found')
+    if stat.S_IMODE(path.stat().st_mode) != 0o600:
+        raise PlaybookError('approval token file must have mode 0600')
+    expected = os.environ.get('PLAYBOOK_LIVE_APPROVAL_TOKEN_SHA256', '')
+    if not expected:
+        raise PlaybookError('live approval token hash is not configured')
+    token = path.read_text(encoding='utf-8').strip()
+    actual = hashlib.sha256(token.encode()).hexdigest()
+    if not token or not hmac.compare_digest(expected, actual):
+        raise PlaybookError('approval token is invalid')
+
+
 def list_assets() -> dict[str, Any]:
     return load_yaml(ASSET_FILE)
 
@@ -69,11 +107,6 @@ def list_assets() -> dict[str, Any]:
 def _asset_index() -> dict[str, dict[str, Any]]:
     assets = list_assets()['assets']
     return {a['name']: a for a in assets}
-
-
-def _check_command(command: str) -> tuple[int, str, str]:
-    proc = subprocess.run(command, shell=True, text=True, capture_output=True)
-    return proc.returncode, proc.stdout.strip(), proc.stderr.strip()
 
 
 def _run(args: list[str]) -> tuple[int, str, str]:
@@ -100,15 +133,19 @@ def _validation_files() -> list[Path]:
 
 def _load_validation_summary(path: Path) -> dict[str, Any]:
     data = json.loads(path.read_text(encoding='utf-8'))
+    validate_schema(data, 'detection-validation.schema.json')
     return {
         'file': str(path.relative_to(REPO_ROOT)),
         'scenario_id': data['scenario_id'],
         'validation_run_id': data['validation_run_id'],
+        'detection_id': data['detection_id'],
         'technique_id': data['technique_id'],
-        'original_detection_fired': data['original']['detection_fired'],
-        'variant_detection_fired': data['variant']['detection_fired'],
-        'negative_detections': [n['detection_fired'] for n in data['negatives']],
-        'cleanup_output': data['cleanup']['exec_output'],
+        'status': data['status'],
+        'positive_detection_fired': data['positive_test']['detection_fired'],
+        'variant_detection_fired': data['variant_test']['detection_fired'],
+        'negative_detections': [n['detection_fired'] for n in data['negative_tests']],
+        'cleanup_status': data['cleanup']['status'],
+        'validated_at': data['validated_at'],
     }
 
 
@@ -140,43 +177,30 @@ def scenario_plan(args: argparse.Namespace) -> int:
 
 def scenario_preflight(args: argparse.Namespace) -> int:
     path = resolve_scenario(args.scenario)
-    doc = load_yaml(path)
-    assets = _asset_index()
-    approved_networks = [ipaddress.ip_network(n) for n in list_assets()['approved_networks']]
-    target = doc['targets']['approved_hosts'][0]
-    asset = assets.get(target)
-    if not asset:
-        raise PlaybookError(f'target asset missing from inventory: {target}')
-    if not asset.get('approved_target'):
-        raise PlaybookError(f'target not approved: {target}')
-    ip = ipaddress.ip_address(asset['ip'])
-    if not any(ip in net for net in approved_networks):
-        raise PlaybookError(f'target ip outside approved networks: {ip}')
-
-    snapshot_name = doc.get('safety', {}).get('required_snapshot_name', '')
-    snapshot_ok = False
-    if snapshot_name:
-        vmid = asset['id'].split('-')[-1]
-        cmd = (
-            "ssh -i /root/.ssh/hermes-home-server-ed25519 -o BatchMode=yes hermes@mayuri "
-            f"'sudo -n qm listsnapshot {vmid}'"
+    scenario = load_yaml(path)
+    validate_schema(scenario, 'purple-team-scenario.schema.json')
+    if not args.attestation:
+        raise PlaybookError(
+            'live preflight requires --attestation with a private runtime JSON file'
         )
-        rc, out, err = _check_command(cmd)
-        snapshot_ok = rc == 0 and snapshot_name in (out or err)
-    else:
-        snapshot_ok = True
-
-    required = {
-        'target': target,
-        'target_ip': asset['ip'],
-        'risk_level': doc['safety']['risk_level'],
-        'snapshot_required': doc['safety']['snapshot_required'],
-        'snapshot_check': snapshot_ok,
-        'cleanup_required': doc['safety']['cleanup_required'],
-        'timeout_seconds': doc['safety']['timeout_seconds'],
-    }
-    dump(required, args.json)
-    return 0 if snapshot_ok else 2
+    attestation_path = Path(args.attestation).expanduser().resolve()
+    if not attestation_path.is_file():
+        raise PlaybookError('preflight attestation file not found')
+    doc = json.loads(attestation_path.read_text(encoding='utf-8'))
+    validate_live_preflight(doc, scenario['id'])
+    dump(
+        {
+            'status': 'ready',
+            'scenario_id': scenario['id'],
+            'target_role': doc['target_role'],
+            'authorized': True,
+            'snapshot_check': True,
+            'telemetry_check': True,
+            'expires_at': doc['expires_at'],
+        },
+        args.json,
+    )
+    return 0
 
 
 def inventory(args: argparse.Namespace) -> int:
@@ -186,11 +210,24 @@ def inventory(args: argparse.Namespace) -> int:
 
 def validate_repo(args: argparse.Namespace) -> int:
     checked: list[str] = []
+    for schema_file in sorted(SCHEMA_DIR.glob('*.json')):
+        schema_doc = json.loads(schema_file.read_text(encoding='utf-8'))
+        jsonschema.Draft202012Validator.check_schema(schema_doc)
+        checked.append(str(schema_file.relative_to(REPO_ROOT)))
     for path in REPO_ROOT.glob('purple-team/scenarios/*/scenario.yaml'):
         validate_schema(load_yaml(path), 'purple-team-scenario.schema.json')
         checked.append(str(path.relative_to(REPO_ROOT)))
     for path in REPO_ROOT.glob('threat-hunting/hypotheses/*.yaml'):
         validate_schema(load_yaml(path), 'threat-hunt-hypothesis.schema.json')
+        checked.append(str(path.relative_to(REPO_ROOT)))
+    alert_sample = REPO_ROOT / 'automation' / 'intake' / 'sample-splunk-alert-pt-2026-001.json'
+    validate_schema(json.loads(alert_sample.read_text(encoding='utf-8')), 'alert-intake.schema.json')
+    checked.append(str(alert_sample.relative_to(REPO_ROOT)))
+    for path in sorted(LIVE_VALIDATION_DIR.glob('VAL-*.json')):
+        validate_schema(json.loads(path.read_text(encoding='utf-8')), 'detection-validation.schema.json')
+        checked.append(str(path.relative_to(REPO_ROOT)))
+    for path in sorted((REPO_ROOT / 'automation' / 'n8n').glob('*.json')):
+        json.loads(path.read_text(encoding='utf-8'))
         checked.append(str(path.relative_to(REPO_ROOT)))
     dump({'status': 'ok', 'validated_files': checked}, args.json)
     return 0
@@ -239,7 +276,7 @@ def show_timeline(args: argparse.Namespace) -> int:
 
 def show_status(args: argparse.Namespace) -> int:
     summary = {
-        'branch': _check_command(f'git -C {REPO_ROOT} branch --show-current')[1],
+        'branch': _run(['git', 'branch', '--show-current'])[1],
         'live_validation_files': [str(p.relative_to(REPO_ROOT)) for p in _validation_files()],
         'current_state_docs': [str(p.relative_to(REPO_ROOT)) for p in sorted(CURRENT_STATE_DIR.glob('*.md'))],
         'sigma_rules': [str(p.relative_to(REPO_ROOT)) for p in sorted((REPO_ROOT / 'detections' / 'sigma').glob('**/*.yml'))],
@@ -277,17 +314,48 @@ def test_dispatch(args: argparse.Namespace) -> int:
         return rc
 
     if args.test_cmd == 'live':
-        rc, out, err = _run([sys.executable, str(LIVE_VALIDATOR)])
-        if rc != 0:
-            if out:
-                print(out)
-            if err:
-                print(err, file=sys.stderr)
-            return rc
-        files = _validation_files()
-        if args.scenario_id:
-            files = [p for p in files if args.scenario_id in p.name]
-        dump({'validated': [str(p.relative_to(REPO_ROOT)) for p in files]}, args.json)
+        if not args.scenario_id:
+            raise PlaybookError('live validation requires a scenario ID')
+        if not args.preflight:
+            raise PlaybookError('live validation requires --preflight')
+        if not args.approval_token_file:
+            raise PlaybookError('live validation requires --approval-token-file')
+        scenario_path = resolve_scenario(args.scenario_id)
+        scenario = load_yaml(scenario_path)
+        preflight_path = Path(args.preflight).expanduser().resolve()
+        if not preflight_path.is_file():
+            raise PlaybookError('preflight file not found')
+        preflight = json.loads(preflight_path.read_text(encoding='utf-8'))
+        validate_live_preflight(preflight, scenario['id'])
+        verify_approval_token(Path(args.approval_token_file).expanduser().resolve())
+        adapter_value = os.environ.get('PLAYBOOK_LIVE_VALIDATION_ADAPTER', '')
+        if not adapter_value:
+            raise PlaybookError(
+                'live validation adapter is not configured; legacy embedded adapters are disabled'
+            )
+        adapter = Path(adapter_value).expanduser().resolve()
+        if not adapter.is_absolute() or not adapter.is_file() or not os.access(adapter, os.X_OK):
+            raise PlaybookError('live validation adapter must be an executable absolute path')
+        try:
+            proc = subprocess.run(
+                [str(adapter), scenario['id']],
+                text=True,
+                capture_output=True,
+                timeout=min(int(scenario['safety']['timeout_seconds']), 900),
+                check=False,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise PlaybookError('live validation adapter timed out; cleanup status is unknown') from exc
+        if proc.returncode != 0:
+            raise PlaybookError('live validation adapter failed; verify cleanup before retrying')
+        try:
+            result = json.loads(proc.stdout)
+        except json.JSONDecodeError as exc:
+            raise PlaybookError('live validation adapter returned invalid JSON') from exc
+        validate_schema(result, 'live-validation-adapter-result.schema.json')
+        if result['scenario_id'] != scenario['id']:
+            raise PlaybookError('live validation adapter returned a mismatched scenario')
+        dump(result, args.json)
         return 0
 
     raise PlaybookError(f'unsupported test command: {args.test_cmd}')
@@ -306,18 +374,30 @@ def elastic_readiness(args: argparse.Namespace) -> int:
 
 
 def ir_create(args: argparse.Namespace) -> int:
-    case = ir_ops.create_case_from_alert(args.alert, case_prefix=args.prefix)
+    case = ir_ops.create_case_from_alert(
+        args.alert, case_prefix=args.prefix, dry_run=args.dry_run
+    )
     dump(case, args.json)
     return 0
 
 
 def ir_enrich(args: argparse.Namespace) -> int:
-    dump(ir_ops.enrich_case(args.case_id), args.json)
+    dump(ir_ops.enrich_case(args.case_id, dry_run=args.dry_run), args.json)
     return 0
 
 
 def ir_collect(args: argparse.Namespace) -> int:
-    dump(ir_ops.collect_case(args.case_id, profile=args.profile), args.json)
+    dump(
+        ir_ops.collect_case(
+            args.case_id, profile=args.profile, dry_run=args.dry_run
+        ),
+        args.json,
+    )
+    return 0
+
+
+def ir_cleanup(args: argparse.Namespace) -> int:
+    dump(ir_ops.cleanup_case(args.case_id, dry_run=args.dry_run), args.json)
     return 0
 
 
@@ -389,6 +469,21 @@ def forensic_timeline(args: argparse.Namespace) -> int:
     return 0
 
 
+def forensic_analyze(args: argparse.Namespace) -> int:
+    dump(ir_ops.analyze_case(args.case_id), args.json)
+    return 0
+
+
+def forensic_report(args: argparse.Namespace) -> int:
+    dump(ir_ops.report_case(args.case_id), args.json)
+    return 0
+
+
+def detection_review(args: argparse.Namespace) -> int:
+    dump(ir_ops.report_case(args.case_id), args.json)
+    return 0
+
+
 def detection_build(args: argparse.Namespace) -> int:
     dump({'case_id': args.case_id, 'status': 'implemented', 'note': 'Review detection-opportunities.md and existing DET-2026-001 content before authoring new rules.'}, args.json)
     return 0
@@ -400,7 +495,13 @@ def detection_test(args: argparse.Namespace) -> int:
 
 
 def detection_validate_live(args: argparse.Namespace) -> int:
-    ns = argparse.Namespace(test_cmd='live', scenario_id=args.rule_id if args.rule_id.startswith('PT-') else None, json=args.json)
+    ns = argparse.Namespace(
+        test_cmd='live',
+        scenario_id=args.scenario_id,
+        preflight=args.preflight,
+        approval_token_file=args.approval_token_file,
+        json=args.json,
+    )
     return test_dispatch(ns)
 
 
@@ -412,7 +513,7 @@ def detection_report(args: argparse.Namespace) -> int:
 def purple_replay(args: argparse.Namespace) -> int:
     scenario = resolve_scenario(args.scenario_id)
     doc = load_yaml(scenario)
-    dump({'scenario_id': doc['id'], 'status': 'implemented', 'note': 'Use preflight plus existing live validator path before replaying live behavior.', 'expected_rules': doc['detections']['expected_rules']}, args.json)
+    dump({'scenario_id': doc['id'], 'status': 'implemented', 'note': 'Live replay requires a private preflight, approval token, and external validation adapter.', 'expected_rules': doc['detections']['expected_rules']}, args.json)
     return 0
 
 def metrics(args: argparse.Namespace) -> int:
@@ -498,6 +599,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_preflight = sub.add_parser('preflight')
     p_preflight.add_argument('scenario')
+    p_preflight.add_argument('--attestation', required=True)
     p_preflight.set_defaults(func=scenario_preflight)
 
     p_scenario = sub.add_parser('scenario')
@@ -542,7 +644,9 @@ def build_parser() -> argparse.ArgumentParser:
     t_fix.add_argument('--technique')
     t_fix.set_defaults(func=test_dispatch)
     t_live = ts.add_parser('live')
-    t_live.add_argument('scenario_id', nargs='?')
+    t_live.add_argument('scenario_id')
+    t_live.add_argument('--preflight', required=True)
+    t_live.add_argument('--approval-token-file', required=True)
     t_live.set_defaults(func=test_dispatch)
 
     p_elastic = sub.add_parser('elastic')
@@ -555,13 +659,16 @@ def build_parser() -> argparse.ArgumentParser:
     ir_create_p = ir.add_parser('create')
     ir_create_p.add_argument('--alert')
     ir_create_p.add_argument('--prefix', default='IR')
+    ir_create_p.add_argument('--dry-run', action='store_true')
     ir_create_p.set_defaults(func=ir_create)
     ir_enrich_p = ir.add_parser('enrich')
     ir_enrich_p.add_argument('case_id')
+    ir_enrich_p.add_argument('--dry-run', action='store_true')
     ir_enrich_p.set_defaults(func=ir_enrich)
     ir_collect_p = ir.add_parser('collect')
     ir_collect_p.add_argument('case_id')
     ir_collect_p.add_argument('--profile')
+    ir_collect_p.add_argument('--dry-run', action='store_true')
     ir_collect_p.set_defaults(func=ir_collect)
     ir_hunt_p = ir.add_parser('hunt')
     ir_hunt_p.add_argument('case_id')
@@ -583,6 +690,10 @@ def build_parser() -> argparse.ArgumentParser:
     ir_close_p.add_argument('case_id')
     ir_close_p.add_argument('--disposition', default='undetermined')
     ir_close_p.set_defaults(func=ir_close)
+    ir_cleanup_p = ir.add_parser('cleanup')
+    ir_cleanup_p.add_argument('case_id')
+    ir_cleanup_p.add_argument('--dry-run', action='store_true')
+    ir_cleanup_p.set_defaults(func=ir_cleanup)
 
     p_hunt = sub.add_parser('hunt')
     hs = p_hunt.add_subparsers(dest='hunt_cmd', required=True)
@@ -607,6 +718,12 @@ def build_parser() -> argparse.ArgumentParser:
     f_timeline = fs.add_parser('timeline')
     f_timeline.add_argument('case_id')
     f_timeline.set_defaults(func=forensic_timeline)
+    f_analyze = fs.add_parser('analyze')
+    f_analyze.add_argument('case_id')
+    f_analyze.set_defaults(func=forensic_analyze)
+    f_report = fs.add_parser('report')
+    f_report.add_argument('case_id')
+    f_report.set_defaults(func=forensic_report)
 
     p_detection = sub.add_parser('detection')
     ds = p_detection.add_subparsers(dest='detection_cmd', required=True)
@@ -617,11 +734,16 @@ def build_parser() -> argparse.ArgumentParser:
     d_test.add_argument('rule_id')
     d_test.set_defaults(func=detection_test)
     d_live = ds.add_parser('validate-live')
-    d_live.add_argument('rule_id')
+    d_live.add_argument('scenario_id')
+    d_live.add_argument('--preflight', required=True)
+    d_live.add_argument('--approval-token-file', required=True)
     d_live.set_defaults(func=detection_validate_live)
     d_report = ds.add_parser('report')
     d_report.add_argument('rule_id')
     d_report.set_defaults(func=detection_report)
+    d_review = ds.add_parser('review')
+    d_review.add_argument('case_id')
+    d_review.set_defaults(func=detection_review)
 
     p_pt = sub.add_parser('purple-team')
     pts = p_pt.add_subparsers(dest='pt_cmd', required=True)

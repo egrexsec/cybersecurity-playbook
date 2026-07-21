@@ -12,7 +12,7 @@ required_data:
   - local BITS Operational events
   - optional transferred file evidence
 target_systems:
-  - VICTIM-MAYURI
+  - AUTHORIZED-LAB-ENDPOINT
 baseline_query: windows-baseline-bits-job-counts
 hunt_query: suspicious-bits-job-create-correlation
 investigation_pivots:

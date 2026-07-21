@@ -6,6 +6,11 @@ __pycache__/
 
 # Evidence and generated outputs
 evidence/raw/**
+evidence/manifests/**
+!evidence/manifests/.gitkeep
+investigations/cases/**
+!investigations/cases/.gitkeep
+.runtime/**
 *.evtx
 *.pcap
 *.pcapng

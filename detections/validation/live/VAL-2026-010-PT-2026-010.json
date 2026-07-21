@@ -1,87 +1,53 @@
 {
-  "scenario_id": "PT-2026-010",
+  "schema_version": "1.0.0",
   "validation_run_id": "VAL-2026-010",
+  "detection_id": "DET-2026-010",
+  "scenario_id": "PT-2026-010",
   "technique_id": "T1218.011",
-  "original": {
-    "start_time_utc": "2026-07-18T20:20:13.440558Z",
-    "end_time_utc": "2026-07-18T20:20:19.441801Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\Windows\\\\Temp\\\\pt-2026-010-url.txt\\r\\nLength        : 7\\r\\nLastWriteTime : 7/18/2026 1:20:25 PM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-    "detection_results": [
-      {
-        "_time": "2026-07-18 20:20:22.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T20:20:22.2741157Z'/><EventRecordID>46777</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1059.001,technique_name=PowerShell</Data><Data Name='UtcTime'>2026-07-18 20:20:22.258</Data><Data Name='ProcessGuid'>{1d66a19f-e006-6a5b-6719-000000000d00}</Data><Data Name='ProcessId'>5556</Data><Data Name='Image'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='FileVersion'>10.0.26100.8875 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows PowerShell</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>PowerShell.EXE</Data><Data Name='CommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference='SilentlyContinue'\n$marker='C:\\Windows\\Temp\\pt-2026-010-url.txt'\nRemove-Item $marker -Force -ErrorAction SilentlyContinue\nStart-Process rundll32.exe -ArgumentList 'url.dll,FileProtocolHandler calc.exe'\nStart-Sleep -Seconds 3\n$calc=Get-Process calc -ErrorAction SilentlyContinue\n$ran=[bool]$calc\nif($calc){ $calc | Stop-Process -Force }\nSet-Content -Path $marker -Value ([string]$ran)\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=613000DC53E7EF0B048021F68DD06C101994DA29,MD5=E65ECCA3754249C00F50A035202F7591,SHA256=7600FFE12DA441FE89D035B13801E8E91D064BC544A27B19A5CF49F6AB8B18F5,IMPHASH=AFACF6DC9041114B198160AAB4D0AE77</Data><Data Name='ParentProcessGuid'>{1d66a19f-e006-6a5b-6519-000000000d00}</Data><Data Name='ParentProcessId'>5524</Data><Data Name='ParentImage'>C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe</Data><Data Name='ParentCommandLine'>\"C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe\" 8 9 z 4 6 - y y - - powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference='SilentlyContinue'\n$marker='C:\\Windows\\Temp\\pt-2026-010-url.txt'\nRemove-Item $marker -Force -ErrorAction SilentlyContinue\nStart-Process rundll32.exe -ArgumentList 'url.dll,FileProtocolHandler calc.exe'\nStart-Sleep -Seconds 3\n$calc=Get-Process calc -ErrorAction SilentlyContinue\n$ran=[bool]$calc\nif($calc){ $calc | Stop-Process -Force }\nSet-Content -Path $marker -Value ([string]$ran)\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 20:20:22.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T20:20:22.6726245Z'/><EventRecordID>46790</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1218.011,technique_name=rundll32.exe</Data><Data Name='UtcTime'>2026-07-18 20:20:22.659</Data><Data Name='ProcessGuid'>{1d66a19f-e006-6a5b-6819-000000000d00}</Data><Data Name='ProcessId'>5028</Data><Data Name='Image'>C:\\Windows\\System32\\rundll32.exe</Data><Data Name='FileVersion'>10.0.26100.8737 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows host process (Rundll32)</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>RUNDLL32.EXE</Data><Data Name='CommandLine'>\"C:\\WINDOWS\\system32\\rundll32.exe\" url.dll,FileProtocolHandler calc.exe </Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=179EE61E957CB5A6CF12D4822DFC59B66C51B317,MD5=541EC97EAB7D4D20054B59F97F1A74C6,SHA256=5C066C0A800A0158180CA413148EDF84033981010CA624F1637EAB71475E3DD5,IMPHASH=C8B70D465C35D895C4171BAF042BB63A</Data><Data Name='ParentProcessGuid'>{1d66a19f-e006-6a5b-6719-000000000d00}</Data><Data Name='ParentProcessId'>5556</Data><Data Name='ParentImage'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='ParentCommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference='SilentlyContinue'\n$marker='C:\\Windows\\Temp\\pt-2026-010-url.txt'\nRemove-Item $marker -Force -ErrorAction SilentlyContinue\nStart-Process rundll32.exe -ArgumentList 'url.dll,FileProtocolHandler calc.exe'\nStart-Sleep -Seconds 3\n$calc=Get-Process calc -ErrorAction SilentlyContinue\n$ran=[bool]$calc\nif($calc){ $calc | Stop-Process -Force }\nSet-Content -Path $marker -Value ([string]$ran)\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      }
-    ],
-    "marker_state": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\Windows\\\\Temp\\\\pt-2026-010-url.txt\\r\\nLength        : 7\\r\\nLastWriteTime : 7/18/2026 1:20:25 PM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-    "detection_fired": true,
-    "detection_latency_seconds": "uncomputed-search-window"
+  "status": "historical-live-validated",
+  "validation_environment": {
+    "target_role": "authorized lab endpoint",
+    "siem_role": "internal SIEM service",
+    "sanitized": true
   },
-  "variant": {
-    "start_time_utc": "2026-07-18T20:20:29.357623Z",
-    "end_time_utc": "2026-07-18T20:20:34.715618Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\Windows\\\\Temp\\\\pt-2026-010-pcwu.txt\\r\\nLength        : 7\\r\\nLastWriteTime : 7/18/2026 1:20:40 PM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-    "detection_results": [
-      {
-        "_time": "2026-07-18 20:20:37.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T20:20:37.8862606Z'/><EventRecordID>46825</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1218.011,technique_name=rundll32.exe</Data><Data Name='UtcTime'>2026-07-18 20:20:37.878</Data><Data Name='ProcessGuid'>{1d66a19f-e015-6a5b-7019-000000000d00}</Data><Data Name='ProcessId'>1348</Data><Data Name='Image'>C:\\Windows\\System32\\rundll32.exe</Data><Data Name='FileVersion'>10.0.26100.8737 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows host process (Rundll32)</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>RUNDLL32.EXE</Data><Data Name='CommandLine'>\"C:\\WINDOWS\\system32\\rundll32.exe\" pcwutl.dll,LaunchApplication calc.exe </Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=179EE61E957CB5A6CF12D4822DFC59B66C51B317,MD5=541EC97EAB7D4D20054B59F97F1A74C6,SHA256=5C066C0A800A0158180CA413148EDF84033981010CA624F1637EAB71475E3DD5,IMPHASH=C8B70D465C35D895C4171BAF042BB63A</Data><Data Name='ParentProcessGuid'>{1d66a19f-e015-6a5b-6f19-000000000d00}</Data><Data Name='ParentProcessId'>4408</Data><Data Name='ParentImage'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='ParentCommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference='SilentlyContinue'\n$marker='C:\\Windows\\Temp\\pt-2026-010-pcwu.txt'\nRemove-Item $marker -Force -ErrorAction SilentlyContinue\nStart-Process rundll32.exe -ArgumentList 'pcwutl.dll,LaunchApplication calc.exe'\nStart-Sleep -Seconds 3\n$calc=Get-Process calc -ErrorAction SilentlyContinue\n$ran=[bool]$calc\nif($calc){ $calc | Stop-Process -Force }\nSet-Content -Path $marker -Value ([string]$ran)\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 20:20:37.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T20:20:37.6164717Z'/><EventRecordID>46812</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1059.001,technique_name=PowerShell</Data><Data Name='UtcTime'>2026-07-18 20:20:37.605</Data><Data Name='ProcessGuid'>{1d66a19f-e015-6a5b-6f19-000000000d00}</Data><Data Name='ProcessId'>4408</Data><Data Name='Image'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='FileVersion'>10.0.26100.8875 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows PowerShell</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>PowerShell.EXE</Data><Data Name='CommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference='SilentlyContinue'\n$marker='C:\\Windows\\Temp\\pt-2026-010-pcwu.txt'\nRemove-Item $marker -Force -ErrorAction SilentlyContinue\nStart-Process rundll32.exe -ArgumentList 'pcwutl.dll,LaunchApplication calc.exe'\nStart-Sleep -Seconds 3\n$calc=Get-Process calc -ErrorAction SilentlyContinue\n$ran=[bool]$calc\nif($calc){ $calc | Stop-Process -Force }\nSet-Content -Path $marker -Value ([string]$ran)\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=613000DC53E7EF0B048021F68DD06C101994DA29,MD5=E65ECCA3754249C00F50A035202F7591,SHA256=7600FFE12DA441FE89D035B13801E8E91D064BC544A27B19A5CF49F6AB8B18F5,IMPHASH=AFACF6DC9041114B198160AAB4D0AE77</Data><Data Name='ParentProcessGuid'>{1d66a19f-e015-6a5b-6d19-000000000d00}</Data><Data Name='ParentProcessId'>5916</Data><Data Name='ParentImage'>C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe</Data><Data Name='ParentCommandLine'>\"C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe\" 8 9 z 4 6 - y y - - powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference='SilentlyContinue'\n$marker='C:\\Windows\\Temp\\pt-2026-010-pcwu.txt'\nRemove-Item $marker -Force -ErrorAction SilentlyContinue\nStart-Process rundll32.exe -ArgumentList 'pcwutl.dll,LaunchApplication calc.exe'\nStart-Sleep -Seconds 3\n$calc=Get-Process calc -ErrorAction SilentlyContinue\n$ran=[bool]$calc\nif($calc){ $calc | Stop-Process -Force }\nSet-Content -Path $marker -Value ([string]$ran)\nGet-Item $marker | Select-Object FullName,Length,LastWriteTime | Format-List\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      }
-    ],
-    "marker_state": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\Windows\\\\Temp\\\\pt-2026-010-pcwu.txt\\r\\nLength        : 7\\r\\nLastWriteTime : 7/18/2026 1:20:40 PM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
+  "validated_at": "2026-07-18T20:20:34.715618Z",
+  "source_record_sha256": "44f22655641ee13497b02a36243d70f1edaa75df912007a8507dd71ef5df69e2",
+  "positive_test": {
     "detection_fired": true,
-    "detection_latency_seconds": "uncomputed-search-window"
+    "marker_found": null,
+    "latency_seconds": null,
+    "latency_status": "uncomputed"
   },
-  "negatives": [
+  "variant_test": {
+    "detection_fired": true,
+    "marker_found": null,
+    "latency_seconds": null,
+    "latency_status": "uncomputed"
+  },
+  "negative_tests": [
     {
-      "start_time_utc": "2026-07-18T20:20:44.651751Z",
-      "end_time_utc": "2026-07-18T20:20:49.954042Z",
-      "exec_output": "{\n   \"exitcode\" : 1,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nProcessName : rundll32\\r\\nId          : 2384\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-      "detection_results": [],
-      "marker_state": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\Windows\\\\Temp\\\\pt-2026-010-url.txt\\r\\nLength        : 7\\r\\nLastWriteTime : 7/18/2026 1:20:25 PM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
+      "ordinal": 1,
       "detection_fired": false,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     },
     {
-      "start_time_utc": "2026-07-18T20:20:57.878104Z",
-      "end_time_utc": "2026-07-18T20:21:29.338556Z",
-      "exec_output": "timeout reached, returning pid\n{\n   \"pid\" : 4124\n}\n",
-      "detection_results": [],
-      "marker_state": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\Windows\\\\Temp\\\\pt-2026-010-url.txt\\r\\nLength        : 7\\r\\nLastWriteTime : 7/18/2026 1:20:25 PM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
+      "ordinal": 2,
       "detection_fired": false,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     },
     {
-      "start_time_utc": "2026-07-18T20:21:37.324264Z",
-      "end_time_utc": "2026-07-18T20:21:42.664242Z",
-      "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"control panel benign launch attempted\\r\\n\"\n}\n",
-      "detection_results": [],
-      "marker_state": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\Windows\\\\Temp\\\\pt-2026-010-url.txt\\r\\nLength        : 7\\r\\nLastWriteTime : 7/18/2026 1:20:25 PM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
+      "ordinal": 3,
       "detection_fired": false,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     }
   ],
   "cleanup": {
-    "start_time_utc": "2026-07-18T20:21:50.706315Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"cleanup complete\\r\\n\"\n}\n",
-    "end_time_utc": "2026-07-18T20:21:53.049662Z"
-  }
+    "status": "confirmed",
+    "confirmed_at": "2026-07-18T20:21:53.049662Z"
+  },
+  "limitations": [
+    "Historical authorized-lab result; current telemetry and deployment state require a fresh preflight.",
+    "Raw logs, commands, host identifiers, user identifiers, event identifiers, and environment-specific values are intentionally excluded.",
+    "Successful detection does not prove portability to other field mappings, indexes, tables, sourcetypes, or data models."
+  ]
 }

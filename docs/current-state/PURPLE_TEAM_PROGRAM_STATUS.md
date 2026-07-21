@@ -1,38 +1,40 @@
-# Purple Team Program Status
+# Purple-team program status
 
 ## Milestone matrix
-| Capability | Status | Evidence | Blocking Issue | Next Action |
+
+| Capability | Current status | Evidence | Boundary / blocker | Next action |
 |---|---|---|---|---|
-| Lab readiness | Partially ready | `DETECTION_PLATFORM_READINESS.md`, `PROJECT_TIMELINE_ASSESSMENT.md` | limited to current Mayuri lab assumptions | keep evidence-scoped and public-safe |
-| Windows telemetry | Ready | Sysmon + PowerShell + Splunk evidence in live validation JSON | field normalization incomplete | improve normalized field model |
-| Splunk ingestion | Ready | generated Splunk queries + `VAL-2026-001..011` | raw XML matching still used in places | normalize fields where practical |
-| Atomic execution foundation | Validated | `VAL-2026-001..004` | latency not yet standardized | add numeric latency fields |
-| Windows persistence expansion | Validated | `VAL-2026-005..011` | coverage is broader but still Windows-centric | continue expanding safely |
-| Threat hunts | Partially ready | `HUNT-2026-001..011` | could be broader and more standardized | expand hunt packs |
-| Forensics | Partially ready | `investigations/endpoint/DFIR-2026-001..011/` | not yet full DFIR suite | enrich case studies and artifacts |
-| Sigma source rules | Ready | `detections/sigma/windows/process_creation/` | 11 canonical rules are live on main | add more validated rules incrementally |
-| Splunk conversions | Ready | `detections/generated/splunk/official/` and `live/` | live path still partly XML-backed | improve normalization |
-| Offline EVTX testing | Staged | `docs/workflows/OFFLINE_EVTX_DETECTION_TESTING.md` | tooling not yet fully operationalized | add Chainsaw/Hayabusa workflow |
-| Positive fixtures | Ready | `tests/fixtures/` | coverage is solid for current Windows scenarios | expand with each new scenario |
-| Negative fixtures | Ready | `tests/fixtures/` | same as above | expand with each new scenario |
-| Live detection validation | Ready | `detections/validation/live/` | 11 scenarios are live validated on main | continue scenario-by-scenario growth |
-| GitHub CI | Ready | `.github/workflows/detection-validation.yml` | live Mayuri connectivity intentionally excluded | keep CI offline-focused |
-| Elastic readiness | Deferred | `ELASTIC_READINESS_DECISION.md` | no live backend deployment | keep conversion-only for now |
-| Elastic deployment | Not started | none | intentionally deferred | revisit only after stronger maturity |
+| Repository validation | Ready | schema, Markdown, public-safety, and unit checks | offline only | keep CI green |
+| Windows detection content | Fixture tested | 11 Sigma rules and 59 fixtures | Windows-centric | expand only with fixtures |
+| Generated Splunk content | Conversion supported | official and environment-wrapper SPL | deployment not verified | add backend registry and deployment profiles |
+| Generated Elastic content | Conversion supported | EQL output | no live Elastic backend validation | retain conversion-only label |
+| Historical live summaries | Historical evidence | 11 sanitized records dated 2026-07-18 | not current-health evidence | require fresh preflight for replay |
+| Threat hunts | Planned / reference-only | 11 hunt definitions | no bounded SIEM adapter | implement adapter and result contract |
+| IR intake and case workflow | Fixture tested | deterministic intake, enrichment, collection plan, timeline, analysis, report | no fresh webhook replay | test via approved adapter when authorized |
+| CTI enrichment | Fixture tested contract | timeout, fail-open, advisory-only tests | no current provider health claim | add private provider adapter |
+| DFIR collection | Fixture tested / planned | artifact hashes and explicit status model | no live collector adapter | implement Velociraptor contract externally |
+| Containment | Intentionally disabled | approval-aware plans | destructive execution prohibited | retain human approval gate |
+| GitHub CI | Ready locally; pending branch CI | workflow includes unit and public-safety checks | new commit not yet pushed | verify PR checks |
+| Shared DetLab contract | Not started | assessment complete | cross-repository schema required | implement specification v1 |
 
-## Current verified maturity level
-**Level 4 — Detection as Code**
+## Current maturity
 
-### Why this level is supported
-- telemetry-backed scenarios exist
-- authored Sigma rules exist
-- backend conversions exist
-- offline fixture tests exist
-- live validation records exist
-- CI validates content structure and generated artifacts
+**Functional detection-engineering MVP / early Detection-as-Code platform.**
 
-### Why it is not yet Level 5 or 6
-- live validated coverage is still narrower than the long-term roadmap, but no longer limited to the original three scenarios
-- field normalization remains incomplete in Splunk
-- offline EVTX workflow is documented but not fully operationalized
-- Elastic conversion exists, but no live Elastic backend validation is present
+Supported by:
+
+- canonical Sigma source rules;
+- positive and negative fixtures;
+- reproducible generated queries;
+- schema-valid scenarios and sanitized historical summaries;
+- deterministic IR workflow tests;
+- public-safety and secret-scanning gates.
+
+Not yet a higher-maturity operational platform because:
+
+- live SIEM, endpoint, CTI, and DFIR adapters are not configured in the public repository;
+- current deployment and telemetry health are not asserted;
+- field normalization remains incomplete;
+- durable SIEM saved-search deployment is not verified;
+- Elastic support remains conversion-only;
+- destructive response remains disabled.

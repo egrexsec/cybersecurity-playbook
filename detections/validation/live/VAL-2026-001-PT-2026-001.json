@@ -1,171 +1,53 @@
 {
-  "scenario_id": "PT-2026-001",
+  "schema_version": "1.0.0",
   "validation_run_id": "VAL-2026-001",
+  "detection_id": "DET-2026-001",
+  "scenario_id": "PT-2026-001",
   "technique_id": "T1059.001",
-  "original": {
-    "start_time_utc": "2026-07-18T13:19:28.467278Z",
-    "end_time_utc": "2026-07-18T13:19:30.671388Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"The operation completed successfully.\\r\\r\\n\\r\\n\\r\\nFullName      : C:\\\\WINDOWS\\\\Temp\\\\art-marker.txt\\r\\nLength        : 32\\r\\nLastWriteTime : 7/18/2026 6:19:34 AM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-    "detection_results": [
-      {
-        "_time": "2026-07-18 13:19:34.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4104</EventID><Version>1</Version><Level>5</Level><Task>2</Task><Opcode>15</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:34.5224211Z'/><EventRecordID>56394</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0001-648b-6839fa15dd01}'/><Execution ProcessID='4400' ThreadID='1336'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='MessageNumber'>1</Data><Data Name='MessageTotal'>1</Data><Data Name='ScriptBlockText'>$ErrorActionPreference='Stop'; $encoded='U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI='; reg.exe add \"HKEY_CURRENT_USER\\Software\\Classes\\AtomicRedTeam\" /v ART /t REG_SZ /d $encoded /f; Invoke-Expression ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKCU:\\Software\\Classes\\AtomicRedTeam').ART))); Get-Item \"$env:SystemRoot\\Temp\\art-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List</Data><Data Name='ScriptBlockId'>5315bd27-e193-455e-b446-120ba3d65aad</Data><Data Name='Path'></Data></EventData></Event>"
-      }
-    ],
-    "marker_results": [
-      {
-        "_time": "2026-07-18 13:19:34.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4103</EventID><Version>1</Version><Level>4</Level><Task>106</Task><Opcode>20</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:34.6748315Z'/><EventRecordID>56400</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0001-648b-6839fa15dd01}'/><Execution ProcessID='4400' ThreadID='1336'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='ContextInfo'>        Severity = Informational\r\n        Host Name = ConsoleHost\r\n        Host Version = 5.1.26100.8875\r\n        Host ID = 45dfb75c-4332-479a-aca3-ccb748e9e81b\r\n        Host Application = powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference='Stop'; $encoded='U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI='; reg.exe add \"HKEY_CURRENT_USER\\Software\\Classes\\AtomicRedTeam\" /v ART /t REG_SZ /d $encoded /f; Invoke-Expression ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKCU:\\Software\\Classes\\AtomicRedTeam').ART))); Get-Item \"$env:SystemRoot\\Temp\\art-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List\r\n        Engine Version = 5.1.26100.8875\r\n        Runspace ID = 2900b3e9-8510-4800-9dda-ce092548359d\r\n        Pipeline ID = 1\r\n        Command Name = \r\n        Command Type = Script\r\n        Script Name = \r\n        Command Path = \r\n        Sequence Number = 48\r\n        User = MAYURI\\SYSTEM\r\n        Connected User = \r\n        Shell ID = Microsoft.PowerShell\r\n</Data><Data Name='UserData'></Data><Data Name='Payload'>CommandInvocation(Out-Default): \"Out-Default\"\r\nParameterBinding(Out-Default): name=\"InputObject\"; value=\"Microsoft.PowerShell.Commands.Internal.Format.FormatStartData\"\r\nParameterBinding(Out-Default): name=\"InputObject\"; value=\"Microsoft.PowerShell.Commands.Internal.Format.GroupStartData\"\r\nParameterBinding(Out-Default): name=\"InputObject\"; value=\"Microsoft.PowerShell.Commands.Internal.Format.FormatEntryData\"\r\nParameterBinding(Out-Default): name=\"InputObject\"; value=\"Microsoft.PowerShell.Commands.Internal.Format.GroupEndData\"\r\nParameterBinding(Out-Default): name=\"InputObject\"; value=\"Microsoft.PowerShell.Commands.Internal.Format.FormatEndData\"\r\n</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:34.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4103</EventID><Version>1</Version><Level>4</Level><Task>106</Task><Opcode>20</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:34.6744563Z'/><EventRecordID>56399</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0003-7cd0-7e39fa15dd01}'/><Execution ProcessID='4400' ThreadID='1336'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='ContextInfo'>        Severity = Informational\r\n        Host Name = ConsoleHost\r\n        Host Version = 5.1.26100.8875\r\n        Host ID = 45dfb75c-4332-479a-aca3-ccb748e9e81b\r\n        Host Application = powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference='Stop'; $encoded='U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI='; reg.exe add \"HKEY_CURRENT_USER\\Software\\Classes\\AtomicRedTeam\" /v ART /t REG_SZ /d $encoded /f; Invoke-Expression ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKCU:\\Software\\Classes\\AtomicRedTeam').ART))); Get-Item \"$env:SystemRoot\\Temp\\art-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List\r\n        Engine Version = 5.1.26100.8875\r\n        Runspace ID = 2900b3e9-8510-4800-9dda-ce092548359d\r\n        Pipeline ID = 1\r\n        Command Name = Get-Item\r\n        Command Type = Cmdlet\r\n        Script Name = \r\n        Command Path = \r\n        Sequence Number = 43\r\n        User = MAYURI\\SYSTEM\r\n        Connected User = \r\n        Shell ID = Microsoft.PowerShell\r\n</Data><Data Name='UserData'></Data><Data Name='Payload'>CommandInvocation(Get-Item): \"Get-Item\"\r\nParameterBinding(Get-Item): name=\"Path\"; value=\"C:\\WINDOWS\\Temp\\art-marker.txt\"\r\nCommandInvocation(Select-Object): \"Select-Object\"\r\nParameterBinding(Select-Object): name=\"Property\"; value=\"FullName, Length, LastWriteTime\"\r\nCommandInvocation(Format-List): \"Format-List\"\r\nParameterBinding(Select-Object): name=\"InputObject\"; value=\"C:\\WINDOWS\\Temp\\art-marker.txt\"\r\nParameterBinding(Format-List): name=\"InputObject\"; value=\"@{FullName=C:\\WINDOWS\\Temp\\art-marker.txt; Length=32; LastWriteTime=7/18/2026 6:19:34 AM}\"\r\n</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:34.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4103</EventID><Version>1</Version><Level>4</Level><Task>106</Task><Opcode>20</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:34.6640090Z'/><EventRecordID>56398</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0003-78d0-7e39fa15dd01}'/><Execution ProcessID='4400' ThreadID='1336'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='ContextInfo'>        Severity = Informational\r\n        Host Name = ConsoleHost\r\n        Host Version = 5.1.26100.8875\r\n        Host ID = 45dfb75c-4332-479a-aca3-ccb748e9e81b\r\n        Host Application = powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference='Stop'; $encoded='U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI='; reg.exe add \"HKEY_CURRENT_USER\\Software\\Classes\\AtomicRedTeam\" /v ART /t REG_SZ /d $encoded /f; Invoke-Expression ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKCU:\\Software\\Classes\\AtomicRedTeam').ART))); Get-Item \"$env:SystemRoot\\Temp\\art-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List\r\n        Engine Version = 5.1.26100.8875\r\n        Runspace ID = 2900b3e9-8510-4800-9dda-ce092548359d\r\n        Pipeline ID = 1\r\n        Command Name = Invoke-Expression\r\n        Command Type = Cmdlet\r\n        Script Name = \r\n        Command Path = \r\n        Sequence Number = 34\r\n        User = MAYURI\\SYSTEM\r\n        Connected User = \r\n        Shell ID = Microsoft.PowerShell\r\n</Data><Data Name='UserData'></Data><Data Name='Payload'>CommandInvocation(Invoke-Expression): \"Invoke-Expression\"\r\nParameterBinding(Invoke-Expression): name=\"Command\"; value=\"Set-Content -path \"$env:SystemRoot/Temp/art-marker.txt\" -value \"Hello from the Atomic Red Team\"\"\r\n</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:34.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4103</EventID><Version>1</Version><Level>4</Level><Task>106</Task><Opcode>20</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:34.6636780Z'/><EventRecordID>56397</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0003-79d0-7e39fa15dd01}'/><Execution ProcessID='4400' ThreadID='1336'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='ContextInfo'>        Severity = Informational\r\n        Host Name = ConsoleHost\r\n        Host Version = 5.1.26100.8875\r\n        Host ID = 45dfb75c-4332-479a-aca3-ccb748e9e81b\r\n        Host Application = powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference='Stop'; $encoded='U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI='; reg.exe add \"HKEY_CURRENT_USER\\Software\\Classes\\AtomicRedTeam\" /v ART /t REG_SZ /d $encoded /f; Invoke-Expression ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKCU:\\Software\\Classes\\AtomicRedTeam').ART))); Get-Item \"$env:SystemRoot\\Temp\\art-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List\r\n        Engine Version = 5.1.26100.8875\r\n        Runspace ID = 2900b3e9-8510-4800-9dda-ce092548359d\r\n        Pipeline ID = 1\r\n        Command Name = Set-Content\r\n        Command Type = Cmdlet\r\n        Script Name = \r\n        Command Path = \r\n        Sequence Number = 31\r\n        User = MAYURI\\SYSTEM\r\n        Connected User = \r\n        Shell ID = Microsoft.PowerShell\r\n</Data><Data Name='UserData'></Data><Data Name='Payload'>CommandInvocation(Set-Content): \"Set-Content\"\r\nParameterBinding(Set-Content): name=\"Path\"; value=\"C:\\WINDOWS/Temp/art-marker.txt\"\r\nParameterBinding(Set-Content): name=\"Value\"; value=\"Hello from the Atomic Red Team\"\r\n</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:34.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4104</EventID><Version>1</Version><Level>5</Level><Task>2</Task><Opcode>15</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:34.6572749Z'/><EventRecordID>56396</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0003-78d0-7e39fa15dd01}'/><Execution ProcessID='4400' ThreadID='1336'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='MessageNumber'>1</Data><Data Name='MessageTotal'>1</Data><Data Name='ScriptBlockText'>Set-Content -path \"$env:SystemRoot/Temp/art-marker.txt\" -value \"Hello from the Atomic Red Team\"</Data><Data Name='ScriptBlockId'>50464806-e54c-483a-ac8b-c23c6cf64e2f</Data><Data Name='Path'></Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:34.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4103</EventID><Version>1</Version><Level>4</Level><Task>106</Task><Opcode>20</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:34.5958519Z'/><EventRecordID>56395</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0003-76d0-7e39fa15dd01}'/><Execution ProcessID='4400' ThreadID='1336'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='ContextInfo'>        Severity = Informational\r\n        Host Name = ConsoleHost\r\n        Host Version = 5.1.26100.8875\r\n        Host ID = 45dfb75c-4332-479a-aca3-ccb748e9e81b\r\n        Host Application = powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference='Stop'; $encoded='U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI='; reg.exe add \"HKEY_CURRENT_USER\\Software\\Classes\\AtomicRedTeam\" /v ART /t REG_SZ /d $encoded /f; Invoke-Expression ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKCU:\\Software\\Classes\\AtomicRedTeam').ART))); Get-Item \"$env:SystemRoot\\Temp\\art-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List\r\n        Engine Version = 5.1.26100.8875\r\n        Runspace ID = 2900b3e9-8510-4800-9dda-ce092548359d\r\n        Pipeline ID = 1\r\n        Command Name = Get-ItemProperty\r\n        Command Type = Cmdlet\r\n        Script Name = \r\n        Command Path = \r\n        Sequence Number = 24\r\n        User = MAYURI\\SYSTEM\r\n        Connected User = \r\n        Shell ID = Microsoft.PowerShell\r\n</Data><Data Name='UserData'></Data><Data Name='Payload'>CommandInvocation(Get-ItemProperty): \"Get-ItemProperty\"\r\nParameterBinding(Get-ItemProperty): name=\"Path\"; value=\"HKCU:\\Software\\Classes\\AtomicRedTeam\"\r\n</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:34.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4104</EventID><Version>1</Version><Level>5</Level><Task>2</Task><Opcode>15</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:34.5224211Z'/><EventRecordID>56394</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0001-648b-6839fa15dd01}'/><Execution ProcessID='4400' ThreadID='1336'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='MessageNumber'>1</Data><Data Name='MessageTotal'>1</Data><Data Name='ScriptBlockText'>$ErrorActionPreference='Stop'; $encoded='U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI='; reg.exe add \"HKEY_CURRENT_USER\\Software\\Classes\\AtomicRedTeam\" /v ART /t REG_SZ /d $encoded /f; Invoke-Expression ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKCU:\\Software\\Classes\\AtomicRedTeam').ART))); Get-Item \"$env:SystemRoot\\Temp\\art-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List</Data><Data Name='ScriptBlockId'>5315bd27-e193-455e-b446-120ba3d65aad</Data><Data Name='Path'></Data></EventData></Event>"
-      }
-    ],
+  "status": "historical-live-validated",
+  "validation_environment": {
+    "target_role": "authorized lab endpoint",
+    "siem_role": "internal SIEM service",
+    "sanitized": true
+  },
+  "validated_at": "2026-07-18T13:19:45.028294Z",
+  "source_record_sha256": "61bf54f28547bf9e7332761078ba1e808b354e6e6b4a6506583252f40a6af924",
+  "positive_test": {
     "detection_fired": true,
     "marker_found": true,
-    "detection_latency_seconds": "uncomputed-search-window"
+    "latency_seconds": null,
+    "latency_status": "uncomputed"
   },
-  "variant": {
-    "start_time_utc": "2026-07-18T13:19:42.818387Z",
-    "end_time_utc": "2026-07-18T13:19:45.028294Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\WINDOWS\\\\Temp\\\\variant-marker.txt\\r\\nLength        : 29\\r\\nLastWriteTime : 7/18/2026 6:19:49 AM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-    "detection_results": [
-      {
-        "_time": "2026-07-18 13:19:48.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4104</EventID><Version>1</Version><Level>5</Level><Task>2</Task><Opcode>15</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:48.8840558Z'/><EventRecordID>56405</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0000-8bfe-7b39fa15dd01}'/><Execution ProcessID='5640' ThreadID='3420'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='MessageNumber'>1</Data><Data Name='MessageTotal'>1</Data><Data Name='ScriptBlockText'>$ErrorActionPreference='Stop'; $bytes=[Text.Encoding]::Unicode.GetBytes('Set-Content -Path \"$env:SystemRoot\\Temp\\variant-marker.txt\" -Value \"Hello from modified variant\"'); $b64=[Convert]::ToBase64String($bytes); Invoke-Expression ([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($b64))); Get-Item \"$env:SystemRoot\\Temp\\variant-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List</Data><Data Name='ScriptBlockId'>748858d3-5917-460f-b844-9670101236b5</Data><Data Name='Path'></Data></EventData></Event>"
-      }
-    ],
-    "marker_results": [
-      {
-        "_time": "2026-07-18 13:19:49.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4103</EventID><Version>1</Version><Level>4</Level><Task>106</Task><Opcode>20</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:49.0151121Z'/><EventRecordID>56409</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0000-bcfe-7b39fa15dd01}'/><Execution ProcessID='5640' ThreadID='3420'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='ContextInfo'>        Severity = Informational\r\n        Host Name = ConsoleHost\r\n        Host Version = 5.1.26100.8875\r\n        Host ID = fe8fb414-cc51-44e0-a0dc-de56f7e960f1\r\n        Host Application = powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference='Stop'; $bytes=[Text.Encoding]::Unicode.GetBytes('Set-Content -Path \"$env:SystemRoot\\Temp\\variant-marker.txt\" -Value \"Hello from modified variant\"'); $b64=[Convert]::ToBase64String($bytes); Invoke-Expression ([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($b64))); Get-Item \"$env:SystemRoot\\Temp\\variant-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List\r\n        Engine Version = 5.1.26100.8875\r\n        Runspace ID = ca2db9d7-e836-4970-ba78-cbc4de5c3697\r\n        Pipeline ID = 1\r\n        Command Name = Get-Item\r\n        Command Type = Cmdlet\r\n        Script Name = \r\n        Command Path = \r\n        Sequence Number = 37\r\n        User = MAYURI\\SYSTEM\r\n        Connected User = \r\n        Shell ID = Microsoft.PowerShell\r\n</Data><Data Name='UserData'></Data><Data Name='Payload'>CommandInvocation(Get-Item): \"Get-Item\"\r\nParameterBinding(Get-Item): name=\"Path\"; value=\"C:\\WINDOWS\\Temp\\variant-marker.txt\"\r\nCommandInvocation(Select-Object): \"Select-Object\"\r\nParameterBinding(Select-Object): name=\"Property\"; value=\"FullName, Length, LastWriteTime\"\r\nCommandInvocation(Format-List): \"Format-List\"\r\nParameterBinding(Select-Object): name=\"InputObject\"; value=\"C:\\WINDOWS\\Temp\\variant-marker.txt\"\r\nParameterBinding(Format-List): name=\"InputObject\"; value=\"@{FullName=C:\\WINDOWS\\Temp\\variant-marker.txt; Length=29; LastWriteTime=7/18/2026 6:19:49 AM}\"\r\n</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:49.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4103</EventID><Version>1</Version><Level>4</Level><Task>106</Task><Opcode>20</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:49.0040048Z'/><EventRecordID>56408</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0001-f08b-6839fa15dd01}'/><Execution ProcessID='5640' ThreadID='3420'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='ContextInfo'>        Severity = Informational\r\n        Host Name = ConsoleHost\r\n        Host Version = 5.1.26100.8875\r\n        Host ID = fe8fb414-cc51-44e0-a0dc-de56f7e960f1\r\n        Host Application = powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference='Stop'; $bytes=[Text.Encoding]::Unicode.GetBytes('Set-Content -Path \"$env:SystemRoot\\Temp\\variant-marker.txt\" -Value \"Hello from modified variant\"'); $b64=[Convert]::ToBase64String($bytes); Invoke-Expression ([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($b64))); Get-Item \"$env:SystemRoot\\Temp\\variant-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List\r\n        Engine Version = 5.1.26100.8875\r\n        Runspace ID = ca2db9d7-e836-4970-ba78-cbc4de5c3697\r\n        Pipeline ID = 1\r\n        Command Name = Invoke-Expression\r\n        Command Type = Cmdlet\r\n        Script Name = \r\n        Command Path = \r\n        Sequence Number = 28\r\n        User = MAYURI\\SYSTEM\r\n        Connected User = \r\n        Shell ID = Microsoft.PowerShell\r\n</Data><Data Name='UserData'></Data><Data Name='Payload'>CommandInvocation(Invoke-Expression): \"Invoke-Expression\"\r\nParameterBinding(Invoke-Expression): name=\"Command\"; value=\"Set-Content -Path \"$env:SystemRoot\\Temp\\variant-marker.txt\" -Value \"Hello from modified variant\"\"\r\n</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:49.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4103</EventID><Version>1</Version><Level>4</Level><Task>106</Task><Opcode>20</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:49.0036757Z'/><EventRecordID>56407</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0001-f18b-6839fa15dd01}'/><Execution ProcessID='5640' ThreadID='3420'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='ContextInfo'>        Severity = Informational\r\n        Host Name = ConsoleHost\r\n        Host Version = 5.1.26100.8875\r\n        Host ID = fe8fb414-cc51-44e0-a0dc-de56f7e960f1\r\n        Host Application = powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference='Stop'; $bytes=[Text.Encoding]::Unicode.GetBytes('Set-Content -Path \"$env:SystemRoot\\Temp\\variant-marker.txt\" -Value \"Hello from modified variant\"'); $b64=[Convert]::ToBase64String($bytes); Invoke-Expression ([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($b64))); Get-Item \"$env:SystemRoot\\Temp\\variant-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List\r\n        Engine Version = 5.1.26100.8875\r\n        Runspace ID = ca2db9d7-e836-4970-ba78-cbc4de5c3697\r\n        Pipeline ID = 1\r\n        Command Name = Set-Content\r\n        Command Type = Cmdlet\r\n        Script Name = \r\n        Command Path = \r\n        Sequence Number = 25\r\n        User = MAYURI\\SYSTEM\r\n        Connected User = \r\n        Shell ID = Microsoft.PowerShell\r\n</Data><Data Name='UserData'></Data><Data Name='Payload'>CommandInvocation(Set-Content): \"Set-Content\"\r\nParameterBinding(Set-Content): name=\"Path\"; value=\"C:\\WINDOWS\\Temp\\variant-marker.txt\"\r\nParameterBinding(Set-Content): name=\"Value\"; value=\"Hello from modified variant\"\r\n</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:48.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4104</EventID><Version>1</Version><Level>5</Level><Task>2</Task><Opcode>15</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:48.9709832Z'/><EventRecordID>56406</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0001-f08b-6839fa15dd01}'/><Execution ProcessID='5640' ThreadID='3420'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='MessageNumber'>1</Data><Data Name='MessageTotal'>1</Data><Data Name='ScriptBlockText'>Set-Content -Path \"$env:SystemRoot\\Temp\\variant-marker.txt\" -Value \"Hello from modified variant\"</Data><Data Name='ScriptBlockId'>c43bf741-4ded-47b6-9e16-49902a6d8105</Data><Data Name='Path'></Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:48.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4104</EventID><Version>1</Version><Level>5</Level><Task>2</Task><Opcode>15</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:48.8840558Z'/><EventRecordID>56405</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0000-8bfe-7b39fa15dd01}'/><Execution ProcessID='5640' ThreadID='3420'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='MessageNumber'>1</Data><Data Name='MessageTotal'>1</Data><Data Name='ScriptBlockText'>$ErrorActionPreference='Stop'; $bytes=[Text.Encoding]::Unicode.GetBytes('Set-Content -Path \"$env:SystemRoot\\Temp\\variant-marker.txt\" -Value \"Hello from modified variant\"'); $b64=[Convert]::ToBase64String($bytes); Invoke-Expression ([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($b64))); Get-Item \"$env:SystemRoot\\Temp\\variant-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List</Data><Data Name='ScriptBlockId'>748858d3-5917-460f-b844-9670101236b5</Data><Data Name='Path'></Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 13:19:49.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-PowerShell/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-PowerShell' Guid='{a0c1853b-5c40-4b15-8766-3cf1c58f985a}'/><EventID>4103</EventID><Version>1</Version><Level>4</Level><Task>106</Task><Opcode>20</Opcode><Keywords>0x0</Keywords><TimeCreated SystemTime='2026-07-18T13:19:49.0155838Z'/><EventRecordID>56410</EventRecordID><Correlation ActivityID='{395f3f0e-15fa-0000-8bfe-7b39fa15dd01}'/><Execution ProcessID='5640' ThreadID='3420'/><Channel>Microsoft-Windows-PowerShell/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='ContextInfo'>        Severity = Informational\r\n        Host Name = ConsoleHost\r\n        Host Version = 5.1.26100.8875\r\n        Host ID = fe8fb414-cc51-44e0-a0dc-de56f7e960f1\r\n        Host Application = powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $ErrorActionPreference='Stop'; $bytes=[Text.Encoding]::Unicode.GetBytes('Set-Content -Path \"$env:SystemRoot\\Temp\\variant-marker.txt\" -Value \"Hello from modified variant\"'); $b64=[Convert]::ToBase64String($bytes); Invoke-Expression ([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($b64))); Get-Item \"$env:SystemRoot\\Temp\\variant-marker.txt\" | Select-Object FullName,Length,LastWriteTime | Format-List\r\n        Engine Version = 5.1.26100.8875\r\n        Runspace ID = ca2db9d7-e836-4970-ba78-cbc4de5c3697\r\n        Pipeline ID = 1\r\n        Command Name = \r\n        Command Type = Script\r\n        Script Name = \r\n        Command Path = \r\n        Sequence Number = 42\r\n        User = MAYURI\\SYSTEM\r\n        Connected User = \r\n        Shell ID = Microsoft.PowerShell\r\n</Data><Data Name='UserData'></Data><Data Name='Payload'>CommandInvocation(Out-Default): \"Out-Default\"\r\nParameterBinding(Out-Default): name=\"InputObject\"; value=\"Microsoft.PowerShell.Commands.Internal.Format.FormatStartData\"\r\nParameterBinding(Out-Default): name=\"InputObject\"; value=\"Microsoft.PowerShell.Commands.Internal.Format.GroupStartData\"\r\nParameterBinding(Out-Default): name=\"InputObject\"; value=\"Microsoft.PowerShell.Commands.Internal.Format.FormatEntryData\"\r\nParameterBinding(Out-Default): name=\"InputObject\"; value=\"Microsoft.PowerShell.Commands.Internal.Format.GroupEndData\"\r\nParameterBinding(Out-Default): name=\"InputObject\"; value=\"Microsoft.PowerShell.Commands.Internal.Format.FormatEndData\"\r\n</Data></EventData></Event>"
-      }
-    ],
+  "variant_test": {
     "detection_fired": true,
     "marker_found": true,
-    "detection_latency_seconds": "uncomputed-search-window"
+    "latency_seconds": null,
+    "latency_status": "uncomputed"
   },
-  "negatives": [
+  "negative_tests": [
     {
-      "start_time_utc": "2026-07-18T13:19:58.237382Z",
-      "end_time_utc": "2026-07-18T13:20:00.501170Z",
-      "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\WINDOWS\\\\TEMP\\\\pt-2026-001-negative-date.txt\\r\\nLength        : 45\\r\\nLastWriteTime : 7/18/2026 6:20:04 AM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-      "detection_results": [],
-      "marker_results": [],
+      "ordinal": 1,
       "detection_fired": false,
-      "marker_found": null,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     },
     {
-      "start_time_utc": "2026-07-18T13:20:07.022196Z",
-      "end_time_utc": "2026-07-18T13:20:09.211735Z",
-      "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\WINDOWS\\\\TEMP\\\\pt-2026-001-negative-process.txt\\r\\nLength        : 156\\r\\nLastWriteTime : 7/18/2026 6:20:13 AM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-      "detection_results": [],
-      "marker_results": [],
+      "ordinal": 2,
       "detection_fired": false,
-      "marker_found": null,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     },
     {
-      "start_time_utc": "2026-07-18T13:20:16.635727Z",
-      "end_time_utc": "2026-07-18T13:20:18.826778Z",
-      "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nFullName      : C:\\\\WINDOWS\\\\TEMP\\\\pt-2026-001-negative-service.txt\\r\\nLength        : 135\\r\\nLastWriteTime : 7/18/2026 6:20:22 AM\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-      "detection_results": [],
-      "marker_results": [],
+      "ordinal": 3,
       "detection_fired": false,
-      "marker_found": null,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     }
   ],
   "cleanup": {
-    "start_time_utc": "2026-07-18T13:20:25.246439Z",
-    "end_time_utc": "2026-07-18T13:20:27.477379Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"cleanup complete\\r\\n\"\n}\n"
-  }
+    "status": "confirmed",
+    "confirmed_at": "2026-07-18T13:20:27.477379Z"
+  },
+  "limitations": [
+    "Historical authorized-lab result; current telemetry and deployment state require a fresh preflight.",
+    "Raw logs, commands, host identifiers, user identifiers, event identifiers, and environment-specific values are intentionally excluded.",
+    "Successful detection does not prove portability to other field mappings, indexes, tables, sourcetypes, or data models."
+  ]
 }

@@ -13,7 +13,7 @@ required_data:
   - Task Scheduler Operational events 106, 140, 200, 201, 325
   - Splunk Sysmon search results for scheduled task creation
 target_systems:
-  - VICTIM-MAYURI
+  - AUTHORIZED-LAB-ENDPOINT
 baseline_query: windows-baseline-schtasks-counts
 hunt_query: suspicious-scheduled-task-create-correlation
 investigation_pivots:

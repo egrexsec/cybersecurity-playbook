@@ -1,29 +1,24 @@
-# Automated IR Program Status
+# Automated IR program status
 
-| Capability | Status | Evidence | Blocking Issue | Next Action |
+| Capability | Current status | Evidence | Boundary / blocker | Next action |
 |---|---|---|---|---|
-| Splunk alert intake | Implemented | `schemas/alert-intake.schema.json`, `automation/controller/ir_ops.py`, `automation/n8n/splunk-alert-to-case.json` | live Splunk alert object not yet configured | wire webhook in Splunk and n8n |
-| Deduplication | Implemented | case grouping logic in `ir_ops.py` using rule+host+user+window | no production event volume tested | exercise against repeated alerts |
-| Case management | Implemented | expanded `investigation-case.schema.json`, case template, `playbook ir create/close` | needs multi-case live use | run additional cases |
-| Host enrichment | Implemented | `playbook ir enrich`, normalized enrichment output | currently deterministic/repo-backed | add live VM query module later |
-| User enrichment | Implemented | case enrichment includes account and scope fields | no AD API integration yet | add DC-safe identity pivots |
-| Process enrichment | Implemented | process context fields stored from alert + derived context | relies on alert payload unless live integrations added | enrich from Splunk export next |
-| Network enrichment | Implemented | network fields and classification in case model | no OPNsense API execution yet | add safe network enrichment adapter |
-| Velociraptor collection | Partially tested | profile selection and collection manifest generation | API auth/execution not wired | add DFIR API client config |
-| Evidence hashing | Implemented | evidence manifest generation with SHA-256 | only repo-side artifacts hashed in this branch | extend to raw DFIR exports |
-| Hayabusa processing | Blocked | workflow/documentation added | tool missing on DFIR | install/validate Hayabusa |
-| Chainsaw analysis | Blocked | workflow/documentation added | binary unconfirmed on DFIR | install/validate Chainsaw |
-| Unified timeline | Implemented | `automation/forensics/build_timeline.py`, `playbook ir timeline` | needs broader source feeds | merge EVTX/Velociraptor later |
-| Process tree | Implemented | `process-tree.json` generated from case/process context | shallow for now | extend with Splunk/EVTX parents |
-| Automated hunts | Implemented | hunt library + `playbook ir hunt` | only PowerShell-first hunt modeled fully | add more hunt packs |
-| Scheduled hunts | Implemented | schedule-ready manifests + n8n workflow export | not production-scheduled | connect to n8n cron |
-| Ollama analysis | Partially tested | schema + safe wrapper + fallback analysis path | endpoint unconfirmed | validate local model endpoint |
-| Containment planning | Implemented | `playbook ir contain --plan`, containment docs | execution intentionally blocked | add audited approval token path |
-| Detection generation | Implemented | detection-opportunity workflow docs and report generation | no new rule authored in this branch | connect to detection build helper |
-| Live detection testing | Partially tested | existing `VAL-2026-001` evidence referenced, `playbook detection validate-live` wired to existing validators | fresh live rerun not performed in this branch | rerun PT-2026-001 with confirmed credentials |
-| n8n orchestration | Implemented | workflow JSON exports under `automation/n8n/` | not yet imported | import and test in homelab n8n |
-| GitHub integration | Implemented | issue templates, PR template, feature branch workflow | no PR opened yet in this branch | push and open draft PR |
-| GitHub Actions | Partially tested | existing CI remains green baseline; new schema/controller paths added | workflow not yet expanded for every requested check | extend `detection-validation.yml` |
-| PowerShell workflow | Partially tested | PT-2026-001 scenario/hunt/live validation exists; new IR case flow added | fresh live alert-to-case not yet rerun | wire Splunk webhook and rerun |
-| Scheduled-task workflow | Planned | existing PT-2026-004 assets provide baseline | no IR pipeline integration yet | map PT-2026-004 into case workflow |
-| Service workflow | Planned | existing PT-2026-005 assets provide baseline | no IR pipeline integration yet | map PT-2026-005 into case workflow |
+| Alert intake | Fixture tested | strict alert schema, receiver tests, sample payload | durable SIEM alert object not verified | add approved SIEM adapter |
+| Deduplication | Fixture tested | deterministic fingerprint and duplicate-count tests | production event volume not tested | load-test separately |
+| Case management | Fixture tested | create, enrich, collect, hunt-plan, timeline, analyze, report, cleanup tests | no fresh live case asserted | keep runtime cases outside Git |
+| CTI enrichment | Fixture tested | typed indicators, timeout, fail-open result, advisory-only behavior | no current provider health assertion | add private provider adapter |
+| Asset enrichment | Repository backed | sanitized role inventory | not a live CMDB or hypervisor query | keep role metadata separate from runtime discovery |
+| Evidence collection planning | Implemented | explicit artifact classes and `planned` status | no live acquisition occurs | add external collector adapter |
+| Fixture collection | Tested | SHA-256 artifact manifests | fixtures are not live evidence | retain explicit `fixture-collected` label |
+| Live DFIR collection | Not configured | adapter boundary documented | authorization and collector credentials required | implement externally |
+| Unified timeline | Fixture tested | deterministic alert/enrichment timeline | broader source feeds absent | add bounded parsers |
+| Process context | Fixture tested | alert-derived process context | not a complete endpoint process tree | integrate collector data later |
+| Threat hunting | Reference-only | hunt query artifact and `planned` state | no SIEM query adapter | do not claim result counts |
+| Analysis/reporting | Fixture tested | sanitized findings and report test | no current host/SIEM verification | preserve evidence limitations |
+| Containment planning | Implemented | human-review plan generation | execution intentionally disabled | retain approval boundary |
+| Live validation | Disabled by default | preflight schema, approval-token check, external adapter contract | no public embedded executor | run only after private authorization |
+| n8n orchestration | Sanitized template | importable workflow JSON | deployment/import not verified | validate in an authorized environment |
+| GitHub Actions | Implemented on branch | unit, content, generated-output, and public-safety checks | branch CI pending push | watch PR checks |
+
+## Operational boundary
+
+The repository can validate its contracts and exercise the IR lifecycle against fixtures. It does not currently prove live SIEM alerting, endpoint collection, CTI availability, snapshot readiness, or containment execution.

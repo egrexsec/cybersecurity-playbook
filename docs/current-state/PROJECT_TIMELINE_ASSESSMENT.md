@@ -108,8 +108,8 @@ Status legend: Planned | Implemented | Executed | Partially tested | Validated |
 - gaps: normalized-field maturity, durable alert objects, and broader non-Windows coverage still lag the scenario count growth
 - recommended_action: treat this as the current baseline for public status/metrics rather than the earlier three-scenario snapshot
 
-## Verified current position
-- repository now supports authored Sigma + generated Splunk/Elastic + fixture tests + live validation records
-- eleven scenarios are currently represented as live-validated on main
-- GitHub Actions workflow exists and is part of the repository state
-- project maturity is suitable for portfolio showcase as a lab-validated detection-engineering repository, not a production SIEM platform
+## Position recorded on 2026-07-19
+- the repository supported authored Sigma, generated Splunk/Elastic queries, fixture tests, and live-validation records
+- eleven scenarios had historical live-validation records on the then-current main branch
+- GitHub Actions validated offline content and evidence structure
+- this dated position supported a lab-validated portfolio claim at that time; current repository posture is fixture-tested content plus sanitized historical summaries, not a current lab-health assertion

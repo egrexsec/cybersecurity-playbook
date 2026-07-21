@@ -15,7 +15,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [0, 0],
-      "webhookId": "a3fe2ef4-7c3f-4b6a-9bf8-bd72b36d6fa0"
+      "webhookId": "00000000-0000-4000-8000-000000000001"
     },
     {
       "parameters": {
@@ -43,7 +43,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://100.90.16.73:8765/ir/splunk-alert",
+        "url": "http://ir-receiver.example.invalid:8765/ir/splunk-alert",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -98,7 +98,7 @@
   "meta": null,
   "nodeGroups": [],
   "pinData": {},
-  "versionId": "f1cbeb7c-e7e3-48b7-8b6d-53ff4de0ddf1",
+  "versionId": "00000000-0000-4000-8000-000000000002",
   "activeVersionId": null,
   "versionCounter": 1,
   "triggerCount": 0,

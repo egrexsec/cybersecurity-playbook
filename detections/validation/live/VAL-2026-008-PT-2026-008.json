@@ -1,101 +1,53 @@
 {
-  "scenario_id": "PT-2026-008",
+  "schema_version": "1.0.0",
   "validation_run_id": "VAL-2026-008",
+  "detection_id": "DET-2026-008",
+  "scenario_id": "PT-2026-008",
   "technique_id": "T1197",
-  "original": {
-    "start_time_utc": "2026-07-18T19:25:44.733676Z",
-    "end_time_utc": "2026-07-18T19:26:16.906023Z",
-    "exec_output": "timeout reached, returning pid\n{\n   \"pid\" : 5736\n}\n",
-    "detection_results": [
-      {
-        "_time": "2026-07-18 19:25:53.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T19:25:53.8771676Z'/><EventRecordID>46027</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1059.003,technique_name=Windows Command Shell</Data><Data Name='UtcTime'>2026-07-18 19:25:53.863</Data><Data Name='ProcessGuid'>{1d66a19f-d341-6a5b-7f17-000000000d00}</Data><Data Name='ProcessId'>3384</Data><Data Name='Image'>C:\\Windows\\System32\\cmd.exe</Data><Data Name='FileVersion'>10.0.26100.8737 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows Command Processor</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>Cmd.Exe</Data><Data Name='CommandLine'>\"C:\\WINDOWS\\system32\\cmd.exe\" /c \"bitsadmin.exe /reset /allusers\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=6142A8457F497ABC4B102D75F549F76A9E3577C7,MD5=1F4D18374A699452622E80F6D5BB743E,SHA256=65EC268ADD3973B6DCA64222985DA47CAEAEE44A340B0EC1466782914FD743D9,IMPHASH=010B165E4C37F484601D3DBD700C9423</Data><Data Name='ParentProcessGuid'>{1d66a19f-d341-6a5b-7e17-000000000d00}</Data><Data Name='ParentProcessId'>5736</Data><Data Name='ParentImage'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='ParentCommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$job = 'PT-2026-008-Original'\n$src = '\\\\127.0.0.1\\C$\\Windows\\win.ini'\n$dst = \\\"$env:TEMP\\pt-2026-008-original.txt\\\"\nRemove-Item $dst -ErrorAction SilentlyContinue -Force\ncmd.exe /c \\\"bitsadmin.exe /reset /allusers\\\"\ncmd.exe /c \\\"bitsadmin.exe /transfer $job /download /priority foreground $src $dst\\\" | Out-Host\n$exists = Test-Path $dst\n[pscustomobject]@{ JobName=$job; DstExists=$exists } | ConvertTo-Json -Compress | Out-Host\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 19:25:53.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T19:25:53.4978354Z'/><EventRecordID>46015</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1059.001,technique_name=PowerShell</Data><Data Name='UtcTime'>2026-07-18 19:25:53.481</Data><Data Name='ProcessGuid'>{1d66a19f-d341-6a5b-7e17-000000000d00}</Data><Data Name='ProcessId'>5736</Data><Data Name='Image'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='FileVersion'>10.0.26100.8875 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows PowerShell</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>PowerShell.EXE</Data><Data Name='CommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$job = 'PT-2026-008-Original'\n$src = '\\\\127.0.0.1\\C$\\Windows\\win.ini'\n$dst = \\\"$env:TEMP\\pt-2026-008-original.txt\\\"\nRemove-Item $dst -ErrorAction SilentlyContinue -Force\ncmd.exe /c \\\"bitsadmin.exe /reset /allusers\\\"\ncmd.exe /c \\\"bitsadmin.exe /transfer $job /download /priority foreground $src $dst\\\" | Out-Host\n$exists = Test-Path $dst\n[pscustomobject]@{ JobName=$job; DstExists=$exists } | ConvertTo-Json -Compress | Out-Host\n\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=613000DC53E7EF0B048021F68DD06C101994DA29,MD5=E65ECCA3754249C00F50A035202F7591,SHA256=7600FFE12DA441FE89D035B13801E8E91D064BC544A27B19A5CF49F6AB8B18F5,IMPHASH=AFACF6DC9041114B198160AAB4D0AE77</Data><Data Name='ParentProcessGuid'>{1d66a19f-d341-6a5b-7c17-000000000d00}</Data><Data Name='ParentProcessId'>4320</Data><Data Name='ParentImage'>C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe</Data><Data Name='ParentCommandLine'>\"C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe\" 8 9 z 4 6 - y y - - powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$job = 'PT-2026-008-Original'\n$src = '\\\\127.0.0.1\\C$\\Windows\\win.ini'\n$dst = \\\"$env:TEMP\\pt-2026-008-original.txt\\\"\nRemove-Item $dst -ErrorAction SilentlyContinue -Force\ncmd.exe /c \\\"bitsadmin.exe /reset /allusers\\\"\ncmd.exe /c \\\"bitsadmin.exe /transfer $job /download /priority foreground $src $dst\\\" | Out-Host\n$exists = Test-Path $dst\n[pscustomobject]@{ JobName=$job; DstExists=$exists } | ConvertTo-Json -Compress | Out-Host\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 19:25:54.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T19:25:54.0013925Z'/><EventRecordID>46033</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1197,technique_name=BITS Jobs</Data><Data Name='UtcTime'>2026-07-18 19:25:53.994</Data><Data Name='ProcessGuid'>{1d66a19f-d341-6a5b-8217-000000000d00}</Data><Data Name='ProcessId'>1916</Data><Data Name='Image'>C:\\Windows\\System32\\bitsadmin.exe</Data><Data Name='FileVersion'>7.8.26100.7019 (WinBuild.160101.0800)</Data><Data Name='Description'>BITS administration utility</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>bitsadmin.exe</Data><Data Name='CommandLine'>bitsadmin.exe  /transfer PT-2026-008-Original /download /priority foreground \\\\127.0.0.1\\C$\\Windows\\win.ini C:\\WINDOWS\\TEMP\\pt-2026-008-original.txt</Data><Data Name='CurrentDirectory'>C:\\Windows\\System32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=87768A709EDF3ADCF29C7AF8514E40F8D82CC06E,MD5=B6A4C8C3041D40A32983B0922CC1012D,SHA256=5CEEC3064D495F73AAD77FACF9D0B05A89B3A137FC86BA1B43C14B3CA3BD3E11,IMPHASH=D93F8F73A9F8629D0A8B416A7FCEE86F</Data><Data Name='ParentProcessGuid'>{1d66a19f-d341-6a5b-8117-000000000d00}</Data><Data Name='ParentProcessId'>4604</Data><Data Name='ParentImage'>C:\\Windows\\System32\\cmd.exe</Data><Data Name='ParentCommandLine'>\"C:\\WINDOWS\\system32\\cmd.exe\" /c \"bitsadmin.exe /transfer PT-2026-008-Original /download /priority foreground \\\\127.0.0.1\\C$\\Windows\\win.ini C:\\WINDOWS\\TEMP\\pt-2026-008-original.txt\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 19:25:53.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T19:25:53.9749918Z'/><EventRecordID>46031</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1059.003,technique_name=Windows Command Shell</Data><Data Name='UtcTime'>2026-07-18 19:25:53.959</Data><Data Name='ProcessGuid'>{1d66a19f-d341-6a5b-8117-000000000d00}</Data><Data Name='ProcessId'>4604</Data><Data Name='Image'>C:\\Windows\\System32\\cmd.exe</Data><Data Name='FileVersion'>10.0.26100.8737 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows Command Processor</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>Cmd.Exe</Data><Data Name='CommandLine'>\"C:\\WINDOWS\\system32\\cmd.exe\" /c \"bitsadmin.exe /transfer PT-2026-008-Original /download /priority foreground \\\\127.0.0.1\\C$\\Windows\\win.ini C:\\WINDOWS\\TEMP\\pt-2026-008-original.txt\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=6142A8457F497ABC4B102D75F549F76A9E3577C7,MD5=1F4D18374A699452622E80F6D5BB743E,SHA256=65EC268ADD3973B6DCA64222985DA47CAEAEE44A340B0EC1466782914FD743D9,IMPHASH=010B165E4C37F484601D3DBD700C9423</Data><Data Name='ParentProcessGuid'>{1d66a19f-d341-6a5b-7e17-000000000d00}</Data><Data Name='ParentProcessId'>5736</Data><Data Name='ParentImage'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='ParentCommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$job = 'PT-2026-008-Original'\n$src = '\\\\127.0.0.1\\C$\\Windows\\win.ini'\n$dst = \\\"$env:TEMP\\pt-2026-008-original.txt\\\"\nRemove-Item $dst -ErrorAction SilentlyContinue -Force\ncmd.exe /c \\\"bitsadmin.exe /reset /allusers\\\"\ncmd.exe /c \\\"bitsadmin.exe /transfer $job /download /priority foreground $src $dst\\\" | Out-Host\n$exists = Test-Path $dst\n[pscustomobject]@{ JobName=$job; DstExists=$exists } | ConvertTo-Json -Compress | Out-Host\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      }
-    ],
-    "local_bits_logs": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"{\\r\\n    \\\"TimeCreated\\\":  \\\"\\\\/Date(1784402754036)\\\\/\\\",\\r\\n    \\\"Id\\\":  3,\\r\\n    \\\"Message\\\":  \\\"The BITS service created a new job.\\\\r\\\\nTransfer job: PT-2026-008-Original\\\\r\\\\nJob ID: {ea1fc3dc-27a6-435a-a034-666a842538e4}\\\\r\\\\nOwner: NT AUTHORITY\\\\\\\\SYSTEM\\\\r\\\\nProcess Path: C:\\\\\\\\Windows\\\\\\\\System32\\\\\\\\bitsadmin.exe\\\\r\\\\nProcess ID: 1916\\\"\\r\\n}\\r\\n\"\n}\n",
-    "detection_fired": true,
-    "detection_latency_seconds": "uncomputed-search-window"
+  "status": "historical-live-validated",
+  "validation_environment": {
+    "target_role": "authorized lab endpoint",
+    "siem_role": "internal SIEM service",
+    "sanitized": true
   },
-  "variant": {
-    "start_time_utc": "2026-07-18T19:26:35.174674Z",
-    "end_time_utc": "2026-07-18T19:26:37.432779Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"There are currently no active network connections. Background Intelligent Transfer Service (BITS) will try again when an adapter is connected.\\r\\n\\r\\n{\\\"DstExists\\\":false}\\r\\n\"\n}\n",
-    "detection_results": [
-      {
-        "_time": "2026-07-18 19:26:43.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T19:26:43.3823785Z'/><EventRecordID>46053</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1059.001,technique_name=PowerShell</Data><Data Name='UtcTime'>2026-07-18 19:26:43.373</Data><Data Name='ProcessGuid'>{1d66a19f-d373-6a5b-8f17-000000000d00}</Data><Data Name='ProcessId'>4064</Data><Data Name='Image'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='FileVersion'>10.0.26100.8875 (WinBuild.160101.0800)</Data><Data Name='Description'>Windows PowerShell</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae Windows\u00c3\u0082\u00c2\u00ae Operating System</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>PowerShell.EXE</Data><Data Name='CommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$src = '\\\\127.0.0.1\\C$\\Windows\\win.ini'\n$dst = \\\"$env:TEMP\\pt-2026-008-variant.txt\\\"\nRemove-Item $dst -ErrorAction SilentlyContinue -Force\ntry { Start-BitsTransfer -Priority foreground -Source $src -Destination $dst -ErrorAction Stop } catch { Write-Output $_.Exception.Message }\n$exists = Test-Path $dst\n[pscustomobject]@{ DstExists=$exists } | ConvertTo-Json -Compress | Out-Host\n\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=613000DC53E7EF0B048021F68DD06C101994DA29,MD5=E65ECCA3754249C00F50A035202F7591,SHA256=7600FFE12DA441FE89D035B13801E8E91D064BC544A27B19A5CF49F6AB8B18F5,IMPHASH=AFACF6DC9041114B198160AAB4D0AE77</Data><Data Name='ParentProcessGuid'>{1d66a19f-d373-6a5b-8d17-000000000d00}</Data><Data Name='ParentProcessId'>4688</Data><Data Name='ParentImage'>C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe</Data><Data Name='ParentCommandLine'>\"C:\\Program Files\\Qemu-ga\\gspawn-win64-helper.exe\" 10 11 z 6 8 - y y - - powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$src = '\\\\127.0.0.1\\C$\\Windows\\win.ini'\n$dst = \\\"$env:TEMP\\pt-2026-008-variant.txt\\\"\nRemove-Item $dst -ErrorAction SilentlyContinue -Force\ntry { Start-BitsTransfer -Priority foreground -Source $src -Destination $dst -ErrorAction Stop } catch { Write-Output $_.Exception.Message }\n$exists = Test-Path $dst\n[pscustomobject]@{ DstExists=$exists } | ConvertTo-Json -Compress | Out-Host\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      },
-      {
-        "_time": "2026-07-18 19:26:43.000 UTC",
-        "host": "VICTIM-MAYURI",
-        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "sourcetype": "XmlWinEventLog:Microsoft-Windows-Sysmon/Operational",
-        "_raw": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-Sysmon' Guid='{5770385f-c22a-43e0-bf4c-06f5698ffbd9}'/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime='2026-07-18T19:26:43.7143453Z'/><EventRecordID>46072</EventRecordID><Correlation/><Execution ProcessID='3504' ThreadID='4132'/><Channel>Microsoft-Windows-Sysmon/Operational</Channel><Computer>VICTIM-MAYURI.mayuri.lab</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='RuleName'>technique_id=T1127,technique_name=Trusted Developer Utilities Proxy Execution</Data><Data Name='UtcTime'>2026-07-18 19:26:43.710</Data><Data Name='ProcessGuid'>{1d66a19f-d373-6a5b-9017-000000000d00}</Data><Data Name='ProcessId'>4012</Data><Data Name='Image'>C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe</Data><Data Name='FileVersion'>4.8.9221.0 built by: NET481REL1LAST_25H2</Data><Data Name='Description'>Visual C# Command Line Compiler</Data><Data Name='Product'>Microsoft\u00c3\u0082\u00c2\u00ae .NET Framework</Data><Data Name='Company'>Microsoft Corporation</Data><Data Name='OriginalFileName'>csc.exe</Data><Data Name='CommandLine'>\"C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe\" /noconfig /fullpaths @\"C:\\WINDOWS\\SystemTemp\\lpnizejl\\lpnizejl.cmdline\"</Data><Data Name='CurrentDirectory'>C:\\WINDOWS\\system32\\</Data><Data Name='User'>NT AUTHORITY\\SYSTEM</Data><Data Name='LogonGuid'>{1d66a19f-3ee6-6a5a-e703-000000000000}</Data><Data Name='LogonId'>0x3e7</Data><Data Name='TerminalSessionId'>0</Data><Data Name='IntegrityLevel'>System</Data><Data Name='Hashes'>SHA1=3F57BA45706E793EFB1FEEAD04EAA469CC408CD0,MD5=27B53760E936445399A2F92223323383,SHA256=46809206887326D2D24DB1EFF1F3064DE972C3451ABE766B49111450A5E08E00,IMPHASH=2E6A9097FBA347A254DAC72662FE1259</Data><Data Name='ParentProcessGuid'>{1d66a19f-d373-6a5b-8f17-000000000d00}</Data><Data Name='ParentProcessId'>4064</Data><Data Name='ParentImage'>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Data><Data Name='ParentCommandLine'>powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$ErrorActionPreference = 'Stop'\n$src = '\\\\127.0.0.1\\C$\\Windows\\win.ini'\n$dst = \\\"$env:TEMP\\pt-2026-008-variant.txt\\\"\nRemove-Item $dst -ErrorAction SilentlyContinue -Force\ntry { Start-BitsTransfer -Priority foreground -Source $src -Destination $dst -ErrorAction Stop } catch { Write-Output $_.Exception.Message }\n$exists = Test-Path $dst\n[pscustomobject]@{ DstExists=$exists } | ConvertTo-Json -Compress | Out-Host\n\"</Data><Data Name='ParentUser'>NT AUTHORITY\\SYSTEM</Data></EventData></Event>"
-      }
-    ],
-    "local_bits_logs": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"[\\r\\n    {\\r\\n        \\\"TimeCreated\\\":  \\\"\\\\/Date(1784402803972)\\\\/\\\",\\r\\n        \\\"Id\\\":  5,\\r\\n        \\\"Message\\\":  \\\"Job cancelled. User: NT AUTHORITY\\\\\\\\SYSTEM, job: BITS Transfer, jobID: {fc73a0bc-e40f-43a0-9920-37fb9dc15d06}, owner: NT AUTHORITY\\\\\\\\SYSTEM, filecount: 1\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"TimeCreated\\\":  \\\"\\\\/Date(1784402803925)\\\\/\\\",\\r\\n        \\\"Id\\\":  3,\\r\\n        \\\"Message\\\":  \\\"The BITS service created a new job.\\\\r\\\\nTransfer job: BITS Transfer\\\\r\\\\nJob ID: {fc73a0bc-e40f-43a0-9920-37fb9dc15d06}\\\\r\\\\nOwner: NT AUTHORITY\\\\\\\\SYSTEM\\\\r\\\\nProcess Path: C:\\\\\\\\Windows\\\\\\\\System32\\\\\\\\WindowsPowerShell\\\\\\\\v1.0\\\\\\\\powershell.exe\\\\r\\\\nProcess ID: 4064\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"TimeCreated\\\":  \\\"\\\\/Date(1784402678810)\\\\/\\\",\\r\\n        \\\"Id\\\":  5,\\r\\n        \\\"Message\\\":  \\\"Job cancelled. User: NT AUTHORITY\\\\\\\\SYSTEM, job: BITS Transfer, jobID: {1044859e-c97b-4fd5-a66b-dd23f207e12a}, owner: NT AUTHORITY\\\\\\\\SYSTEM, filecount: 1\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"TimeCreated\\\":  \\\"\\\\/Date(1784402678772)\\\\/\\\",\\r\\n        \\\"Id\\\":  3,\\r\\n        \\\"Message\\\":  \\\"The BITS service created a new job.\\\\r\\\\nTransfer job: BITS Transfer\\\\r\\\\nJob ID: {1044859e-c97b-4fd5-a66b-dd23f207e12a}\\\\r\\\\nOwner: NT AUTHORITY\\\\\\\\SYSTEM\\\\r\\\\nProcess Path: C:\\\\\\\\Windows\\\\\\\\System32\\\\\\\\WindowsPowerShell\\\\\\\\v1.0\\\\\\\\powershell.exe\\\\r\\\\nProcess ID: 5748\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"TimeCreated\\\":  \\\"\\\\/Date(1784402471121)\\\\/\\\",\\r\\n        \\\"Id\\\":  5,\\r\\n        \\\"Message\\\":  \\\"Job cancelled. User: NT AUTHORITY\\\\\\\\SYSTEM, job: BITS Transfer, jobID: {f9b58316-34b5-467c-a3ef-57c3aa65e313}, owner: NT AUTHORITY\\\\\\\\SYSTEM, filecount: 1\\\"\\r\\n    },\\r\\n    {\\r\\n        \\\"TimeCreated\\\":  \\\"\\\\/Date(1784402471080)\\\\/\\\",\\r\\n        \\\"Id\\\":  3,\\r\\n        \\\"Message\\\":  \\\"The BITS service created a new job.\\\\r\\\\nTransfer job: BITS Transfer\\\\r\\\\nJob ID: {f9b58316-34b5-467c-a3ef-57c3aa65e313}\\\\r\\\\nOwner: NT AUTHORITY\\\\\\\\SYSTEM\\\\r\\\\nProcess Path: C:\\\\\\\\Windows\\\\\\\\System32\\\\\\\\WindowsPowerShell\\\\\\\\v1.0\\\\\\\\powershell.exe\\\\r\\\\nProcess ID: 3668\\\"\\r\\n    }\\r\\n]\\r\\n\"\n}\n",
+  "validated_at": "2026-07-18T19:26:37.432779Z",
+  "source_record_sha256": "c2092bc0a4789ec14564e86c81650f851591b3686d14a957f859bcf25325c8a6",
+  "positive_test": {
     "detection_fired": true,
-    "detection_latency_seconds": "uncomputed-search-window"
+    "marker_found": null,
+    "latency_seconds": null,
+    "latency_status": "uncomputed"
   },
-  "negatives": [
+  "variant_test": {
+    "detection_fired": true,
+    "marker_found": null,
+    "latency_seconds": null,
+    "latency_status": "uncomputed"
+  },
+  "negative_tests": [
     {
-      "start_time_utc": "2026-07-18T19:26:48.564150Z",
-      "end_time_utc": "2026-07-18T19:26:50.825926Z",
-      "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nDisplayName : PT-2026-008-Original\\r\\nJobState    : TransientError\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-      "detection_results": [],
-      "local_bits_logs": "",
+      "ordinal": 1,
       "detection_fired": false,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     },
     {
-      "start_time_utc": "2026-07-18T19:26:56.489851Z",
-      "end_time_utc": "2026-07-18T19:26:58.754683Z",
-      "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\n\\r\\nName      : BITS\\r\\nStatus    : Running\\r\\nStartType : Automatic\\r\\n\\r\\n\\r\\n\\r\\n\"\n}\n",
-      "detection_results": [],
-      "local_bits_logs": "",
+      "ordinal": 2,
       "detection_fired": false,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     },
     {
-      "start_time_utc": "2026-07-18T19:27:04.306272Z",
-      "end_time_utc": "2026-07-18T19:27:06.584712Z",
-      "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\nBITSADMIN version 3.0\\r\\nBITS administration utility.\\r\\n(C) Copyright Microsoft Corp.\\r\\n\\r\\n{EA1FC3DC-27A6-435A-A034-666A842538E4} 'PT-2026-008-Original' TRANSIENT_ERROR 0 / 1 0 / UNKNOWN\\r\\nListed 1 job(s).\\r\\n\"\n}\n",
-      "detection_results": [],
-      "local_bits_logs": "",
+      "ordinal": 3,
       "detection_fired": false,
-      "detection_latency_seconds": null
+      "expected_quiet": true
     }
   ],
   "cleanup": {
-    "start_time_utc": "2026-07-18T19:27:12.212828Z",
-    "exec_output": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"\\r\\nBITSADMIN version 3.0\\r\\nBITS administration utility.\\r\\n(C) Copyright Microsoft Corp.\\r\\n\\r\\n0 out of 0 jobs canceled.\\r\\ncleanup complete\\r\\n\"\n}\n",
-    "end_time_utc": "2026-07-18T19:27:14.500707Z"
-  }
+    "status": "confirmed",
+    "confirmed_at": "2026-07-18T19:27:14.500707Z"
+  },
+  "limitations": [
+    "Historical authorized-lab result; current telemetry and deployment state require a fresh preflight.",
+    "Raw logs, commands, host identifiers, user identifiers, event identifiers, and environment-specific values are intentionally excluded.",
+    "Successful detection does not prove portability to other field mappings, indexes, tables, sourcetypes, or data models."
+  ]
 }

@@ -10,7 +10,7 @@ required_data:
   - Sysmon Event ID 1
   - optional image-load/file-write telemetry
 target_systems:
-  - VICTIM-MAYURI
+  - AUTHORIZED-LAB-ENDPOINT
 baseline_query: windows-baseline-regsvr32-counts
 hunt_query: suspicious-regsvr32-proxy-execution
 investigation_pivots:

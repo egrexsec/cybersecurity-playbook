@@ -15,7 +15,7 @@ required_data:
   - Wazuh alerts for validation
   - Velociraptor process inventory
 target_systems:
-  - VICTIM-MAYURI
+  - AUTHORIZED-LAB-ENDPOINT
 baseline_query: windows-baseline-powershell-counts
 hunt_query: powershell-base64-and-invoke-expression-correlation
 investigation_pivots:

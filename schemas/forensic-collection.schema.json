@@ -13,12 +13,14 @@
     "files",
     "hashes",
     "errors",
-    "status"
+    "status",
+    "evidence_class",
+    "artifacts"
   ],
   "properties": {
     "case_id": {
       "type": "string",
-      "pattern": "^(IR|HUNT|DFIR|PT|DET|VAL)-\\d{4}-\\d{3}$"
+      "pattern": "^(IR|HUNT|DFIR|PT|DET|VAL)-\\d{4}-(\\d{3}|[A-F0-9]{12})$"
     },
     "profile": {
       "type": "string"
@@ -54,7 +56,68 @@
       }
     },
     "status": {
-      "type": "string"
+      "enum": [
+        "planned",
+        "fixture-collected",
+        "live-collected",
+        "partially-collected",
+        "collection-failed"
+      ]
+    },
+    "evidence_class": {
+      "enum": [
+        "plan",
+        "fixture",
+        "live"
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status",
+          "sha256",
+          "error"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "not-collected",
+              "collected",
+              "absent",
+              "collection-failed"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^$|^[a-f0-9]{64}$"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "name"
+            ]
+          },
+          {
+            "required": [
+              "path"
+            ]
+          }
+        ]
+      }
     }
-  }
+  },
+  "additionalProperties": false
 }

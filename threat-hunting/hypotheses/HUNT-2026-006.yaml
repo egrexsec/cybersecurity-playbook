@@ -12,7 +12,7 @@ required_data:
   - local registry Run value state
   - optional Sysmon registry set events
 target_systems:
-  - VICTIM-MAYURI
+  - AUTHORIZED-LAB-ENDPOINT
 baseline_query: windows-baseline-runkey-counts
 hunt_query: suspicious-runkey-create-correlation
 investigation_pivots:

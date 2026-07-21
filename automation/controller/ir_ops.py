@@ -6,7 +6,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import jsonschema
 import yaml
@@ -17,6 +17,7 @@ CASES = REPO_ROOT / "investigations" / "cases"
 ASSETS = REPO_ROOT / "automation" / "integrations" / "lab-assets.yaml"
 SAMPLE_ALERT = REPO_ROOT / "automation" / "intake" / "sample-splunk-alert-pt-2026-001.json"
 EVIDENCE_MANIFESTS = REPO_ROOT / "evidence" / "manifests"
+AUDIT_LOG = REPO_ROOT / ".runtime" / "audit" / "ir-audit.jsonl"
 
 
 @dataclass
@@ -75,6 +76,50 @@ def next_id(prefix: str) -> str:
     return f"{prefix}-{year}-{(max(nums) if nums else 0) + 1:03d}"
 
 
+def alert_fingerprint(alert: dict[str, Any]) -> str:
+    """Return a stable fingerprint without persisting raw alert values in the index."""
+    stable = {
+        key: alert.get(key, "")
+        for key in (
+            "alert_id",
+            "rule_id",
+            "host",
+            "user",
+            "process",
+            "command_line",
+            "event_time",
+            "event_id",
+            "search_reference",
+        )
+    }
+    return hashlib.sha256(
+        json.dumps(stable, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+
+
+def deterministic_case_id(prefix: str, alert: dict[str, Any]) -> str:
+    event_time = str(alert.get("event_time", ""))
+    year = (
+        event_time[:4]
+        if len(event_time) >= 4 and event_time[:4].isdigit()
+        else str(datetime.now(timezone.utc).year)
+    )
+    return f"{prefix}-{year}-{alert_fingerprint(alert)[:12].upper()}"
+
+
+def audit(operation: str, case_id: str, status: str, **metadata: Any) -> None:
+    event = {
+        "timestamp": utc_now(),
+        "operation": operation,
+        "case_id": case_id,
+        "status": status,
+        "metadata": metadata,
+    }
+    AUDIT_LOG.parent.mkdir(parents=True, exist_ok=True)
+    with AUDIT_LOG.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(event, sort_keys=True) + "\n")
+
+
 def case_dir(case_id: str) -> Path:
     return CASES / case_id
 
@@ -103,8 +148,25 @@ def file_sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def _base_case(prefix: str, title: str, source: dict[str, Any], host: str, user: str, process: str, technique_id: str, owner: str = "mell0wx") -> dict[str, Any]:
-    case_id = next_id(prefix)
+def repository_reference(path: Path) -> str:
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return path.name
+
+
+def _base_case(
+    prefix: str,
+    case_id: str,
+    title: str,
+    source: dict[str, Any],
+    host: str,
+    user: str,
+    process: str,
+    technique_id: str,
+    fingerprint: str,
+    owner: str = "mell0wx",
+) -> dict[str, Any]:
     now = utc_now()
     case_type = {
         "IR": "incident",
@@ -125,6 +187,11 @@ def _base_case(prefix: str, title: str, source: dict[str, Any], host: str, user:
         "updated_at": now,
         "owner": owner,
         "source": source,
+        "intake": {
+            "fingerprint": fingerprint,
+            "duplicate_count": 0,
+            "last_received_at": now,
+        },
         "scope": {
             "hosts": [host] if host else [],
             "users": [user] if user else [],
@@ -138,6 +205,7 @@ def _base_case(prefix: str, title: str, source: dict[str, Any], host: str, user:
             "enrichment_complete": False,
             "collection_complete": False,
             "hunting_complete": False,
+            "hunting_status": "not-run",
             "timeline_complete": False,
             "analysis_complete": False,
             "detection_review_complete": False,
@@ -146,7 +214,7 @@ def _base_case(prefix: str, title: str, source: dict[str, Any], host: str, user:
         "evidence": {
             "manifest": "",
             "raw_location": f"external-dfir-storage/{case_id}",
-            "processed_location": str(case_dir(case_id).relative_to(REPO_ROOT)),
+            "processed_location": repository_reference(case_dir(case_id)),
             "hashes": {},
         },
         "detections": {
@@ -169,11 +237,39 @@ def _base_case(prefix: str, title: str, source: dict[str, Any], host: str, user:
     }
 
 
-def create_case_from_alert(alert_path: str | None = None, case_prefix: str = "IR") -> dict[str, Any]:
+def create_case_from_alert(
+    alert_path: str | None = None,
+    case_prefix: str = "IR",
+    dry_run: bool = False,
+) -> dict[str, Any]:
     alert = load_json(Path(alert_path) if alert_path else SAMPLE_ALERT)
     validate(alert, "alert-intake.schema.json")
+    fingerprint = alert_fingerprint(alert)
+    case_id = deterministic_case_id(case_prefix, alert)
+    if dry_run:
+        return {
+            "operation": "create",
+            "dry_run": True,
+            "case_id": case_id,
+            "fingerprint": fingerprint,
+        }
+    if case_file(case_id).exists():
+        existing = load_case(case_id)
+        existing["intake"]["duplicate_count"] += 1
+        existing["intake"]["last_received_at"] = utc_now()
+        existing["updated_at"] = utc_now()
+        existing["notes"].append("Duplicate alert received; existing case reused.")
+        save_case(existing)
+        audit(
+            "ir.create",
+            case_id,
+            "duplicate",
+            duplicate_count=existing["intake"]["duplicate_count"],
+        )
+        return existing
     case = _base_case(
         case_prefix,
+        case_id,
         f"{alert['alert_name']} on {alert['host']}",
         {
             "platform": "splunk",
@@ -187,34 +283,86 @@ def create_case_from_alert(alert_path: str | None = None, case_prefix: str = "IR
         alert["user"],
         alert["process"],
         alert["technique_id"],
+        fingerprint,
     )
     cdir = case_dir(case["id"])
-    cdir.mkdir(parents=True, exist_ok=True)
+    cdir.mkdir(parents=True, exist_ok=False)
     save_case(case)
     dump_json(cdir / "alert.json", alert)
-    dump_json(cdir / "enrichment.json", {})
-    dump_json(cdir / "hunt-results.json", {})
-    dump_json(cdir / "findings.json", {})
-    dump_json(cdir / "evidence-manifest.json", {})
-    dump_json(cdir / "process-tree.json", {})
+    for name in (
+        "enrichment.json",
+        "hunt-results.json",
+        "findings.json",
+        "evidence-manifest.json",
+        "process-tree.json",
+    ):
+        dump_json(cdir / name, {})
     (cdir / "timeline.csv").write_text(
         "timestamp_utc,timestamp_original,host,user,source,event_id,category,process,parent_process,command_line,source_address,destination_address,file_path,description,evidence_reference\n",
         encoding="utf-8",
     )
-    (cdir / "detection-opportunities.md").write_text("# Detection opportunities\n\nPending analysis.\n", encoding="utf-8")
-    (cdir / "containment-plan.md").write_text("# Containment plan\n\nNot generated yet.\n", encoding="utf-8")
-    (cdir / "investigation.md").write_text("# Investigation\n\nNot generated yet.\n", encoding="utf-8")
-    (cdir / "closure.md").write_text("# Closure\n\nCase still open.\n", encoding="utf-8")
+    (cdir / "detection-opportunities.md").write_text(
+        "# Detection opportunities\n\nPending analysis.\n", encoding="utf-8"
+    )
+    (cdir / "containment-plan.md").write_text(
+        "# Containment plan\n\nNot generated yet.\n", encoding="utf-8"
+    )
+    (cdir / "investigation.md").write_text(
+        "# Investigation\n\nNot generated yet.\n", encoding="utf-8"
+    )
+    (cdir / "closure.md").write_text(
+        "# Closure\n\nCase still open.\n", encoding="utf-8"
+    )
+    audit("ir.create", case_id, "created", fingerprint=fingerprint)
     return case
 
 
-def enrich_case(case_id: str) -> dict[str, Any]:
+def enrich_case(
+    case_id: str,
+    cti_lookup: Callable[[str, float], dict[str, Any]] | None = None,
+    cti_timeout: float = 3.0,
+    dry_run: bool = False,
+) -> dict[str, Any]:
     case = load_case(case_id)
     alert = load_json(case_dir(case_id) / "alert.json")
     assets = asset_index()
     host = alert.get("host")
     asset = assets.get(host, {})
     user = alert.get("user", "")
+    indicators = alert.get("indicators", [])
+    primary_indicator = indicators[0] if indicators else None
+    cti: dict[str, Any] = {
+        "source": "configured-cti-provider" if cti_lookup else "none",
+        "confidence": "unknown",
+        "timestamp": utc_now(),
+        "lookup_status": "not-requested",
+        "timeout_status": False,
+        "errors": [],
+        "result": {},
+        "indicator": primary_indicator,
+        "advisory_only": True,
+    }
+    if cti_lookup and primary_indicator:
+        try:
+            result = cti_lookup(str(primary_indicator["value"]), cti_timeout)
+            cti.update(
+                {
+                    "lookup_status": "completed",
+                    "result": result,
+                    "confidence": str(result.get("confidence", "unknown")),
+                }
+            )
+        except Exception as exc:
+            is_timeout = isinstance(exc, TimeoutError)
+            cti.update(
+                {
+                    "lookup_status": "error",
+                    "timeout_status": is_timeout,
+                    "errors": ["provider-timeout" if is_timeout else "provider-error"],
+                }
+            )
+    elif cti_lookup:
+        cti["lookup_status"] = "no-indicators"
     enrichment = {
         "generated_at": utc_now(),
         "host": {
@@ -222,10 +370,9 @@ def enrich_case(case_id: str) -> dict[str, Any]:
             "asset_id": asset.get("id"),
             "role": asset.get("role"),
             "network": asset.get("network"),
-            "ip": asset.get("ip"),
             "approved_target": asset.get("approved_target", False),
-            "snapshot_status": "confirmed-on-proxmox-for-vm130" if host == "VICTIM-MAYURI" else "unverified",
-            "telemetry_health": ["Sysmon running", "SplunkForwarder running", "Velociraptor running"] if host == "VICTIM-MAYURI" else [],
+            "snapshot_status": "not-checked-by-repository-workflow",
+            "telemetry_health": [],
         },
         "user": {
             "account_name": user,
@@ -239,19 +386,39 @@ def enrich_case(case_id: str) -> dict[str, Any]:
             "signature_status": "unknown",
         },
         "network": {
-            "classification": "lab-local",
-            "internal": True,
-            "notes": ["No destination network indicators were present in the source alert payload."],
+            "classification": "not-assessed",
+            "internal": None,
+            "notes": [
+                "No destination network indicators were present in the source alert payload."
+            ],
         },
+        "cti": cti,
         "recent_reference": {
-            "validation_record": "detections/validation/live/VAL-2026-001-PT-2026-001.json" if alert.get("rule_id") == "DET-2026-001" else "",
-            "hunt_hypothesis": "threat-hunting/hypotheses/HUNT-2026-001.yaml" if alert.get("technique_id") == "T1059.001" else "",
+            "validation_record": "detections/validation/live/VAL-2026-001-PT-2026-001.json"
+            if alert.get("rule_id") == "DET-2026-001"
+            else "",
+            "hunt_hypothesis": "threat-hunting/hypotheses/HUNT-2026-001.yaml"
+            if alert.get("technique_id") == "T1059.001"
+            else "",
         },
     }
+    if dry_run:
+        return {
+            "operation": "enrich",
+            "dry_run": True,
+            "case_id": case_id,
+            "result": enrichment,
+        }
     dump_json(case_dir(case_id) / "enrichment.json", enrichment)
     case["automation"]["enrichment_complete"] = True
     case["updated_at"] = utc_now()
     save_case(case)
+    audit(
+        "ir.enrich",
+        case_id,
+        "completed-with-errors" if cti["errors"] else "completed",
+        cti_status=cti["lookup_status"],
+    )
     return enrichment
 
 
@@ -262,37 +429,112 @@ def select_profile(case: dict[str, Any]) -> str:
     return "malware-triage"
 
 
-def collect_case(case_id: str, profile: str | None = None) -> dict[str, Any]:
+def collect_case(
+    case_id: str,
+    profile: str | None = None,
+    fixture_paths: list[Path] | None = None,
+    dry_run: bool = False,
+) -> dict[str, Any]:
     case = load_case(case_id)
     selected = profile or select_profile(case)
     alert_path = case_dir(case_id) / "alert.json"
     enrichment_path = case_dir(case_id) / "enrichment.json"
+    artifacts: list[dict[str, Any]] = []
+    if fixture_paths:
+        for path in fixture_paths:
+            if path.exists() and path.is_file():
+                artifacts.append(
+                    {
+                        "path": path.name,
+                        "status": "collected",
+                        "sha256": file_sha256(path),
+                        "error": "",
+                    }
+                )
+            else:
+                artifacts.append(
+                    {
+                        "path": path.name,
+                        "status": "collection-failed",
+                        "sha256": "",
+                        "error": "fixture path not found",
+                    }
+                )
+    else:
+        artifacts = [
+            {
+                "name": name,
+                "status": "not-collected",
+                "sha256": "",
+                "error": "live collector not configured",
+            }
+            for name in (
+                "Windows event logs",
+                "Sysmon",
+                "PowerShell Operational",
+                "PowerShell history",
+                "Prefetch",
+                "Amcache",
+                "Shimcache",
+                "scheduled tasks",
+                "services",
+                "registry persistence",
+                "process telemetry",
+                "network telemetry",
+                "Velociraptor triage",
+            )
+        ]
+    evidence_class = "fixture" if fixture_paths else "plan"
+    status = (
+        "fixture-collected"
+        if fixture_paths and all(item["status"] == "collected" for item in artifacts)
+        else "planned"
+    )
     collection = {
         "case_id": case_id,
         "profile": selected,
-        "target": case["scope"]["hosts"][0] if case["scope"]["hosts"] else "unknown",
+        "target": case["scope"]["hosts"][0]
+        if case["scope"]["hosts"]
+        else "unknown",
         "collector": "deterministic-controller",
-        "tool_version": "repo-automation-foundation-v1",
+        "tool_version": "repo-automation-foundation-v2",
         "started_at": utc_now(),
         "completed_at": utc_now(),
-        "files": [str(alert_path.relative_to(REPO_ROOT)), str(enrichment_path.relative_to(REPO_ROOT))],
+        "files": [
+            repository_reference(alert_path),
+            repository_reference(enrichment_path),
+        ],
         "hashes": {
             alert_path.name: file_sha256(alert_path),
             enrichment_path.name: file_sha256(enrichment_path),
         },
-        "errors": [],
-        "status": "planned-safe-collection-only",
+        "errors": [
+            item["error"]
+            for item in artifacts
+            if item.get("error") and item["status"] == "collection-failed"
+        ],
+        "status": status,
+        "evidence_class": evidence_class,
+        "artifacts": artifacts,
     }
+    if dry_run:
+        return {
+            "operation": "collect",
+            "dry_run": True,
+            "case_id": case_id,
+            "result": collection,
+        }
     validate(collection, "forensic-collection.schema.json")
     dump_json(case_dir(case_id) / "evidence-manifest.json", collection)
     EVIDENCE_MANIFESTS.mkdir(parents=True, exist_ok=True)
     manifest_path = EVIDENCE_MANIFESTS / f"{case_id}.json"
     dump_json(manifest_path, collection)
-    case["evidence"]["manifest"] = str(manifest_path.relative_to(REPO_ROOT))
+    case["evidence"]["manifest"] = repository_reference(manifest_path)
     case["evidence"]["hashes"] = collection["hashes"]
-    case["automation"]["collection_complete"] = True
+    case["automation"]["collection_complete"] = status == "live-collected"
     case["updated_at"] = utc_now()
     save_case(case)
+    audit("ir.collect", case_id, status, evidence_class=evidence_class)
     return collection
 
 
@@ -303,8 +545,9 @@ def hunt_case(case_id: str) -> dict[str, Any]:
         "generated_at": utc_now(),
         "hunts_run": [],
         "result_count": 0,
-        "analyst_conclusion": "pending",
-        "detection_opportunity": "pending",
+        "execution_status": "not-executed",
+        "analyst_conclusion": "No SIEM query was executed by the repository workflow.",
+        "detection_opportunity": "pending analyst review",
     }
     if "T1059.001" in case.get("attack_mapping", {}).get("technique_ids", []):
         hunt["hunts_run"].append(
@@ -312,15 +555,16 @@ def hunt_case(case_id: str) -> dict[str, Any]:
                 "id": "HUNT-2026-001",
                 "query": "threat-hunting/queries/splunk/suspicious-powershell-daily-review.spl",
                 "time_range": "24h",
-                "result_count": 1,
-                "note": "Historical PT-2026-001 evidence indicates positive behavior and benign negatives were separable.",
+                "result_count": 0,
+                "execution_status": "reference-only",
+                "note": "Query reference prepared; run it through an authorized bounded SIEM adapter before drawing conclusions.",
             }
         )
-        hunt["result_count"] = 1
-        hunt["analyst_conclusion"] = "review historical PowerShell detection path and rerun live replay only after webhook path is wired"
+        hunt["analyst_conclusion"] = "Historical validation may guide review but does not establish current activity."
         hunt["detection_opportunity"] = "behavior-based PowerShell decode/execute with benign negative suppression"
     dump_json(case_dir(case_id) / "hunt-results.json", hunt)
-    case["automation"]["hunting_complete"] = True
+    case["automation"]["hunting_complete"] = False
+    case["automation"]["hunting_status"] = "planned"
     case["updated_at"] = utc_now()
     save_case(case)
     return hunt
@@ -346,7 +590,7 @@ def build_timeline(case_id: str) -> list[dict[str, Any]]:
             "destination_address": "",
             "file_path": "",
             "description": alert.get("alert_name"),
-            "evidence_reference": str((case_dir(case_id) / "alert.json").relative_to(REPO_ROOT)),
+            "evidence_reference": repository_reference(case_dir(case_id) / "alert.json"),
         },
         {
             "timestamp_utc": enrichment.get("generated_at", ""),
@@ -363,7 +607,7 @@ def build_timeline(case_id: str) -> list[dict[str, Any]]:
             "destination_address": "",
             "file_path": "",
             "description": "Deterministic enrichment completed",
-            "evidence_reference": str((case_dir(case_id) / "enrichment.json").relative_to(REPO_ROOT)),
+            "evidence_reference": repository_reference(case_dir(case_id) / "enrichment.json"),
         },
     ]
     out = case_dir(case_id) / "timeline.csv"
@@ -406,11 +650,11 @@ def analyze_case(case_id: str) -> dict[str, Any]:
     case = load_case(case_id)
     alert = load_json(case_dir(case_id) / "alert.json")
     findings = {
-        "executive_summary": "Deterministic review found a suspicious PowerShell alert on an approved victim host with historical live-validation evidence for the same behavior family.",
+        "executive_summary": "Deterministic review found a reported suspicious PowerShell alert and a sanitized historical validation summary for the same behavior family. No current endpoint or SIEM state was verified.",
         "confirmed_observations": [
             f"Alert source reported {alert.get('process')} on {alert.get('host')} with technique {alert.get('technique_id')}.",
-            "Historical live validation record VAL-2026-001 exists for the same detection family.",
-            "Victim host is approved and snapshot-capable according to current lab inventory.",
+            "A sanitized historical validation summary exists for the same detection family.",
+            "Current target identity, authorization, snapshot state, telemetry, and scope remain unverified.",
         ],
         "candidate_findings": [
             "Behavior matches suspicious PowerShell decode-and-execute semantics but requires fresh live replay to reconfirm latency and present-state telemetry."
@@ -430,7 +674,7 @@ def analyze_case(case_id: str) -> dict[str, Any]:
         ],
         "unsupported_assumptions": [
             "Do not conclude maliciousness from the alert alone.",
-            "Do not assume current Open WebUI or Ollama availability.",
+            "Do not infer current lab, SIEM, CTI, collector, or model availability from historical records.",
         ],
         "confidence": "low",
     }
@@ -462,7 +706,7 @@ def report_case(case_id: str) -> dict[str, Any]:
     save_case(case)
     return {
         "case_id": case_id,
-        "investigation": str((case_dir(case_id) / "investigation.md").relative_to(REPO_ROOT)),
+        "investigation": repository_reference(case_dir(case_id) / "investigation.md"),
         "validation_reference": validation_ref,
     }
 
@@ -514,6 +758,61 @@ def containment_plan(case_id: str) -> dict[str, Any]:
     case["updated_at"] = utc_now()
     save_case(case)
     return {"case_id": case_id, "actions": plan}
+
+
+def cleanup_case(case_id: str, dry_run: bool = False) -> dict[str, Any]:
+    case = load_case(case_id)
+    generated_json = (
+        "enrichment.json",
+        "hunt-results.json",
+        "findings.json",
+        "evidence-manifest.json",
+        "process-tree.json",
+    )
+    generated_text = {
+        "timeline.csv": "timestamp_utc,timestamp_original,host,user,source,event_id,category,process,parent_process,command_line,source_address,destination_address,file_path,description,evidence_reference\n",
+        "detection-opportunities.md": "# Detection opportunities\n\nPending analysis.\n",
+        "containment-plan.md": "# Containment plan\n\nNot generated yet.\n",
+        "investigation.md": "# Investigation\n\nNot generated yet.\n",
+    }
+    affected = [*generated_json, *generated_text]
+    if dry_run:
+        return {
+            "case_id": case_id,
+            "status": "planned",
+            "dry_run": True,
+            "affected": affected,
+        }
+    for name in generated_json:
+        dump_json(case_dir(case_id) / name, {})
+    for name, content in generated_text.items():
+        (case_dir(case_id) / name).write_text(content, encoding="utf-8")
+    manifest = EVIDENCE_MANIFESTS / f"{case_id}.json"
+    if manifest.exists():
+        manifest.unlink()
+    for key in (
+        "enrichment_complete",
+        "collection_complete",
+        "hunting_complete",
+        "timeline_complete",
+        "analysis_complete",
+        "detection_review_complete",
+        "containment_plan_complete",
+    ):
+        case["automation"][key] = False
+    case["automation"]["hunting_status"] = "not-run"
+    case["evidence"]["manifest"] = ""
+    case["evidence"]["hashes"] = {}
+    case["status"] = "triage"
+    case["updated_at"] = utc_now()
+    save_case(case)
+    audit("ir.cleanup", case_id, "cleaned", affected_count=len(affected))
+    return {
+        "case_id": case_id,
+        "status": "cleaned",
+        "dry_run": False,
+        "affected": affected,
+    }
 
 
 def close_case(case_id: str, disposition: str = "undetermined") -> dict[str, Any]:

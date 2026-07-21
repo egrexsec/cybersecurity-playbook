@@ -12,7 +12,7 @@ required_data:
   - local profile file state
   - optional PowerShell operational records
 target_systems:
-  - VICTIM-MAYURI
+  - AUTHORIZED-LAB-ENDPOINT
 baseline_query: windows-baseline-profile-counts
 hunt_query: suspicious-powershell-profile-correlation
 investigation_pivots:

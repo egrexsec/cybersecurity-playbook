@@ -14,4 +14,4 @@
 - Benign task query, benign task inventory, and benign scheduled task creation launching `notepad.exe` did not trigger the Sigma detection
 
 ## Notes
-- During validation, the victim temporarily lost its enterprise IPv4 address and the Splunk Universal Forwarder stopped sending to SOC01. The address was restored to `10.10.10.101/24`, connectivity to `10.10.10.20:9997` was re-established, and live Splunk validation then succeeded.
+- During historical validation, the authorized lab endpoint temporarily lost telemetry connectivity. Private addressing and forwarding configuration were restored, after which validation succeeded.
