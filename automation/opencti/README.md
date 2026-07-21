@@ -10,14 +10,14 @@ Credential-free deployment template for a small OpenCTI Community instance with 
 - backend service ports available only on the Compose network
 - automatic Shodan enrichment disabled by default to control API usage and noise
 
-The validated Mayuri deployment uses Ubuntu 24.04, 4 vCPU, 10 GiB RAM, and an 80 GB virtual disk. Treat that as the practical minimum for this tuned single-node stack.
+The validated Mayuri deployment uses Ubuntu 24.04 with a small dedicated compute and storage allocation. Exact live sizing remains outside the public repository; capacity-test the pinned stack before treating any profile as a production baseline.
 
 ## Deployment
 
 1. Set `vm.max_map_count=1048575` persistently on the host.
 2. Install Docker Engine and the Compose v2 plugin.
 3. Copy `docker-compose.yml` and `.env.example` to a root-owned deployment directory such as `/opt/opencti`.
-4. Rename `.env.example` to `.env`, generate unique random values, and set mode `0600`.
+4. Rename `.env.example` to `.env`, generate unique random values, set mode `0600`, and configure any environment-specific bind address only in that private runtime file.
 5. Start and validate the base platform before enabling Shodan:
 
 ```bash
@@ -43,7 +43,7 @@ A successful connector start registers `Shodan` as `INTERNAL_ENRICHMENT` with sc
 - Keep `.env` and any generated credential record root-owned with mode `0600`.
 - Keep the deployment directory root-owned and non-world-writable.
 - Use key-only SSH and limit administration to the lab-management path.
-- Publish only `${OPENCTI_BIND_IP}:8080`; do not publish Elasticsearch, RabbitMQ, Redis, or MinIO.
+- Publish only `${OPENCTI_BIND_IP}:8080`; keep the public example loopback-only and place any approved lab-interface value outside Git. Do not publish Elasticsearch, RabbitMQ, Redis, or MinIO.
 - Keep `CONNECTOR_AUTO=false` until API consumption and enrichment quality have been reviewed.
 - Preserve `no-new-privileges` and pinned image versions when adapting the template.
 - Configure bounded Docker logs and monitor disk/memory use.
