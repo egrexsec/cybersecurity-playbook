@@ -132,6 +132,7 @@ Implemented today:
 - GitHub Actions validation workflow
 - secret scanning in CI
 - public-safe evidence handling and sanitized repo artifacts
+- normalization into the shared DetLab Detection Content Specification v1 with source-hash provenance
 
 ## Current limitations
 
@@ -168,3 +169,4 @@ This repository demonstrates evidence-backed security engineering skills in:
 - [Security policy](SECURITY.md)
 - [Current program status](docs/current-state/PURPLE_TEAM_PROGRAM_STATUS.md)
 - [Portfolio metrics](docs/current-state/PORTFOLIO_METRICS.md)
+- [DetLab Detection Content Specification v1](docs/detection-content-spec-v1.md)
