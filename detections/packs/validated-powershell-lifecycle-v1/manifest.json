@@ -1,0 +1,98 @@
+{
+  "attack_techniques": [
+    "T1059.001",
+    "T1027"
+  ],
+  "detection_id": "0b77858e-3f9f-4a0e-bc4c-8f0ac4b2b0d1",
+  "detlab_workflow": {
+    "export": "markdown detection pack with source hash and converter provenance",
+    "input": "detections/sigma/windows/process_creation/suspicious_powershell_execution.yml",
+    "targets": [
+      "splunk",
+      "elastic-eql",
+      "microsoft-kusto"
+    ]
+  },
+  "external_evidence": {
+    "path": "evidence/powershell-detection-to-case.md",
+    "repository": "egrexsec/mayuri-purple-team-lab",
+    "result": "PASS \u2014 live validated"
+  },
+  "fixtures": {
+    "negative": [
+      {
+        "path": "tests/fixtures/T1059.001/negative/approved-admin-script.json",
+        "sha256": "e221fc02bf80839a8a39b0f37a2297c3194b7a0e6f5e56d8eadcc4e109fd17a8"
+      },
+      {
+        "path": "tests/fixtures/T1059.001/negative/get-date.json",
+        "sha256": "309a325d5bca6405546ce8034d0c28db12e044b06da6610e4c857f6642f56749"
+      },
+      {
+        "path": "tests/fixtures/T1059.001/negative/get-process.json",
+        "sha256": "f5643feed0301957bf1ffb06fc1a519d0b1df8db78d057bb490f19252f05da18"
+      },
+      {
+        "path": "tests/fixtures/T1059.001/negative/get-service.json",
+        "sha256": "5d91ae1f65c826b5debe74dca56bcb431065b20dea10e9b25a8f0cab554b2f50"
+      },
+      {
+        "path": "tests/fixtures/T1059.001/negative/standard-maintenance.json",
+        "sha256": "c1dcca67183c4b6c76dfa037d2b27df20cf7d0bad41a7e7787c67af66afb79aa"
+      }
+    ],
+    "positive": [
+      {
+        "path": "tests/fixtures/T1059.001/positive/atomic-test.json",
+        "sha256": "73ef3773fb5f12e54419d50602c615775c140f308a8dcbda0c1688fbac8eff13"
+      },
+      {
+        "path": "tests/fixtures/T1059.001/positive/modified-command.json",
+        "sha256": "5f2b44ad8c87589dc1b0dcaac32f21e43024808781f086b423c7546150421768"
+      },
+      {
+        "path": "tests/fixtures/T1059.001/positive/modified-variant.json",
+        "sha256": "5f2b44ad8c87589dc1b0dcaac32f21e43024808781f086b423c7546150421768"
+      },
+      {
+        "path": "tests/fixtures/T1059.001/positive/original-decode-execute.json",
+        "sha256": "73ef3773fb5f12e54419d50602c615775c140f308a8dcbda0c1688fbac8eff13"
+      }
+    ]
+  },
+  "generated_artifacts": [
+    {
+      "backend": "splunk-official",
+      "path": "detections/generated/splunk/official/suspicious_powershell_execution.spl",
+      "sha256": "50d330ed353ab4b580e0a3e58c4dab0bf38507bb238c619a3345704c1348ecf3"
+    },
+    {
+      "backend": "splunk-mayuri-live",
+      "path": "detections/generated/splunk/live/suspicious_powershell_execution.spl",
+      "sha256": "41e6de1afbca36554b596bf534f16bf9de94f819b3f0d0e7adf8d8ec2aaab394"
+    },
+    {
+      "backend": "elastic-eql",
+      "path": "detections/generated/elastic/suspicious_powershell_execution.eql",
+      "sha256": "1846a181046b86f26bd1760fc4142bfd74b4a3b721e468ebcb5549ab954236d5"
+    }
+  ],
+  "pack_version": "1.0.0",
+  "provenance": {
+    "case_study": "case-studies/powershell-encoded-command/README.md",
+    "contract": "schemas/detlab-detection-content-v1.schema.json",
+    "generator": "automation/build_powershell_lifecycle_pack.py",
+    "query_generator": "automation/validators/sigma_ops.py",
+    "sanitized_evidence_root": "evidence/sanitized/PT-2026-001",
+    "validation_record": "detections/validation/DET-2026-001-validation.md"
+  },
+  "sanitization": "Manifest contains public artifact paths and hashes only; raw telemetry is excluded.",
+  "scenario_id": "PT-2026-001",
+  "source": {
+    "path": "detections/sigma/windows/process_creation/suspicious_powershell_execution.yml",
+    "sha256": "adea06156e32cbe2e1d551f415bcac430a19ce4c6fde303c4a3aeb95483ec7b9"
+  },
+  "title": "Validated PowerShell Detection Lifecycle v1",
+  "validation_date": "2026-07-18",
+  "validation_status": "live-validated"
+}

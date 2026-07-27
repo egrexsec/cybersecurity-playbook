@@ -8,6 +8,7 @@ Designed to showcase **evidence-backed security engineering skills** through rep
 
 ## Explore
 
+- [Validated PowerShell Detection Lifecycle v1](detections/packs/validated-powershell-lifecycle-v1/README.md)
 - [Validation status](#current-validation-status)
 - [What this repository is](#what-this-repository-is)
 - [Detection lifecycle](#detection-lifecycle)
@@ -93,6 +94,7 @@ positive + negative]
 | `purple-team/scenarios/` | Canonical purple-team scenario definitions | Human-authored YAML + notes | Schema validation + linked live evidence |
 | `detections/sigma/` | Canonical authored Sigma rules | Human-authored YAML | Sigma lint + conversion + fixtures + live validation where available |
 | `detections/generated/` | Backend-specific generated output | Generated SPL/EQL | Regenerated from canonical Sigma; do not edit by hand |
+| `detections/packs/` | Versioned portfolio-ready lifecycle manifests | Deterministic JSON + documentation | Source/artifact hashes + fixtures + CI staleness check |
 | `detections/validation/live/` | Sanitized lab execution records | Generated JSON evidence | Parsed in repo validation; sourced from Mayuri lab runs |
 | `detections/validation/` | Human-readable validation summaries | Human-authored Markdown | Linked to fixtures and live validation JSON |
 | `tests/fixtures/` | Positive/negative rule fixtures | Sanitized JSON fixtures | Offline fixture test harness |
