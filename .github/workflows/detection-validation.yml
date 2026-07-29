@@ -39,6 +39,11 @@ jobs:
       - name: Sigma fixture tests
         run: python3 playbook --json test fixtures
 
+      - name: Validated PowerShell lifecycle pack
+        run: |
+          python3 automation/build_powershell_lifecycle_pack.py --check
+          python3 -m unittest tests.test_powershell_lifecycle_pack -v
+
       - name: Previous-scenario validation record check
         run: python3 playbook --json validate previous-scenarios
 
