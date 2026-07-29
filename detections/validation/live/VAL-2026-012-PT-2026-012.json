@@ -1,0 +1,112 @@
+{
+  "scenario_id": "PT-2026-012",
+  "validation_run_id": "VAL-2026-012",
+  "technique_id": "T1569.002",
+  "atomic_test_guid": "2382dee2-a75f-49aa-9378-f52df6ed3fb1",
+  "atomic_test_index": 1,
+  "atomic_test_name": "Execute a Command as a Service",
+  "validation_date_utc": "2026-07-29",
+  "target": "approved Windows victim",
+  "rollback_snapshot": "pre-pt-2026-012-t1569-002-20260729",
+  "scope": {
+    "local_only": true,
+    "domain_controller_targeted": false,
+    "network_payload": false,
+    "credential_access": false,
+    "lateral_movement": false
+  },
+  "preflight": {
+    "victim_running": true,
+    "secure_channel": true,
+    "sensors_running": ["Sysmon64", "SplunkForwarder", "Velociraptor", "WazuhSvc", "WinDefend"],
+    "splunk_restored_and_healthy": true,
+    "fresh_victim_telemetry_confirmed": true,
+    "service_name_collisions": false
+  },
+  "original": {
+    "start_time_utc": "2026-07-29T16:55:19.081415Z",
+    "end_time_utc": "2026-07-29T16:55:29.815778Z",
+    "exec_output": "Atomic UUID 2382dee2-a75f-49aa-9378-f52df6ed3fb1 completed; controlled marker created; temporary service deleted.",
+    "detection_results": [
+      {
+        "_time": "2026-07-29 16:55:23.000 UTC",
+        "host": "VICTIM-MAYURI",
+        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
+        "lineage": "services.exe -> cmd.exe -> powershell.exe",
+        "scm_event_codes": [7045, 7009, 7000]
+      }
+    ],
+    "marker_state": "created and content verified",
+    "service_remaining": false,
+    "detection_fired": true,
+    "detection_latency_seconds": 4
+  },
+  "variant": {
+    "start_time_utc": "2026-07-29T16:58:29.105213Z",
+    "end_time_utc": "2026-07-29T16:58:38.997840Z",
+    "exec_output": "Same Atomic UUID completed with modified cmd.exe marker argument; temporary service deleted.",
+    "detection_results": [
+      {
+        "_time": "2026-07-29 16:58:32.000 UTC",
+        "host": "VICTIM-MAYURI",
+        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
+        "lineage": "services.exe -> cmd.exe",
+        "scm_event_codes": [7045, 7009, 7000]
+      }
+    ],
+    "marker_state": "created and content verified",
+    "service_remaining": false,
+    "detection_fired": true,
+    "detection_latency_seconds": 3
+  },
+  "negatives": [
+    {
+      "name": "sc query",
+      "start_time_utc": "2026-07-29T16:59:27.009520Z",
+      "end_time_utc": "2026-07-29T16:59:38.097068Z",
+      "exec_output": "service query completed successfully",
+      "detection_results": [],
+      "detection_fired": false,
+      "detection_latency_seconds": null
+    },
+    {
+      "name": "Get-Service inspection",
+      "start_time_utc": "2026-07-29T16:59:38.097084Z",
+      "end_time_utc": "2026-07-29T16:59:48.995105Z",
+      "exec_output": "service inspection completed successfully",
+      "detection_results": [],
+      "detection_fired": false,
+      "detection_latency_seconds": null
+    },
+    {
+      "name": "create and delete without start",
+      "start_time_utc": "2026-07-29T16:59:48.995121Z",
+      "end_time_utc": "2026-07-29T17:00:01.116583Z",
+      "exec_output": "temporary service created and deleted without starting",
+      "detection_results": [],
+      "scm_event_codes": [7045],
+      "detection_fired": false,
+      "detection_latency_seconds": null
+    }
+  ],
+  "deviations": [
+    {
+      "time_utc": "2026-07-29T16:52:26.621378Z",
+      "description": "Initial custom input used nested quoting; the service lifecycle completed but the marker was not created.",
+      "response": "Stopped, cleaned, added a failing regression test, corrected quoting, added durable completion records, and reran successfully.",
+      "residue_after_cleanup": false
+    },
+    {
+      "description": "Splunk was inactive during preflight.",
+      "response": "Restored Splunk and confirmed listeners and fresh endpoint telemetry before execution."
+    }
+  ],
+  "cleanup": {
+    "start_time_utc": "2026-07-29T17:00:27Z",
+    "end_time_utc": "2026-07-29T17:00:32.526197Z",
+    "exec_output": "services_remaining=[]; artifacts_remaining=[]; victim secure channel=true; endpoint sensors running; dcdiag quiet",
+    "services_remaining": [],
+    "artifacts_remaining": []
+  },
+  "status": "validated"
+}

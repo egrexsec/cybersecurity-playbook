@@ -1,7 +1,7 @@
 # Detection Platform Readiness
 
 ## Summary
-Critical telemetry prerequisites are currently sufficient to replay and validate the current eleven live-validated Windows scenarios represented on main.
+Critical telemetry prerequisites are currently sufficient to replay and validate the current twelve live-validated Windows scenarios represented in the repository.
 
 ## Proxmox and VM state
 | Component | Status | Evidence | Notes |
@@ -12,7 +12,7 @@ Critical telemetry prerequisites are currently sufficient to replay and validate
 | SOC01 VM 140 | Ready | `qm list`, Splunk ports, sigma present | active SIEM node |
 | DFIR01 VM 160 | Partially ready | running in `qm list` | not exercised in this validation cycle |
 | KALI VM 150 | Partially ready | stopped in `qm list` | not required for current validation |
-| Snapshot capability | Ready | victim and SOC snapshot chains present | latest branches end at `pre-splunk-*`; no new rollback taken in this cycle |
+| Snapshot capability | Ready | victim rollback snapshot `pre-pt-2026-012-t1569-002-20260729` verified | snapshots supplement but do not replace cleanup |
 | Host disk capacity | Partially ready | `/` 80% used, ~19G free | enough for current work, not ideal for Elastic |
 | Host memory headroom | Partially ready | 62Gi total / ~1Gi free / 24Gi cache available | Elastic on SOC would be risky |
 
@@ -40,7 +40,7 @@ Critical telemetry prerequisites are currently sufficient to replay and validate
 | Victim telemetry ingestion | Ready | 24h counts for Application / PowerShell / Sysmon / Security / System | live query |
 | DC01 telemetry ingestion | Ready | 24h counts for Application / PowerShell / Sysmon / Security / System | live query |
 | Required sourcetypes | Ready | `XmlWinEventLog:*` sources visible | raw XML ingestion confirmed |
-| Searchability during replay | Ready | `VAL-2026-001/002/003` | positive and negative windows validated |
+| Searchability during replay | Ready | `VAL-2026-001..012` | positive and negative windows validated |
 | Field normalization | Partially ready | official Sigma conversion returns field-based SPL, but live environment lacks equivalent extracted fields | current Mayuri live pipeline uses raw XML `_raw` matching |
 | Existing alerts/saved searches | Missing | no durable Splunk alert objects were verified in this cycle | validation currently query-driven |
 | Retention sufficiency | Partially ready | at least 24h historical queries succeeded | formal retention policy not audited |
@@ -52,10 +52,10 @@ Critical telemetry prerequisites are currently sufficient to replay and validate
 | Controller-side sigma venv | Ready | `/root/.venvs/sigma-platform` with working `sigma check/convert` | current authoritative build environment |
 | Splunk backend conversion | Ready | generated official + Mayuri live SPL files | repository-local |
 | Elastic conversion | Ready (conversion only) | generated EQL files | no live Elastic backend |
-| Fixture harness | Ready | `automation/validators/sigma_ops.py test-fixtures` passing | 11 rules / 59 fixtures |
+| Fixture harness | Ready | `automation/validators/sigma_ops.py test-fixtures` passing | 12 rules / 64 fixtures |
 
 ## Readiness decision
-- Critical telemetry for PT-2026-001 through PT-2026-011: **Ready**
+- Critical telemetry for PT-2026-001 through PT-2026-012: **Ready**
 - Critical telemetry for the current Windows-safe execution/persistence set: **Ready with existing field-normalization caveats**
-- Safe to replay the eleven verified scenarios now: **Yes**
+- Safe to replay the twelve verified scenarios individually after fresh preflight: **Yes**
 - Safe to deploy Elastic now: **No**

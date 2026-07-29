@@ -108,8 +108,20 @@ Status legend: Planned | Implemented | Executed | Partially tested | Validated |
 - gaps: normalized-field maturity, durable alert objects, and broader non-Windows coverage still lag the scenario count growth
 - recommended_action: treat this as the current baseline for public status/metrics rather than the earlier three-scenario snapshot
 
+### 2026-07-29 — PT-2026-012 Service Execution live validated
+- date: 2026-07-29
+- activity: exact upstream Atomic service execution plus a modified command variant and three negative controls were replayed on the approved victim
+- scenario_id: PT-2026-012
+- attack_technique: T1569.002
+- systems_involved: victim, SOC01, repository; domain controller health checked but never targeted
+- claimed_result: service-launched shell behavior was detected in Splunk for both positives, create-without-start stayed quiet, and all services/files were removed
+- evidence_found: scenario YAML, exact Atomic UUID, behavioral Sigma, 64-fixture suite, live validation JSON, SCM/Sysmon correlation, hunt, investigation, and sanitized evidence
+- validation_status: Validated; publication pending exact-head review
+- gaps: live Splunk rule still uses raw XML matching and durable alert deployment remains unverified
+- recommended_action: preserve one-technique-at-a-time execution and exact-head review before merge
+
 ## Verified current position
 - repository now supports authored Sigma + generated Splunk/Elastic + fixture tests + live validation records
-- eleven scenarios are currently represented as live-validated on main
+- twelve scenarios are represented as live validated; PT-2026-012 publication remains branch/review gated
 - GitHub Actions workflow exists and is part of the repository state
 - project maturity is suitable for portfolio showcase as a lab-validated detection-engineering repository, not a production SIEM platform
