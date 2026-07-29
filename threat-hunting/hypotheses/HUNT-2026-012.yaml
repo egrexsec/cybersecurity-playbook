@@ -1,0 +1,38 @@
+id: HUNT-2026-012
+title: Hunt for Service-Launched Command Execution
+status: completed
+hypothesis: >-
+  If an adversary executes a command through the Windows Service Control Manager, the victim should emit
+  process creation telemetry showing services.exe launching cmd.exe or powershell.exe as SYSTEM.
+attack:
+  - T1569.002
+required_data:
+  - Sysmon Event ID 1
+  - Windows System Service Control Manager events 7045, 7009, and 7000
+target_systems:
+  - VICTIM-MAYURI
+baseline_query: windows-baseline-services-child-processes
+hunt_query: suspicious-service-execution
+investigation_pivots:
+  - cmd.exe or powershell.exe with services.exe as parent
+  - SYSTEM integrity and command-line arguments
+  - related service installation and timeout events
+  - service and file cleanup state
+known_legitimate_activity:
+  - service inventory queries
+  - approved service installation without service start
+  - legitimate service binaries started by services.exe
+success_criteria:
+  - exact Atomic service execution is visible in Sysmon and Splunk
+  - a modified command-line variant triggers the behavioral rule
+  - query and create-without-start controls stay quiet
+  - all temporary services and marker files are removed
+detection_opportunity: >-
+  Detect command interpreters launched directly by services.exe rather than matching a lab-specific service name or marker.
+results:
+  - exact Atomic UUID produced services.exe to cmd.exe to powershell.exe lineage and triggered the rule
+  - modified command variant produced services.exe to cmd.exe lineage and triggered the rule
+  - sc.exe query and Get-Service controls did not trigger the rule
+  - service creation without start produced SCM 7045 but did not trigger the behavioral rule
+  - final cleanup and victim, sensor, and domain health checks passed
+conclusion: validated

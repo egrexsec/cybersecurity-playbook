@@ -1,0 +1,11 @@
+{
+  "rule_id": "d7bfcdf8-7f68-4bcb-8a21-11f2c00f9a12",
+  "technique_id": "T1569.002",
+  "scenario_id": "PT-2026-012",
+  "expected_match": true,
+  "event": {
+    "ParentImage": "C:\\Windows\\System32\\services.exe",
+    "Image": "C:\\Windows\\System32\\cmd.exe",
+    "CommandLine": "%COMSPEC% /c powershell.exe -NoProfile -NonInteractive -Command Set-Content"
+  }
+}

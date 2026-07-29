@@ -1,0 +1,1 @@
+search index=main source="WinEventLog:Microsoft-Windows-Sysmon/Operational" _raw="*<EventID>1</EventID>*" (_raw="*<Data Name='ParentImage'>*\services.exe*</Data>*") AND ((_raw="*<Data Name='Image'>*\cmd.exe*</Data>*" OR _raw="*<Data Name='Image'>*\powershell.exe*</Data>*"))

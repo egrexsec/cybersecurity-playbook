@@ -1,0 +1,94 @@
+id: PT-2026-012
+title: Local Service Execution Validation on Approved Windows Endpoint
+description: >-
+  Low-risk victim-only Atomic Red Team validation of service-mediated command execution,
+  behavioral detection, negative controls, and explicit cleanup.
+status: validated
+created: '2026-07-29T00:00:00Z'
+updated: '2026-07-29T17:00:32Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1569.002
+  test_ids:
+    - 2382dee2-a75f-49aa-9378-f52df6ed3fb1
+  commands:
+    - Invoke-AtomicTest T1569.002 exact test GUID with a local marker command
+    - Same exact Atomic test with modified local command arguments
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon, SplunkForwarder, Velociraptor, Wazuh, and Defender are running
+    - Splunk process-creation and System telemetry are current and queryable
+    - Atomic Red Team repository and Invoke-AtomicRedTeam 2.3.0 are staged locally
+targets:
+  approved_hosts:
+    - VICTIM-MAYURI
+  approved_networks:
+    - 10.10.10.0/24
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: pre-pt-2026-012-t1569-002-20260729
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+  excluded_tests:
+    - PsExec remote-host execution
+    - Impacket psexec.py
+    - BlackCat lateral-movement emulation
+    - RemCom remote execution
+    - SCM ACL modification requiring restart
+telemetry:
+  required:
+    - Sysmon Event ID 1 process creation
+    - services.exe parent relationship to cmd.exe or powershell.exe
+    - System Service Control Manager records
+  optional:
+    - Wazuh event correlation
+baseline:
+  duration_minutes: 15
+  queries:
+    - splunk-recent-victim-process-counts
+    - local-recent-service-control-manager-events
+execution:
+  runner: qm-guest-exec
+  arguments:
+    - Invoke-AtomicTest T1569.002
+    - sc.exe local service execution
+collection:
+  before:
+    - service and marker absence
+    - sensor health
+    - current telemetry timestamps
+  after:
+    - service execution process lineage
+    - Service Control Manager events
+    - marker-file evidence
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-012
+forensics:
+  collection_profiles:
+    - service-execution-activity
+    - process-execution
+    - system-service-events
+detections:
+  expected_rules:
+    - DET-2026-012
+validation:
+  positive_tests:
+    - exact-atomic-service-execution
+    - modified-command-service-execution
+  negative_tests:
+    - benign-sc-query
+    - benign-get-service
+    - benign-service-create-without-start
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-012/
+    - investigations/endpoint/DFIR-2026-012/
+  output_paths:
+    - purple-team/scenarios/PT-2026-012-service-execution/
+    - detections/validation/live/
