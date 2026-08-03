@@ -116,12 +116,24 @@ Status legend: Planned | Implemented | Executed | Partially tested | Validated |
 - systems_involved: victim, SOC01, repository; domain controller health checked but never targeted
 - claimed_result: service-launched shell behavior was detected in Splunk for both positives, create-without-start stayed quiet, and all services/files were removed
 - evidence_found: scenario YAML, exact Atomic UUID, behavioral Sigma, 64-fixture suite, live validation JSON, SCM/Sysmon correlation, hunt, investigation, and sanitized evidence
-- validation_status: Validated; publication pending exact-head review
+- validation_status: Validated and merged
 - gaps: live Splunk rule still uses raw XML matching and durable alert deployment remains unverified
 - recommended_action: preserve one-technique-at-a-time execution and exact-head review before merge
 
+### 2026-08-03 — PT-2026-013 WMI Event Subscription live validated
+- date: 2026-08-03
+- activity: exact upstream Atomic permanent WMI subscription plus a modified non-triggering variant and three negative controls were replayed on the approved victim
+- scenario_id: PT-2026-013
+- attack_technique: T1546.003
+- systems_involved: victim, SIEM, repository; domain controller health checked but never targeted
+- claimed_result: behavioral Sysmon WMI creation detection fired for both positives, all three controls stayed quiet, and all filters, consumers, bindings, and completion files were removed
+- evidence_found: scenario YAML, exact Atomic UUID, behavioral Sigma, 69-fixture suite, live validation JSON, Sysmon/Splunk correlation, hunt, DFIR notes, and sanitized evidence
+- validation_status: Validated
+- gaps: live Splunk rule still uses raw XML matching and durable alert deployment remains unverified
+- recommended_action: continue one-technique-at-a-time validation and preserve association-aware WMI cleanup
+
 ## Verified current position
 - repository now supports authored Sigma + generated Splunk/Elastic + fixture tests + live validation records
-- twelve scenarios are represented as live validated; PT-2026-012 publication remains branch/review gated
+- thirteen scenarios are represented as live validated; PT-2026-013 publication remains branch/review gated
 - GitHub Actions workflow exists and is part of the repository state
 - project maturity is suitable for portfolio showcase as a lab-validated detection-engineering repository, not a production SIEM platform

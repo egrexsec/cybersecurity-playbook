@@ -1,0 +1,1 @@
+search index=main source="WinEventLog:Microsoft-Windows-Sysmon/Operational" (_raw="*<EventID>19</EventID>*" OR _raw="*<EventID>20</EventID>*" OR _raw="*<EventID>21</EventID>*") (_raw="*<Data Name='Operation'>*Created*") AND ((_raw="*<Data Name='EventType'>*WmiFilterEvent*" OR _raw="*<Data Name='EventType'>*WmiConsumerEvent*" OR _raw="*<Data Name='EventType'>*WmiBindingEvent*"))

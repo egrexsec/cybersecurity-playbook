@@ -1,0 +1,1 @@
+any where winlog.event_data.Operation:"Created" and (winlog.event_data.EventType like~ ("WmiFilterEvent", "WmiConsumerEvent", "WmiBindingEvent"))

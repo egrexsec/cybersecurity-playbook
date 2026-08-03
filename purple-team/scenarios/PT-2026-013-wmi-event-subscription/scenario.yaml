@@ -1,0 +1,93 @@
+id: PT-2026-013
+title: Permanent WMI Event Subscription Validation on Approved Windows Endpoint
+description: >-
+  Low-risk victim-only Atomic Red Team validation of permanent WMI event subscription creation,
+  behavioral detection, negative controls, and explicit cleanup without reboot or payload triggering.
+status: validated
+created: '2026-08-02T00:00:00Z'
+updated: '2026-08-03T00:00:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+    - T1546.003
+  test_ids:
+    - 3c64f177-28e2-49eb-a799-d767b24dd1e0
+  commands:
+    - Invoke-AtomicTest T1546.003 exact test GUID for CommandLineEventConsumer persistence
+    - Create a modified local CommandLineEventConsumer subscription with a non-triggering query
+  prerequisites:
+    - Windows victim is healthy and domain joined
+    - Sysmon, SplunkForwarder, Velociraptor, Wazuh, and Defender are running
+    - Sysmon WMI subscription events and Splunk telemetry are current and queryable
+    - Atomic Red Team repository and Invoke-AtomicRedTeam 2.3.0 are staged locally
+targets:
+  approved_hosts:
+    - approved-windows-victim
+  approved_networks: []
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: private-rollback-reference
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 300
+  excluded_tests:
+    - ActiveScriptEventConsumer
+    - MOFComp
+    - reboot-triggered payload execution
+    - remote hosts or credentials
+telemetry:
+  required:
+    - Sysmon Event ID 19 WmiEventFilter activity
+    - Sysmon Event ID 20 WmiEventConsumer activity
+    - Sysmon Event ID 21 WmiEventConsumerToFilter activity
+  optional:
+    - Microsoft-Windows-WMI-Activity/Operational
+    - Wazuh event correlation
+baseline:
+  duration_minutes: 15
+  queries:
+    - splunk-recent-wmi-subscription-events
+    - local-permanent-wmi-subscription-inventory
+execution:
+  runner: isolated-guest-command-runner
+  arguments:
+    - Invoke-AtomicTest T1546.003 exact CommandLineEventConsumer test
+    - local non-triggering permanent WMI subscription variant
+collection:
+  before:
+    - named filter, consumer, and binding absence
+    - sensor health
+    - current telemetry timestamps
+  after:
+    - WMI filter creation
+    - WMI consumer creation
+    - WMI binding creation
+hunts:
+  hypothesis_ids:
+    - HUNT-2026-013
+forensics:
+  collection_profiles:
+    - permanent-wmi-subscriptions
+    - sysmon-wmi-events
+    - wmi-activity-events
+detections:
+  expected_rules:
+    - DET-2026-013
+validation:
+  positive_tests:
+    - exact-atomic-command-line-consumer
+    - modified-non-triggering-command-line-consumer
+  negative_tests:
+    - read-only-cim-os-query
+    - read-only-subscription-inventory
+    - transient-in-process-cim-indication-subscription
+reporting:
+  evidence_paths:
+    - evidence/sanitized/PT-2026-013/
+    - investigations/endpoint/DFIR-2026-013/
+  output_paths:
+    - purple-team/scenarios/PT-2026-013-wmi-event-subscription/
+    - detections/validation/live/

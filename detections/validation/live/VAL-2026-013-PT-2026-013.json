@@ -1,0 +1,133 @@
+{
+  "scenario_id": "PT-2026-013",
+  "validation_run_id": "VAL-2026-013",
+  "technique_id": "T1546.003",
+  "atomic_test_guid": "3c64f177-28e2-49eb-a799-d767b24dd1e0",
+  "atomic_test_index": 1,
+  "atomic_test_name": "Persistence via WMI Event Subscription - CommandLineEventConsumer",
+  "validation_date_utc": "2026-08-03",
+  "target": "approved Windows victim",
+  "rollback_snapshot": "verified; identifier retained in private evidence",
+  "scope": {
+    "local_only": true,
+    "domain_controller_targeted": false,
+    "network_payload": false,
+    "credential_access": false,
+    "lateral_movement": false,
+    "payload_triggered": false
+  },
+  "preflight": {
+    "victim_running": true,
+    "secure_channel": true,
+    "sensors_running": ["Sysmon64", "SplunkForwarder", "Velociraptor", "WazuhSvc", "WinDefend"],
+    "splunk_healthy": true,
+    "fresh_victim_telemetry_confirmed": true,
+    "wmi_object_name_collisions": false,
+    "victim_boot_time_utc": "2026-07-17T14:40:33.501419Z",
+    "uptime_seconds_at_original_start": 1422387.012,
+    "atomic_payload_trigger_window_seconds": [240, 324]
+  },
+  "original": {
+    "start_time_utc": "2026-08-03T01:47:00.513788Z",
+    "end_time_utc": "2026-08-03T01:47:08.334013Z",
+    "exec_output": "Exact Atomic UUID completed; filter, CommandLineEventConsumer, and binding were verified through a durable completion record.",
+    "detection_results": [
+      {
+        "_time": "2026-08-03 01:47:05.000 UTC",
+        "host": "approved-windows-victim",
+        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
+        "event_codes": [19, 20],
+        "event_types": ["WmiFilterEvent", "WmiConsumerEvent"],
+        "event_count": 3
+      }
+    ],
+    "subscription_state": "filter, consumer, and binding created and verified",
+    "detection_fired": true,
+    "detection_latency_seconds": 4.486,
+    "payload_verification": {
+      "process": "notepad.exe",
+      "event_id": 1,
+      "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
+      "earliest_utc": "2026-08-03T01:46:55Z",
+      "latest_utc": "2026-08-03T01:47:15Z",
+      "query_scope": "bounded Sysmon process-creation search",
+      "match_count": 0
+    }
+  },
+  "variant": {
+    "start_time_utc": "2026-08-03T01:48:46.005927Z",
+    "end_time_utc": "2026-08-03T01:48:49.604107Z",
+    "exec_output": "Modified local CommandLineEventConsumer subscription completed with a deliberately non-triggering WQL condition; durable completion record verified.",
+    "detection_results": [
+      {
+        "_time": "2026-08-03 01:48:47.000 UTC",
+        "host": "approved-windows-victim",
+        "source": "WinEventLog:Microsoft-Windows-Sysmon/Operational",
+        "event_codes": [19, 20, 21],
+        "event_types": ["WmiFilterEvent", "WmiConsumerEvent", "WmiBindingEvent"],
+        "event_count": 3
+      }
+    ],
+    "subscription_state": "filter, consumer, and binding created and verified",
+    "detection_fired": true,
+    "detection_latency_seconds": 0.994
+  },
+  "negatives": [
+    {
+      "name": "read-only CIM operating-system inventory",
+      "start_time_utc": "2026-08-03T01:49:52.263193Z",
+      "end_time_utc": "2026-08-03T01:49:54.749420Z",
+      "exec_output": "read-only operating-system inventory completed",
+      "detection_results": [],
+      "detection_fired": false,
+      "detection_latency_seconds": null
+    },
+    {
+      "name": "read-only permanent subscription inventory",
+      "start_time_utc": "2026-08-03T01:50:34.234812Z",
+      "end_time_utc": "2026-08-03T01:50:36.844661Z",
+      "exec_output": "existing subscription inventory completed",
+      "detection_results": [],
+      "detection_fired": false,
+      "detection_latency_seconds": null
+    },
+    {
+      "name": "transient in-process CIM indication subscription",
+      "start_time_utc": "2026-08-03T01:51:16.343586Z",
+      "end_time_utc": "2026-08-03T01:51:21.796557Z",
+      "exec_output": "temporary in-process subscription registered and removed; no permanent namespace objects created",
+      "detection_results": [],
+      "detection_fired": false,
+      "detection_latency_seconds": null
+    }
+  ],
+  "deviations": [
+    {
+      "description": "The initial harness used direct CIM-reference string matching to verify and remove the filter-to-consumer binding. The Atomic created the subscription, but the harness could not reliably recognize the association and did not produce a completion record.",
+      "response": "Execution stopped. Cleanup was replaced with the upstream-style REFERENCES OF association query, a regression contract was added, and filter, consumer, binding, and completion-file counts were all verified as zero before rerun.",
+      "residue_after_cleanup": false
+    },
+    {
+      "description": "A subsequent controlled rerun confirmed that fixed-delay polling did not correct the binding comparison because the issue was association representation rather than ingestion delay.",
+      "response": "The positive verification path was changed to the same REFERENCES OF association query and tested before the successful evidence-producing replay.",
+      "residue_after_cleanup": false
+    }
+  ],
+  "cleanup": {
+    "start_time_utc": "2026-08-03T01:52:17.025253Z",
+    "end_time_utc": "2026-08-03T01:52:21.487320Z",
+    "exec_output": "filters=0; consumers=0; bindings=0; completion_files=0; victim secure channel=true; endpoint sensors running; dcdiag quiet",
+    "filters_remaining": 0,
+    "consumers_remaining": 0,
+    "bindings_remaining": 0,
+    "completion_files_remaining": 0,
+    "idempotence_recheck": {
+      "start_time_utc": "2026-08-03T02:18:46.789298Z",
+      "end_time_utc": "2026-08-03T02:18:53.085340Z",
+      "remaining": [],
+      "completion_files": [],
+      "clean": true
+    }
+  },
+  "status": "validated"
+}

@@ -1,0 +1,31 @@
+title: Permanent WMI Event Subscription Created
+id: 45742e29-7c43-4a65-bd91-b04fa7a8d9dc
+status: test
+description: >-
+  Detects creation of a permanent WMI event filter, consumer, or filter-to-consumer binding.
+  Permanent WMI subscriptions can provide stealthy event-triggered persistence.
+references:
+  - https://attack.mitre.org/techniques/T1546/003/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1546.003/T1546.003.yaml
+author: mell0wx
+logsource:
+  product: windows
+  category: wmi_event
+detection:
+  selection_created:
+    Operation: Created
+  selection_type:
+    EventType:
+      - WmiFilterEvent
+      - WmiConsumerEvent
+      - WmiBindingEvent
+  condition: selection_created and selection_type
+falsepositives:
+  - Legitimate endpoint-management, monitoring, or software-deployment products creating permanent WMI subscriptions
+  - Controlled administrative or purple-team validation activity
+date: 2026-08-02
+level: high
+tags:
+  - attack.persistence
+  - attack.privilege-escalation
+  - attack.t1546.003
