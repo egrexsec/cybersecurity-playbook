@@ -1,0 +1,66 @@
+{
+  "scenario_id": "PT-2026-014",
+  "validation_run_id": "VAL-2026-014",
+  "technique_id": "T1105",
+  "atomic_test_guid": "42dc4460-9aa6-45d3-b1a6-3955d34e1fe8",
+  "atomic_test_name": "Windows - PowerShell Download",
+  "validation_date_utc": "2026-08-03",
+  "target": "approved-windows-victim",
+  "rollback_snapshot": "private-rollback-reference",
+  "scope": {
+    "loopback_only": true,
+    "benign_content": true,
+    "external_c2": false,
+    "credential_access": false,
+    "lateral_movement": false
+  },
+  "preflight": {
+    "authorization_confirmed": true,
+    "rollback_ready": true,
+    "endpoint_sensors_healthy": true,
+    "siem_current": true,
+    "domain_healthy": true,
+    "opencti_semantic_enrichment_healthy": true
+  },
+  "original": {
+    "start_time_utc": "2026-08-03T14:34:32.288656Z",
+    "end_time_utc": "2026-08-03T14:34:43.741449Z",
+    "source_destination_hash_equal": true,
+    "detection_times_utc": [
+      "2026-08-03T14:34:40Z"
+    ],
+    "detection_fired": true,
+    "detection_latency_seconds": 7.711344
+  },
+  "variant": {
+    "start_time_utc": "2026-08-03T14:35:39.497829Z",
+    "end_time_utc": "2026-08-03T14:35:44.348059Z",
+    "source_destination_hash_equal": true,
+    "detection_times_utc": [
+      "2026-08-03T14:35:40Z"
+    ],
+    "detection_fired": true,
+    "detection_latency_seconds": 0.502171
+  },
+  "negatives": [
+    {
+      "name": "WebClient object construction without transfer",
+      "detection_fired": false
+    },
+    {
+      "name": "bounded Invoke-WebRequest HEAD request without OutFile",
+      "detection_fired": false
+    },
+    {
+      "name": "Invoke-WebRequest command discovery",
+      "detection_fired": false
+    }
+  ],
+  "cleanup": {
+    "exec_output": "PowerShell transfer artifacts, loopback server jobs, and completion records removed; first and idempotent second cleanup passes verified zero residue.",
+    "first_pass_clean": true,
+    "second_pass_clean": true,
+    "remaining": []
+  },
+  "status": "validated"
+}

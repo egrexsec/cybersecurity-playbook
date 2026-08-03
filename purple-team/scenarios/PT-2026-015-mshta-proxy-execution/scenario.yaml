@@ -1,0 +1,90 @@
+id: PT-2026-015
+title: Mshta Proxy Execution Validation on Approved Windows Endpoint
+description: Low-risk victim-only validation of mshta spawning a benign shell or PowerShell
+  child, behavioral process-lineage detection, negative controls, and verified cleanup.
+status: validated
+created: '2026-08-03T00:00:00Z'
+updated: '2026-08-03T00:00:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+  - T1218.005
+  test_ids:
+  - 8707a805-2b76-4f32-b1c0-14e558205772
+  commands:
+  - Attempt the exact pinned mshta-to-PowerShell Atomic command and record Defender
+    prevention
+  - Execute a local benign HTA variant that launches cmd.exe only to write a marker
+  prerequisites:
+  - Approved Windows victim is healthy and domain joined
+  - Sysmon and Splunk telemetry are current and queryable
+  - Atomic Red Team is staged locally
+  - Private rollback reference exists
+  - No external HTA or payload is used
+targets:
+  approved_hosts:
+  - approved-windows-victim
+  approved_networks: []
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: private-rollback-reference
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 120
+  excluded_tests:
+  - remote HTA retrieval
+  - calculator or executable payload launch
+  - lateral movement and remote hosts
+telemetry:
+  required:
+  - Sysmon Event ID 1 process creation with mshta parent and shell or script-interpreter
+    child
+  optional:
+  - PowerShell Event ID 4104
+  - Wazuh process telemetry
+baseline:
+  duration_minutes: 30
+  queries:
+  - mshta-child-process-baseline
+execution:
+  runner: isolated-guest-command-runner
+  arguments:
+  - exact pinned Atomic command with benign message input and prevention evidence
+  - local benign HTA child-process variant
+collection:
+  before:
+  - sensor health
+  - current telemetry timestamps
+  - residue absence
+  after:
+  - mshta process creation
+  - child-process lineage
+  - marker metadata
+hunts:
+  hypothesis_ids:
+  - HUNT-2026-015
+  - HUNT-2026-016
+forensics:
+  collection_profiles:
+  - sysmon-process-lineage
+  - powershell-operational
+detections:
+  expected_rules:
+  - DET-2026-015
+validation:
+  positive_tests:
+  - exact-atomic-prevented-by-endpoint-control
+  - modified-local-hta-cmd-child
+  negative_tests:
+  - mshta-command-discovery
+  - mshta-signature-inspection
+  - benign-local-hta-no-child
+reporting:
+  evidence_paths:
+  - evidence/sanitized/PT-2026-015/
+  output_paths:
+  - purple-team/scenarios/PT-2026-015-mshta-proxy-execution/
+  - detections/validation/live/

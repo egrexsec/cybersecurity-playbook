@@ -1,0 +1,34 @@
+id: HUNT-2026-014
+title: Hunt for PowerShell Web Retrieval to File
+status: completed
+hypothesis: If adversaries use PowerShell to retrieve staged content, script-block
+  telemetry should show web retrieval that writes to a local file.
+attack:
+- T1105
+required_data:
+- Sysmon Event ID 1 process creation
+- current endpoint telemetry in SIEM
+- private OpenCTI indicator or ATT&CK relationship input
+- bounded controlled-validation timestamps
+target_systems:
+- approved-windows-victim
+baseline_query: powershell-web-download-baseline
+hunt_query: suspicious-powershell-web-download
+investigation_pivots:
+- parent and child process lineage
+- command-line transfer or execution behavior
+- destination metadata and adjacent PowerShell activity
+known_legitimate_activity:
+- approved certificate administration
+- legacy HTML applications
+- controlled security validation
+success_criteria:
+- No uncontrolled PowerShell web-download events in the 30-day baseline
+- The controlled exact and modified positives are visible after validation
+detection_opportunity: Correlate behavior and process lineage rather than active IOC
+  strings, lab filenames, or scenario markers.
+results:
+- PowerShell web-download baseline contained zero uncontrolled matches across 30 days.
+- Exact, modified, and campaign-controlled retrieval events were visible.
+conclusion: PowerShell script-block telemetry supports a behavioral T1105 detection
+  without publishing active IOC strings.
