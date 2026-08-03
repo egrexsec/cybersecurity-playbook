@@ -1,0 +1,1 @@
+search index=main source="WinEventLog:Microsoft-Windows-PowerShell/Operational" _raw="*<EventID>4104</EventID>*" ((_raw="*<Data Name='ScriptBlockText'>*WebClient*" AND _raw="*<Data Name='ScriptBlockText'>*DownloadFile*")) OR ((_raw="*<Data Name='ScriptBlockText'>*Invoke-WebRequest*" AND _raw="*<Data Name='ScriptBlockText'>*OutFile*"))

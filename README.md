@@ -37,6 +37,10 @@ Designed to showcase **evidence-backed security engineering skills** through rep
 | PT-2026-011 | T1218.010 | Regsvr32 proxy execution | Sigma + Splunk evidence | **Live validated** |
 | PT-2026-012 | T1569.002 | Service-launched command execution | Sigma + Splunk evidence | **Live validated** |
 | PT-2026-013 | T1546.003 | Permanent WMI event subscription creation | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-014 | T1105 | PowerShell web ingress transfer | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-015 | T1218.005 | Mshta child-process proxy execution | Sigma + Splunk + Defender evidence | **Live validated with prevention control** |
+
+Detection Cycle 1 also adds three completed threat hunts and a loopback-only benign HTA campaign that correlated T1105 to T1218.005 in three seconds. See [Detection Cycle 1](docs/current-state/DETECTION_CYCLE_1.md).
 
 **Meaning of statuses in this repo**
 - **Live validated**: replayed in the Mayuri lab with positive/negative evidence and cleanup confirmation.

@@ -132,8 +132,19 @@ Status legend: Planned | Implemented | Executed | Partially tested | Validated |
 - gaps: live Splunk rule still uses raw XML matching and durable alert deployment remains unverified
 - recommended_action: continue one-technique-at-a-time validation and preserve association-aware WMI cleanup
 
+### 2026-08-03 — Detection Cycle 1 completed
+- date: 2026-08-03
+- activity: OpenCTI-prioritized T1105 and T1218.005 validation, three historical hunts, and one loopback-only benign HTA chain
+- scenario_ids: PT-2026-014, PT-2026-015
+- systems_involved: approved Windows victim, SIEM, repository; infrastructure health checked but never targeted
+- claimed_result: T1105 exact and modified positives detected; mshta exact Atomic prevented by endpoint protection; modified and campaign mshta behaviors detected; six controls stayed quiet; campaign controls correlated in three seconds
+- evidence_found: exact UUIDs, Sigma rules, 79-fixture suite, live validation records, three completed hunt records, campaign results, cleanup and postflight evidence
+- validation_status: Validated with explicit endpoint-prevention outcome for the exact mshta Atomic
+- gaps: Defender prevention is not yet represented as a canonical Sigma rule; normalized temporal correlation fields remain incomplete
+- recommended_action: prioritize Defender Operational normalization and use residual CTI gaps for Detection Cycle 2
+
 ## Verified current position
 - repository now supports authored Sigma + generated Splunk/Elastic + fixture tests + live validation records
-- thirteen scenarios are represented as live validated; PT-2026-013 publication remains branch/review gated
+- fifteen scenarios are represented with live evidence; Detection Cycle 1 publication remains branch/review gated
 - GitHub Actions workflow exists and is part of the repository state
 - project maturity is suitable for portfolio showcase as a lab-validated detection-engineering repository, not a production SIEM platform

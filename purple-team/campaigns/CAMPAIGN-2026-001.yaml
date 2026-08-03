@@ -1,0 +1,56 @@
+id: CAMPAIGN-2026-001
+title: CTI-Informed Benign HTA Delivery and Execution Chain
+status: completed
+scenario_ids:
+  - PT-2026-014
+  - PT-2026-015
+technique_ids:
+  - T1105
+  - T1218.005
+  - T1059.001
+hunt_ids:
+  - HUNT-2026-016
+objective: Validate that web retrieval, mshta proxy execution, and a benign PowerShell child form an observable, temporally correlated chain.
+targets:
+  - approved-windows-victim
+safety:
+  loopback_only: true
+  benign_content_only: true
+  external_c2: false
+  credential_access: false
+  lateral_movement: false
+  persistence: false
+  destructive_actions: false
+  rollback_reference: private-rollback-reference
+  abort_conditions:
+    - unexpected destination or non-loopback connection
+    - telemetry or endpoint sensor loss
+    - stage timeout or hash mismatch
+    - unexpected child process or cleanup failure
+sequence:
+  - order: 1
+    behavior: PowerShell retrieves a benign HTA from a victim-local loopback server.
+    technique_id: T1105
+    expected_detection: DET-2026-014
+  - order: 2
+    behavior: mshta opens the locally staged HTA.
+    technique_id: T1218.005
+    expected_detection: DET-2026-015
+  - order: 3
+    behavior: The HTA launches a bounded benign PowerShell child that writes a completion marker.
+    technique_id: T1059.001
+    expected_detection: existing-validated-powershell-coverage
+validation:
+  source_and_staged_hashes_equal: true
+  transfer_detection_fired: true
+  mshta_child_detection_fired: true
+  correlation_seconds: 3
+  marker_verified: true
+cleanup:
+  first_pass_clean: true
+  idempotent_recheck_clean: true
+  remaining_artifacts: []
+reporting:
+  results: purple-team/campaigns/CAMPAIGN-2026-001-RESULTS.md
+  sanitized_evidence: evidence/sanitized/CAMPAIGN-2026-001/README.md
+  investigation: investigations/endpoint/DFIR-2026-016/README.md

@@ -1,0 +1,1 @@
+$root='C:\Windows\Temp\dc1-t1218-005-negative';New-Item -ItemType Directory $root -Force|Out-Null;$hta=Join-Path $root 'display-only.hta';Set-Content $hta '<html><script language="VBScript">window.close</script></html>' -Encoding Ascii;$p=Start-Process mshta.exe -ArgumentList $hta -PassThru;if(-not $p.WaitForExit(15000)){try{$p.Kill()}catch{}};Remove-Item $root -Recurse -Force

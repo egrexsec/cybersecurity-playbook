@@ -1,0 +1,91 @@
+id: PT-2026-014
+title: PowerShell Web Ingress Transfer Validation on Approved Windows Endpoint
+description: Low-risk victim-only validation of PowerShell web retrieval using a loopback-only
+  benign source, behavioral script-block detection, negative controls, and verified
+  cleanup.
+status: validated
+created: '2026-08-03T00:00:00Z'
+updated: '2026-08-03T00:00:00Z'
+owner: mell0wx
+attack:
+  framework: MITRE ATT&CK
+  technique_ids:
+  - T1105
+  test_ids:
+  - 42dc4460-9aa6-45d3-b1a6-3955d34e1fe8
+  commands:
+  - Invoke the exact Windows PowerShell Download Atomic UUID with loopback-only benign
+    inputs
+  - Execute a modified Invoke-WebRequest OutFile variant against the same loopback-only
+    source
+  prerequisites:
+  - Approved Windows victim is healthy and domain joined
+  - PowerShell script-block and Splunk telemetry are current and queryable
+  - Atomic Red Team is staged locally
+  - Private rollback reference exists
+  - Loopback listener is bounded and serves only a benign file
+targets:
+  approved_hosts:
+  - approved-windows-victim
+  approved_networks: []
+safety:
+  risk_level: low
+  snapshot_required: true
+  required_snapshot_name: private-rollback-reference
+  isolation_required: true
+  internet_access: none
+  cleanup_required: true
+  timeout_seconds: 180
+  excluded_tests:
+  - external payload download
+  - payload execution
+  - remote hosts or credentials
+telemetry:
+  required:
+  - PowerShell Event ID 4104 script-block telemetry for web retrieval to file
+  optional:
+  - Sysmon Event ID 1 PowerShell process creation
+  - Sysmon Event ID 3 loopback connection
+baseline:
+  duration_minutes: 30
+  queries:
+  - powershell-web-download-baseline
+execution:
+  runner: isolated-guest-command-runner
+  arguments:
+  - exact pinned Atomic UUID with loopback-only benign input
+  - modified Invoke-WebRequest OutFile variant
+collection:
+  before:
+  - sensor health
+  - current telemetry timestamps
+  - residue absence
+  after:
+  - script-block event
+  - bounded loopback transfer
+  - destination hash
+hunts:
+  hypothesis_ids:
+  - HUNT-2026-014
+  - HUNT-2026-016
+forensics:
+  collection_profiles:
+  - powershell-operational
+  - transfer-destination-metadata
+detections:
+  expected_rules:
+  - DET-2026-014
+validation:
+  positive_tests:
+  - exact-atomic-webclient-download
+  - modified-invoke-webrequest-outfile
+  negative_tests:
+  - webclient-object-creation
+  - invoke-webrequest-head-request
+  - command-discovery
+reporting:
+  evidence_paths:
+  - evidence/sanitized/PT-2026-014/
+  output_paths:
+  - purple-team/scenarios/PT-2026-014-powershell-ingress-transfer/
+  - detections/validation/live/
