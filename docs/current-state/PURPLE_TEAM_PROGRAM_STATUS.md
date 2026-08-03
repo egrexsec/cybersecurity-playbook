@@ -5,17 +5,17 @@
 |---|---|---|---|---|
 | Lab readiness | Partially ready | `DETECTION_PLATFORM_READINESS.md`, `PROJECT_TIMELINE_ASSESSMENT.md` | limited to current Mayuri lab assumptions | keep evidence-scoped and public-safe |
 | Windows telemetry | Ready | Sysmon + PowerShell + Splunk evidence in live validation JSON | field normalization incomplete | improve normalized field model |
-| Splunk ingestion | Ready | generated Splunk queries + `VAL-2026-001..012` | raw XML matching still used in places | normalize fields where practical |
+| Splunk ingestion | Ready | generated Splunk queries + `VAL-2026-001..013` | raw XML matching still used in places | normalize fields where practical |
 | Atomic execution foundation | Validated | `VAL-2026-001..004` | latency not yet standardized across historical records | add numeric latency fields |
-| Windows persistence/execution expansion | Validated | `VAL-2026-005..012` | coverage is broader but still Windows-centric | continue expanding safely |
-| Threat hunts | Partially ready | `HUNT-2026-001..012` | could be broader and more standardized | expand hunt packs |
-| Forensics | Partially ready | `investigations/endpoint/DFIR-2026-001..012/` | not yet full DFIR suite | enrich case studies and artifacts |
-| Sigma source rules | Ready | `detections/sigma/windows/process_creation/` | 12 canonical rules are live validated | add more validated rules incrementally |
+| Windows persistence/execution expansion | Validated | `VAL-2026-005..013` | coverage is broader but still Windows-centric | continue expanding safely |
+| Threat hunts | Partially ready | `HUNT-2026-001..013` | could be broader and more standardized | expand hunt packs |
+| Forensics | Partially ready | `investigations/endpoint/DFIR-2026-001..013/` | not yet full DFIR suite | enrich case studies and artifacts |
+| Sigma source rules | Ready | `detections/sigma/windows/` | 13 canonical rules are live validated | add more validated rules incrementally |
 | Splunk conversions | Ready | `detections/generated/splunk/official/` and `live/` | live path still partly XML-backed | improve normalization |
 | Offline EVTX testing | Staged | `docs/workflows/OFFLINE_EVTX_DETECTION_TESTING.md` | tooling not yet fully operationalized | add Chainsaw/Hayabusa workflow |
 | Positive fixtures | Ready | `tests/fixtures/` | coverage is solid for current Windows scenarios | expand with each new scenario |
 | Negative fixtures | Ready | `tests/fixtures/` | same as above | expand with each new scenario |
-| Live detection validation | Ready | `detections/validation/live/` | 12 scenarios are live validated | continue scenario-by-scenario growth |
+| Live detection validation | Ready | `detections/validation/live/` | 13 scenarios are live validated | continue scenario-by-scenario growth |
 | GitHub CI | Ready | `.github/workflows/detection-validation.yml` | live Mayuri connectivity intentionally excluded | keep CI offline-focused |
 | Elastic readiness | Deferred | `ELASTIC_READINESS_DECISION.md` | no live backend deployment | keep conversion-only for now |
 | Elastic deployment | Not started | none | intentionally deferred | revisit only after stronger maturity |

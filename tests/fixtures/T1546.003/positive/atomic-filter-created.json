@@ -1,0 +1,11 @@
+{
+  "rule_id": "45742e29-7c43-4a65-bd91-b04fa7a8d9dc",
+  "technique_id": "T1546.003",
+  "scenario_id": "PT-2026-013",
+  "expected_match": true,
+  "event": {
+    "EventType": "WmiFilterEvent",
+    "Operation": "Created",
+    "Name": "AtomicRedTeam-WMIPersistence-CommandLineEventConsumer-Example"
+  }
+}

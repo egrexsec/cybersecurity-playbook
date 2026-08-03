@@ -36,6 +36,7 @@ Designed to showcase **evidence-backed security engineering skills** through rep
 | PT-2026-010 | T1218.011 | Rundll32 proxy execution | Sigma + Splunk evidence | **Live validated** |
 | PT-2026-011 | T1218.010 | Regsvr32 proxy execution | Sigma + Splunk evidence | **Live validated** |
 | PT-2026-012 | T1569.002 | Service-launched command execution | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-013 | T1546.003 | Permanent WMI event subscription creation | Sigma + Splunk evidence | **Live validated** |
 
 **Meaning of statuses in this repo**
 - **Live validated**: replayed in the Mayuri lab with positive/negative evidence and cleanup confirmation.
