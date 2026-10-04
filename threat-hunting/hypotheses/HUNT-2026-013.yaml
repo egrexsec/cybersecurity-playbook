@@ -1,0 +1,41 @@
+id: HUNT-2026-013
+title: Hunt for Permanent WMI Event Subscription Creation
+status: completed
+hypothesis: >-
+  If an adversary establishes event-triggered persistence through WMI, Sysmon should record creation of a filter,
+  consumer, and binding in the permanent root/subscription namespace.
+attack:
+  - T1546.003
+required_data:
+  - Sysmon Event IDs 19, 20, and 21
+  - Microsoft-Windows-WMI-Activity/Operational
+  - permanent WMI subscription inventory
+target_systems:
+  - approved-windows-victim
+baseline_query: windows-baseline-permanent-wmi-subscriptions
+hunt_query: suspicious-permanent-wmi-subscription
+investigation_pivots:
+  - event filter namespace and WQL query
+  - consumer type and destination command
+  - filter-to-consumer binding relationship
+  - creating user and adjacent PowerShell activity
+known_legitimate_activity:
+  - endpoint management agents
+  - monitoring products
+  - approved software deployment tools
+success_criteria:
+  - exact Atomic CommandLineEventConsumer creation is visible in Sysmon and Splunk
+  - a modified non-triggering variant triggers the behavioral rule
+  - read-only and transient subscription controls stay quiet
+  - all temporary filters, consumers, and bindings are removed
+detection_opportunity: >-
+  Detect creation of permanent WMI filters, consumers, and bindings rather than matching lab-specific object names.
+results:
+  - exact Atomic CommandLineEventConsumer subscription detected in Splunk
+  - modified non-triggering filter, consumer, and binding detected in Splunk
+  - read-only CIM and subscription inventory controls remained quiet
+  - transient in-process subscription control remained quiet
+  - final filter, consumer, binding, and completion-file counts were zero
+conclusion: >-
+  Sysmon permanent WMI subscription creation telemetry supports a behavioral detection across both
+  the exact Atomic and a modified variant while excluding read-only and transient controls.

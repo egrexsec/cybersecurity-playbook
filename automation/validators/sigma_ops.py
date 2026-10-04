@@ -33,10 +33,13 @@ FIELD_RAW_MAP = {
     'Image': "<Data Name='Image'>",
     'ParentImage': "<Data Name='ParentImage'>",
     'User': "<Data Name='User'>",
+    'EventType': "<Data Name='EventType'>",
+    'Operation': "<Data Name='Operation'>",
 }
 BASE_SEARCH = {
     'ps_script': 'search index=main source="WinEventLog:Microsoft-Windows-PowerShell/Operational" _raw="*<EventID>4104</EventID>*"',
     'process_creation': 'search index=main source="WinEventLog:Microsoft-Windows-Sysmon/Operational" _raw="*<EventID>1</EventID>*"',
+    'wmi_event': 'search index=main source="WinEventLog:Microsoft-Windows-Sysmon/Operational" (_raw="*<EventID>19</EventID>*" OR _raw="*<EventID>20</EventID>*" OR _raw="*<EventID>21</EventID>*")',
 }
 
 
