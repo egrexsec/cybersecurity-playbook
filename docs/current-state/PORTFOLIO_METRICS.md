@@ -1,5 +1,7 @@
 # Portfolio Metrics
 
+## Repository content
+
 | Metric | Value |
 |---|---:|
 | Purple-team scenarios | 12 |
@@ -7,15 +9,22 @@
 | Fixture files | 64 |
 | Positive fixtures | 26 |
 | Negative fixtures | 38 |
-| Live validation records | 12 |
-| ATT&CK techniques covered | 12 |
+| Historical live validation records | 12 |
+| ATT&CK techniques represented by validated Windows scenarios | 12 |
 | Generated Splunk detections | 12 |
 | Generated Elastic detections | 12 |
+| Verified AWS case studies | 1 |
 
-## ATT&CK techniques currently represented
+## ATT&CK techniques represented by historical live-validated Windows scenarios
 
 T1037.001, T1047, T1053.005, T1059.001, T1059.003, T1197, T1218.010, T1218.011, T1543.003, T1546.013, T1547.001, T1569.002
 
+## Validation context
+
+The 12 live-validation records were produced in the Mayuri lab before its October 2026 decommissioning. They retain historical provenance but do not imply a currently available live backend.
+
+The AWS portfolio now includes one verified bounded-dataset case study: Flaws2.cloud Defender.
+
 ## Source
 
-Generated from repository content with `python3 playbook metrics` on 2026-07-29.
+Detection-content counts were originally generated from repository content with `python3 playbook metrics` on 2026-07-29. Portfolio context was updated after Mayuri decommissioning in October 2026.
