@@ -9,7 +9,7 @@ This repo should stay:
 - public-safe
 - evidence-backed
 - understandable to engineers while clearly showcasing applied security engineering skill
-- clearly scoped as the companion content repository for DetLab-DAC
+- self-contained as the active source of truth for portfolio security content
 
 ## Good contributions
 

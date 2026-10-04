@@ -5,7 +5,7 @@ This is the canonical, machine-verifiable portfolio pack for `PT-2026-001` / `T1
 It connects one detection engineering lifecycle without copying raw telemetry between repositories:
 
 1. **Author and validate:** `cybersecurity-playbook` owns the Sigma rule, positive and negative fixtures, generated queries, hashes, validation record, and sanitized evidence.
-2. **Convert and present:** `DetLab-DAC` imports the canonical Sigma source, converts it through its explicit backend registry, records source/converter provenance, and exports the presentation pack.
+2. **Historical conversion proof:** `DetLab-DAC` produced the preserved 2026 conversion capture. Current generation and validation are self-contained in `cybersecurity-playbook` and do not require the retired repository.
 3. **Execute and evidence:** `mayuri-purple-team-lab` owns the controlled execution environment and the sanitized detection-to-case result.
 4. **Publish:** `mell0wx.tech` presents the case study and links back to these source artifacts.
 
@@ -27,4 +27,4 @@ The manifest contains public paths, hashes, dates, and validation status only. I
 
 - The live result dates to 2026-07-18; this pack organizes and verifies that evidence rather than claiming a new execution.
 - Numeric end-to-end detection latency was not preserved in the original validation record.
-- DetLab screenshots and the public portfolio article are presentation artifacts and are maintained outside this canonical content repository.
+- The historical DetLab screenshot and public portfolio article are presentation artifacts. They are not dependencies for current validation or artifact generation.

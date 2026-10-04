@@ -1,21 +1,20 @@
-# DetLab Detection Content Specification v1
+# Detection Content Specification v1
 
-This repository implements the shared **DetLab Detection Content Specification v1** at:
+This repository retains the former **DetLab Detection Content Specification v1** locally at:
 
 - `schemas/detlab-detection-content-v1.schema.json`
 
-The schema identifier is `https://schemas.detlab.dev/detection-content/v1.0.0/schema.json`.
+The schema identifier remains `https://schemas.detlab.dev/detection-content/v1.0.0/schema.json` for compatibility with committed artifacts. The retired `DetLab-DAC` repository is not a runtime, build, or documentation dependency.
 
 ## Contract boundary
 
 The v1 contract is a portable, normalized interchange model. It does **not** replace the authored source format:
 
 - Sigma YAML remains canonical in `cybersecurity-playbook`.
-- Rich DetLab detection YAML remains canonical in `DetLab-DAC`.
-- Adapters normalize either source into the same v1 shape.
+- The locally retained adapter normalizes authored Sigma into the v1 shape.
 - Splunk, Elastic, Kusto, and other target queries are derived artifacts, never competing authored sources.
 
-This avoids weakening Sigma validation or forcing DetLab's operational guidance into Sigma-only fields.
+Historical DetLab fields and names remain where changing them would break artifact provenance or compatibility. Current validation and generation operate entirely inside `cybersecurity-playbook`.
 
 ## Required normalized fields
 
