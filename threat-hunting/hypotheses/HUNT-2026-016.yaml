@@ -1,0 +1,36 @@
+id: HUNT-2026-016
+title: Hunt for Download-to-Execution Chains
+status: completed
+hypothesis: If staged web content is followed by proxy execution, PowerShell web retrieval
+  should be temporally adjacent to mshta and PowerShell or cmd process lineage.
+attack:
+- T1105
+- T1218.005
+- T1059.001
+required_data:
+- Sysmon Event ID 1 process creation
+- current endpoint telemetry in SIEM
+- private OpenCTI indicator or ATT&CK relationship input
+- bounded controlled-validation timestamps
+target_systems:
+- approved-windows-victim
+baseline_query: download-execute-chain-baseline
+hunt_query: download-to-mshta-execution-chain
+investigation_pivots:
+- parent and child process lineage
+- command-line transfer or execution behavior
+- destination metadata and adjacent PowerShell activity
+known_legitimate_activity:
+- approved certificate administration
+- legacy HTML applications
+- controlled security validation
+success_criteria:
+- No uncontrolled matching chain in the 30-day baseline
+- The controlled campaign produces a bounded correlated chain
+detection_opportunity: Correlate behavior and process lineage rather than active IOC
+  strings, lab filenames, or scenario markers.
+results:
+- The 30-day baseline contained zero uncontrolled download-to-mshta chains.
+- The campaign produced T1105 at 14:49:47Z followed by T1218.005 at 14:49:50Z.
+conclusion: A three-second controlled correlation validates the temporal hunt; production
+  correlation requires normalized entity and process fields.

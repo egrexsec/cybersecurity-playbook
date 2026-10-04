@@ -1,0 +1,9 @@
+{
+  "rule_id": "4f18fcd8-8a39-4aa2-a71d-9b247d3ea475",
+  "technique_id": "T1105",
+  "scenario_id": "PT-2026-014",
+  "expected_match": true,
+  "event": {
+    "ScriptBlockText": "Invoke-WebRequest -Uri http://127.0.0.1/variant.txt -OutFile C:\\Temp\\benign.txt"
+  }
+}
