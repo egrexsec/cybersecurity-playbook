@@ -20,7 +20,7 @@ These statuses describe investigation capability maturity. They do not replace S
 | [Endpoint](endpoint/README.md) | **Installed** | Existing scenario-linked notes are present, but complete 21-step investigation cases remain Planned |
 | [Identity](identity/README.md) | **Planned** | Credential abuse, lateral movement, and Active Directory privilege investigations |
 | [Network](network/README.md) | **Planned** | Connection, DNS, and cross-host investigative pivots |
-| [Cloud](cloud/README.md) | **Planned** | AWS-first cloud investigation methods; no cloud range is provisioned |
+| [Cloud](cloud/README.md) | **Verified** | AWS CloudTrail/IAM workflow verified against bounded public training data; no standing cloud range is provisioned |
 
 ## Investigation workflows
 

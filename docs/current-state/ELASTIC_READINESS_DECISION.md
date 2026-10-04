@@ -1,24 +1,25 @@
 # Elastic Readiness Decision
 
-## Decision A — Defer Elastic
+## Decision — Keep Elastic as conversion-only
 
-## Evidence for deferral
-Elastic conversion is implemented, but the repository should still be presented as a **Splunk-first, lab-validated detection-engineering repository**.
+The Mayuri lab was decommissioned in October 2026, so there is currently no live Splunk or Elastic backend owned by this repository.
 
-### What is complete
-- three live-validated scenarios on main
-- three canonical Sigma rules on main
-- generated Splunk and Elastic query output on main
-- offline fixture testing on main
-- GitHub Actions workflow for offline validation and secret scanning
+### What remains valid
 
-### Why Elastic is still deferred
-1. **No live Elastic backend is deployed or validated**
-2. **Splunk field normalization is still incomplete**, so even the primary backend retains lab-specific translation caveats
-3. **Offline EVTX workflow is documented but not fully operationalized**
-4. **Current portfolio value is stronger from honest Splunk-first validation than from claiming cross-SIEM parity without live evidence**
+- canonical Sigma content remains in the repository
+- generated Splunk and Elastic output remains useful for portability
+- offline fixture testing and CI validation remain reusable
+- historical Mayuri live-validation records retain their provenance
+
+### Current boundary
+
+Elastic should be described as **conversion supported, not live deployed or validated**.
+
+The repository should also avoid describing Splunk as a current live backend. Existing Splunk validation is historical evidence from the retired Mayuri environment.
 
 ## Recommendation
+
 - keep Elastic conversion visible as a portability feature
-- describe it as **conversion supported, not live deployed**
-- revisit live Elastic only after broader scenario coverage, stronger field normalization, and more mature DFIR workflows
+- keep current testing offline and repository-driven
+- validate against future live SIEM backends only when an approved environment exists
+- do not rebuild infrastructure solely to preserve an old platform claim

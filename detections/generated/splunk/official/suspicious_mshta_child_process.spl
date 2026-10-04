@@ -1,0 +1,1 @@
+ParentImage="*\\mshta.exe" Image IN ("*\\cmd.exe", "*\\powershell.exe", "*\\pwsh.exe", "*\\wscript.exe", "*\\cscript.exe")

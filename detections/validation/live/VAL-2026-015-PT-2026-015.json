@@ -1,0 +1,81 @@
+{
+  "scenario_id": "PT-2026-015",
+  "validation_run_id": "VAL-2026-015",
+  "technique_id": "T1218.005",
+  "atomic_test_guid": "8707a805-2b76-4f32-b1c0-14e558205772",
+  "atomic_test_name": "Mshta used to Execute PowerShell",
+  "validation_date_utc": "2026-08-03",
+  "target": "approved-windows-victim",
+  "rollback_snapshot": "private-rollback-reference",
+  "scope": {
+    "local_only": true,
+    "benign_content": true,
+    "external_c2": false,
+    "credential_access": false,
+    "lateral_movement": false
+  },
+  "preflight": {
+    "authorization_confirmed": true,
+    "rollback_ready": true,
+    "endpoint_sensors_healthy": true,
+    "siem_current": true,
+    "domain_healthy": true
+  },
+  "original": {
+    "start_time_utc": "2026-08-03T14:41:35.993634Z",
+    "process_started": false,
+    "prevented_by_endpoint_control": true,
+    "defender_detection_event_time_utc": "2026-08-03T14:41:36.935085Z",
+    "defender_action_event_time_utc": "2026-08-03T14:41:52.406606Z",
+    "mshta_child_detection_fired": false,
+    "detection_fired": false,
+    "reason": "Prevention occurred before child-process creation."
+  },
+  "variant": {
+    "start_time_utc": "2026-08-03T14:36:16.802813Z",
+    "end_time_utc": "2026-08-03T14:36:20.497155Z",
+    "marker_created": true,
+    "detection_times_utc": [
+      "2026-08-03T14:36:18Z"
+    ],
+    "detection_fired": true,
+    "detection_latency_seconds": 1.197187
+  },
+  "campaign_corroboration": {
+    "start_time_utc": "2026-08-03T14:49:46.204020Z",
+    "end_time_utc": "2026-08-03T14:49:52.652249Z",
+    "mshta_detection_time_utc": "2026-08-03T14:49:50Z",
+    "detection_fired": true,
+    "detection_latency_seconds": 3.79598
+  },
+  "negatives": [
+    {
+      "name": "mshta command discovery",
+      "detection_fired": false
+    },
+    {
+      "name": "mshta signature inspection",
+      "detection_fired": false
+    },
+    {
+      "name": "benign local HTA without child process",
+      "detection_fired": false
+    }
+  ],
+  "deviations": [
+    {
+      "description": "A candidate remote-HTA Atomic was rejected after its SYSTEM/noninteractive controller path did not honor the intended safe input override; its default payload attempted an outbound external connection and the connection failed.",
+      "response": "Execution was stopped; no connection was established; temporary processes and files were removed; no sensor impact remained; the candidate was excluded from the selected exact test."
+    }
+  ],
+  "cleanup": {
+    "exec_output": "Temporary HTA files and run-scoped processes removed; no external connection remained; first and idempotent second cleanup passes verified zero residue.",
+    "first_pass_clean": true,
+    "second_pass_clean": true,
+    "remaining_processes": [],
+    "remaining_files": [],
+    "external_connections": []
+  },
+  "status": "validated-with-prevention-control",
+  "limitation": "The exact Atomic was validated as an endpoint-prevention outcome. The behavioral child-process rule was live-validated with a modified local HTA and the campaign chain."
+}

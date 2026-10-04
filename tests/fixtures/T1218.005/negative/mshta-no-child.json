@@ -1,0 +1,11 @@
+{
+  "rule_id": "8b36d6e2-16e6-4ae2-b86a-d396aac273c1",
+  "technique_id": "T1218.005",
+  "scenario_id": "PT-2026-015",
+  "expected_match": false,
+  "event": {
+    "ParentImage": "C:\\Windows\\System32\\explorer.exe",
+    "Image": "C:\\Windows\\System32\\mshta.exe",
+    "CommandLine": "mshta.exe display-only.hta"
+  }
+}

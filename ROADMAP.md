@@ -2,103 +2,41 @@
 
 ## Direction
 
-Evolve the repository into an investigation-led technical portfolio. Detection engineering, purple-team validation, threat hunting, and automation remain intact as supporting capabilities that produce leads, test hypotheses, and improve coverage after evidence-led analysis.
+Evolve this repository as an investigation-led technical portfolio centered on repeatable incident-response, DFIR, threat-hunting, and cloud-investigation methods.
+
+Detection engineering, purple-team validation, and automation remain supporting capabilities. Historical Mayuri validation evidence is preserved as provenance, but Mayuri is no longer an active lab dependency.
 
 ## Status model
 
-Investigation and DFIR capability maturity uses only:
+Investigation and DFIR capability maturity uses:
 
 - **Planned** — scope and acceptance criteria exist; implementation is not evidence-backed.
 - **Installed** — required tooling or collection capability is available but not verified end to end.
-- **Verified** — the workflow has been exercised successfully with reviewable evidence.
+- **Verified** — the workflow has been exercised successfully with reviewable evidence or an approved bounded dataset.
 - **Live validated** — the workflow has been exercised against approved live lab activity with sanitized, traceable results.
 
-This model does not change Sigma-native lifecycle values or existing detection validation statuses.
+Historical Mayuri live-validation records retain their original status after decommissioning.
 
 ## Current evidence-backed foundation
 
-- twelve existing Windows purple-team scenarios have published live-validation status
+- twelve Windows purple-team scenarios retain historical live-validation status
 - endpoint investigation notes exist for PT-2026-001 through PT-2026-012
-- Sigma linting, conversion, fixture testing, and Splunk live-validation workflows remain operational
-- public-safe validation records and case-study material demonstrate evidence traceability
+- Sigma linting, conversion, fixture testing, and validation-record workflows remain operational
+- public-safe evidence-handling and case-study material demonstrate traceability
+- the Flaws2.cloud Defender track provides a verified AWS CloudTrail investigation workflow
 - raw evidence remains private; the repository stores sanitized derivatives and documentation
 
-## Investigation case roadmap
+## Investigation roadmap
 
-Every case below remains **Planned** until its stated acceptance criteria are complete and backed by traceable evidence. A scenario, installed tool, draft narrative, or AI-generated analysis does not advance the status by itself.
+### Endpoint
 
-### MAY-IR-001 PowerShell
-
-**Status: Planned**
-
-Acceptance criteria:
-- define a scoped investigative question and competing hypotheses
-- create an evidence ledger referencing approved private sources
-- correlate PowerShell, process, persistence, and SIEM evidence
-- publish a timestamp-normalized sanitized timeline
-- distinguish observed facts, interpretation, and limitations
-- document response and detection-improvement opportunities
-
-Existing PT-2026-001 and DFIR-2026-001 material may support this case, but the MAY-IR case is not complete until the investigation-led record meets these criteria.
-
-### MAY-IR-002 Scheduled Task
-
-**Status: Planned**
-
-Acceptance criteria:
-- reconstruct Scheduled Task creation, execution, modification, and cleanup where evidenced
-- correlate task metadata with process and event-log records
-- test malicious and benign administrative explanations
-- publish sanitized findings and a source-cited timeline
-- derive and validate detection opportunities without treating a rule match as proof
-
-### MAY-IR-003 credential abuse/lateral movement
-
-**Status: Planned**
-
-Acceptance criteria:
-- use bounded, approved lab activity without real credentials or secret exposure
-- correlate authentication, endpoint, identity, and available network evidence
-- distinguish credential use, account compromise, and administrator activity
-- document affected scope, containment logic, and unresolved visibility gaps
-- publish only sanitized derivatives; raw authentication evidence remains private
-
-### MAY-IR-004 AD privilege escalation
-
-**Status: Planned**
-
-Acceptance criteria:
-- document a controlled directory privilege change or escalation path
-- preserve authoritative identity and directory-change sources
-- correlate principal, session, group or role, host, and timestamp context
-- evaluate benign change-control explanations
-- publish a defensible attack-path narrative and detection recommendations
-
-### MAY-IR-005 full Windows DFIR
-
-**Status: Planned**
-
-Acceptance criteria:
-- document authorization, scope, acquisition decisions, custody, and integrity checks
-- perform targeted endpoint acquisition using a repeatable workflow
-- produce a multi-source normalized timeline
-- analyze relevant event, registry, file-system, execution, persistence, and identity artifacts
-- include memory triage only if the capability has reached the required maturity and collection is justified
-- state root cause or explain why evidence cannot establish it
-- publish a complete sanitized case study with response and prevention recommendations
-
-## Capability roadmap
-
-### Endpoint DFIR
-
+- Windows execution investigation — **Installed**
+- persistence investigation — **Installed**
+- reusable endpoint timeline reconstruction — **Planned**
 - targeted forensic acquisition — **Planned**
-- reusable Windows timeline workflow — **Planned**
-- disk and execution-artifact analysis — **Planned**
-- memory acquisition and triage — **Planned**
-- public sanitization and public-safe derivation — **Verified**
-- end-to-end private evidence handling — **Installed** pending a completed case that verifies ledger, integrity, lineage, and source/working-copy controls
+- execution-artifact and filesystem analysis — **Planned**
 
-### Identity and Active Directory
+### Identity
 
 - authentication and session correlation — **Planned**
 - credential-abuse investigation workflow — **Planned**
@@ -108,38 +46,64 @@ Acceptance criteria:
 ### Network
 
 - DNS and connection pivots supporting endpoint cases — **Planned**
-- documented packet or flow collection boundary — **Planned**
+- packet or flow evidence-handling boundary — **Planned**
 - cross-host timeline correlation — **Planned**
 
 ### Cloud
 
-AWS is an adjacent future cloud range. No AWS provisioning is included or implied in the current work.
+AWS is an active investigation domain, but this repository does not maintain a standing AWS lab.
 
-- approved cloud evidence dataset and custody model — **Planned**
-- CloudTrail and IAM investigation workflow — **Planned**
-- first evidence-backed AWS case study — **Planned**
+- CloudTrail local-analysis workflow with PowerShell and jq — **Verified**
+- AWS CLI profile and identity-pivot workflow — **Verified**
+- IAM / STS investigation workflow — **Verified**
+- AWS resource-policy review workflow — **Verified**
+- Athena-at-scale investigation workflow — **Conceptually reviewed**
+- first polished AWS case study — **Verified** through Flaws2.cloud Defender
+- additional AWS investigations using bounded training datasets — **Planned**
 - Azure and GCP investigation content — **Planned**
+
+## DFIR capability roadmap
+
+- targeted forensic acquisition — **Planned**
+- reusable Windows timeline workflow — **Planned**
+- disk and execution-artifact analysis — **Planned**
+- memory acquisition and triage — **Planned**
+- public sanitization and public-safe derivation — **Verified**
+- end-to-end private evidence handling — **Installed**
 
 ## Detection engineering as a supporting capability
 
-Preserve and continue the existing detection program:
+Preserve and continue:
 
 - field normalization improvements
-- durable Splunk saved searches and alerts
-- standardized validation latency
+- durable SIEM saved searches and alerts where an approved environment exists
 - detection quality scoring
 - ATT&CK coverage reporting
 - rule versioning and regression tests
 - generated-versus-canonical content separation
+- fixture-driven testing
 
-Detection acceptance continues to use the repository's existing rule, fixture, conversion, and live-validation controls. Investigation maturity statuses do not replace those controls.
+The repository should not imply that historical Mayuri live detections can still be replayed against that retired environment.
+
+## Learning-lab strategy
+
+Training platforms are inputs to the portfolio, not the portfolio itself.
+
+Use `learning-labs/` for concise notes from:
+
+- CyberDefenders
+- TryHackMe
+- Hack The Box / HTB Academy
+- other bounded training datasets
+
+Promote only stronger investigations into `case-studies/` when they include a defensible investigative question, evidence, timeline, analysis, findings, response considerations, and lessons learned.
 
 ## Portfolio acceptance goals
 
 - a visitor can identify the investigative question, evidence, timeline, reasoning, and outcome of each completed case
 - every material conclusion traces to an evidence identifier or sanitized source artifact
+- historical lab evidence is clearly labeled as historical
 - raw evidence, credentials, acquisitions, and sensitive infrastructure details remain private
-- AI output is disclosed when material, independently validated, and never treated as evidence
-- a detection engineer can still trace scenario -> rule -> query -> fixture -> live evidence
-- existing detection, purple-team, automation, and URL structure remain intact
+- AI output is independently validated and never treated as evidence
+- completed learning labs do not automatically become portfolio case studies
 - Planned work is not presented as implemented, verified, or live validated
