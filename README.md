@@ -121,7 +121,9 @@ positive + negative]
 | `docs/detection-engineering/` | Detection engineering implementation notes | Human-authored Markdown | Documentation-only |
 | `docs/data-sources/` | Source-system and field-mapping notes | Human-authored Markdown | Documentation-only |
 | `templates/` | Authoring templates for detections, hunts, investigations | Human-authored Markdown templates | Manual review + template consistency checks |
-| `case-studies/` | End-to-end, skills-forward technical walk-throughs | Human-authored Markdown | Sourced from validated scenarios only |
+| `case-studies/` | End-to-end, skills-forward technical walk-throughs | Human-authored Markdown | Sourced from validated scenarios or verified bounded datasets |
+| `learning-labs/` | Concise notes from CyberDefenders, TryHackMe, HTB, and other training sources | Human-authored Markdown | Learning value only; promote stronger work into case studies |
+| `docs/history/mayuri/` | Historical Mayuri infrastructure and validation-program records | Human-authored Markdown | Historical provenance only; not current infrastructure state |
 
 ## Quick-start validation
 
@@ -150,7 +152,7 @@ Implemented today:
 - Sigma conversion to Splunk and Elastic outputs
 - positive and negative fixture testing
 - sanitized live validation record parsing
-- live-validated scenarios across multiple Windows execution and persistence techniques
+- twelve historically live-validated Windows scenarios across multiple execution and persistence techniques
 - generated Splunk SPL and generated Elastic EQL separation
 - GitHub Actions validation workflow
 - secret scanning in CI
@@ -163,7 +165,7 @@ Be explicit about current limits:
 - Elastic conversion exists, but **no live Elastic backend is deployed or validated**
 - Splunk live validation currently relies on **raw XML matching** in places where normalized fields/CIM remain incomplete
 - durable Splunk saved searches / alerts are **not yet verified as deployed objects**
-- current live coverage is concentrated on **Windows endpoint execution and persistence behaviors**
+- historical live coverage is concentrated on **Windows endpoint execution and persistence behaviors**
 - full forensic acquisition, timeline, identity, network, cloud, and memory capabilities remain **Planned** unless their indexes state otherwise
 - AWS investigation capability is **Verified** through the Flaws2.cloud Defender workflow, but **no standing AWS environment is provisioned by this repository**
 - raw evidence remains private, so public case material is necessarily a sanitized derivative
@@ -203,5 +205,8 @@ This repository demonstrates evidence-backed security engineering skills in:
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Historical Mayuri program status](docs/history/mayuri/PURPLE_TEAM_PROGRAM_STATUS.md)
+- [Current portfolio status](docs/current-state/PORTFOLIO_STATUS.md)
+- [Capability matrix](docs/current-state/CAPABILITY_MATRIX.md)
 - [Portfolio metrics](docs/current-state/PORTFOLIO_METRICS.md)
+- [Mayuri historical archive](docs/history/mayuri/README.md)
 - [DetLab Detection Content Specification v1](docs/detection-content-spec-v1.md)
