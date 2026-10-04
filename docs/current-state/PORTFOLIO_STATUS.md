@@ -8,7 +8,8 @@ The Mayuri lab was decommissioned in October 2026. Historical Mayuri validation 
 
 ## Current verified areas
 
-- historical live-validated Windows detection scenarios (12)
+- 15 historical live-validated Windows purple-team scenarios
+- 16 threat-hunt hypotheses, including three completed Detection Cycle 1 hunts
 - Sigma authoring, conversion, fixture testing, and validation-record handling
 - public-safe evidence handling and sanitization
 - AWS CloudTrail investigation workflow using PowerShell, AWS CLI, and jq
@@ -24,7 +25,7 @@ The Mayuri lab was decommissioned in October 2026. Historical Mayuri validation 
 
 ## Historical Mayuri material
 
-Historical Mayuri infrastructure and program-state documents are stored under:
+Historical Mayuri infrastructure, readiness, campaign, and program-state documents are stored under:
 
 `docs/history/mayuri/`
 
