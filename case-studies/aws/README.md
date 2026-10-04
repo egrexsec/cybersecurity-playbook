@@ -1,13 +1,25 @@
 # AWS case studies
 
-**Current maturity: Planned**
+**Current maturity: Verified**
 
-AWS is an adjacent future cloud range. No AWS infrastructure is provisioned or authorized by this repository update, and no AWS case is claimed as installed, verified, or live validated.
+AWS case studies in this repository use bounded public training datasets or approved environments. No standing AWS lab is provisioned by this repository.
 
-## Existing scaffold
+## Published
 
-- [AWS Flaws2 notes](../../aws/flaws2/README.md) — documentation scaffold; not an evidence-backed case study.
+- [Flaws2.cloud Defender Track](flaws2-defender/README.md) — verified Windows PowerShell + AWS CLI + jq workflow for CloudTrail analysis, credential-theft investigation, and ECR resource-policy review.
 
-## Planned case direction
+## Publication standard
 
-A future case may reconstruct an AWS control-plane or IAM event sequence from an approved dataset using CloudTrail and relevant service logs. Completion requires source provenance, a private evidence ledger, a normalized timeline, tested hypotheses, sanitized findings, and documented detection opportunities.
+A training exercise should only be promoted into this directory when it demonstrates more than challenge completion. A case study should include:
+
+- investigative question or objective
+- evidence sources
+- timeline or event sequence
+- analysis and pivots
+- findings
+- affected identity or resource context
+- response or remediation considerations
+- detection opportunities where relevant
+- lessons learned and limitations
+
+Shorter platform notes belong under `learning-labs/`.
