@@ -73,7 +73,7 @@ Investigation and DFIR capabilities use **Planned**, **Installed**, **Verified**
 
 ## Detection lifecycle
 
-The current implemented workflow is:
+The historically live-validated Mayuri workflow was:
 
 1. controlled adversary simulation on an approved lab endpoint
 2. Windows and Sysmon telemetry collection
@@ -151,7 +151,7 @@ python3 automation/validators/check_markdown.py
 Implemented today:
 - investigation domain indexes and a reusable investigation lifecycle
 - public-safe evidence-handling and case-documentation standards
-- endpoint investigation records linked to live-validated Windows scenarios
+- endpoint investigation records linked to historically live-validated Windows scenarios
 - schema validation for scenarios and hunt hypotheses
 - Sigma metadata linting
 - Sigma conversion to Splunk and Elastic outputs
