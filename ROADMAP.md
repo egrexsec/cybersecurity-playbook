@@ -1,69 +1,108 @@
 # Roadmap
 
-## Current foundation
+## Direction
 
-### Completed
-- PT-2026-001 validated end-to-end against live lab telemetry
-- PT-2026-002 validated end-to-end against live lab telemetry
-- PT-2026-003 validated end-to-end against live lab telemetry
-- Sigma linting, conversion, and fixture testing implemented
-- Splunk live validation workflow implemented
-- public-safe validation evidence and investigation documentation published
+Evolve this repository as an investigation-led technical portfolio centered on repeatable incident-response, DFIR, threat-hunting, and cloud-investigation methods.
 
-## Next detection coverage
+Detection engineering, purple-team validation, and automation remain supporting capabilities. Historical Mayuri validation evidence is preserved as provenance, but Mayuri is no longer an active lab dependency.
 
-### Phase 1 — Windows persistence / execution expansion
-- **T1053.005 Scheduled Task/Job**
-  - Acceptance: scenario, Sigma rule, fixtures, and live validation record committed
-- **T1543.003 Windows Service**
-  - Acceptance: scenario, Sigma rule, fixtures, and live validation record committed
-- **Account or group modification**
-  - Acceptance: one low-risk scenario with positive/negative tests and sanitized evidence
-- **Safe credential-access simulation**
-  - Acceptance: one bounded scenario demonstrating telemetry + detection without unsafe secrets handling
-- **Network or DNS behavior**
-  - Acceptance: one scenario tying host behavior to network-oriented detection content
-- **One multi-stage attack chain**
-  - Acceptance: at least two linked techniques with cross-artifact validation evidence
+## Status model
 
-### Phase 2 — Detection platform maturity
-- **Field normalization improvements**
-  - Acceptance: documented reduction in raw-XML-only matching for live Splunk queries
-- **Durable Splunk saved searches / alerts**
-  - Acceptance: saved search objects defined, documented, and verified in the lab
-- **Standardized validation latency**
-  - Acceptance: live validation records contain computed ingestion/detection latency fields
-- **Detection quality scoring**
-  - Acceptance: rules carry a consistent quality rubric or scorecard
-- **ATT&CK coverage reporting**
-  - Acceptance: repo-derived coverage report generated from current scenarios and rules
-- **Rule versioning and regression tests**
-  - Acceptance: changes to validated rules can be compared and regression-tested automatically
+Investigation and DFIR capability maturity uses:
 
-### Phase 3 — DFIR expansion
-- **Velociraptor collections**
-  - Acceptance: repeatable collection workflows linked to at least one validated scenario
-- **Windows event-log triage**
-  - Acceptance: documented analysis path from raw Windows events to detection evidence
-- **Timeline generation**
-  - Acceptance: at least one case study includes structured timeline output
-- **Disk artifact review**
-  - Acceptance: one scenario includes file-system artifact handling beyond process/event evidence
-- **Memory-forensics workflow**
-  - Acceptance: documented, safe, and reproducible memory workflow for future scenarios
+- **Planned** — scope and acceptance criteria exist; implementation is not evidence-backed.
+- **Installed** — required tooling or collection capability is available but not verified end to end.
+- **Verified** — the workflow has been exercised successfully with reviewable evidence or an approved bounded dataset.
+- **Live validated** — the workflow has been exercised against approved live lab activity with sanitized, traceable results.
 
-### Phase 4 — Cloud expansion
-- **AWS investigation content**
-  - Acceptance: one validated cloud-oriented case study or detection workflow
-- **Azure investigation content**
-  - Acceptance: one structured Azure-focused detection or hunt artifact set
-- **GCP investigation content**
-  - Acceptance: one structured GCP-focused detection or hunt artifact set
-- **Cloud detection validation**
-  - Acceptance: at least one cloud detection includes fixture or replay-based validation
+Historical Mayuri live-validation records retain their original status after decommissioning.
+
+## Current evidence-backed foundation
+
+- fifteen Windows purple-team scenarios retain historical live-validation status
+- endpoint investigation notes and three completed threat-informed hunts are preserved
+- Sigma linting, conversion, fixture testing, and validation-record workflows remain operational
+- public-safe evidence-handling and case-study material demonstrate traceability
+- the Flaws2.cloud Defender track provides a verified AWS CloudTrail investigation workflow
+- raw evidence remains private; the repository stores sanitized derivatives and documentation
+
+## Investigation roadmap
+
+### Endpoint
+
+- Windows execution and persistence investigation — **Installed**
+- reusable endpoint timeline reconstruction — **Planned**
+- targeted forensic acquisition — **Planned**
+- execution-artifact and filesystem analysis — **Planned**
+
+### Identity
+
+- authentication and session correlation — **Planned**
+- credential-abuse investigation workflow — **Planned**
+- privilege and group-change reconstruction — **Planned**
+- endpoint and identity timeline correlation — **Planned**
+
+### Network
+
+- DNS and connection pivots supporting endpoint cases — **Planned**
+- packet or flow evidence-handling boundary — **Planned**
+- cross-host timeline correlation — **Planned**
+
+### Cloud
+
+AWS is an active investigation domain, but this repository does not maintain a standing AWS lab.
+
+- CloudTrail local-analysis workflow with PowerShell and jq — **Verified**
+- AWS CLI profile and identity-pivot workflow — **Verified**
+- IAM / STS investigation workflow — **Verified**
+- AWS resource-policy review workflow — **Verified**
+- Athena-at-scale investigation workflow — **Conceptually reviewed**
+- first polished AWS case study — **Verified** through Flaws2.cloud Defender
+- additional AWS investigations using bounded training datasets — **Planned**
+- Azure and GCP investigation content — **Planned**
+
+## DFIR capability roadmap
+
+- targeted forensic acquisition — **Planned**
+- reusable Windows timeline workflow — **Planned**
+- disk and execution-artifact analysis — **Planned**
+- memory acquisition and triage — **Planned**
+- public sanitization and public-safe derivation — **Verified**
+- end-to-end private evidence handling — **Installed**
+
+## Detection engineering as a supporting capability
+
+Preserve and continue:
+
+- Sigma authoring and backend conversion
+- fixture-driven regression testing
+- threat-informed hunt and detection cycles
+- detection quality scoring
+- ATT&CK coverage reporting
+- generated-versus-canonical content separation
+- historical validation provenance
+
+The repository should not imply that historical Mayuri live detections can still be replayed against that retired environment.
+
+## Learning-lab strategy
+
+Training platforms are inputs to the portfolio, not the portfolio itself.
+
+Use `learning-labs/` for concise notes from:
+
+- CyberDefenders
+- TryHackMe
+- Hack The Box / HTB Academy
+- other bounded training datasets
+
+Promote only stronger investigations into `case-studies/` when they include a defensible investigative question, evidence, timeline, analysis, findings, response considerations, and lessons learned.
 
 ## Portfolio acceptance goals
-- a visitor can understand the repo structure and current state quickly
-- a detection engineer can trace scenario -> rule -> query -> fixture -> live evidence
-- generated vs canonical content remains clearly separated
-- public-safe posture remains intact
+
+- a visitor can identify the investigative question, evidence, timeline, reasoning, and outcome of each completed case
+- every material conclusion traces to an evidence identifier or sanitized source artifact
+- historical lab evidence is clearly labeled as historical
+- raw evidence, credentials, acquisitions, and sensitive infrastructure details remain private
+- AI output is independently validated and never treated as evidence
+- completed learning labs do not automatically become portfolio case studies
+- Planned work is not presented as implemented, verified, or live validated
