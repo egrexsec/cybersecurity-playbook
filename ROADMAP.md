@@ -1,145 +1,69 @@
 # Roadmap
 
-## Direction
+## Current foundation
 
-Evolve the repository into an investigation-led technical portfolio. Detection engineering, purple-team validation, threat hunting, and automation remain intact as supporting capabilities that produce leads, test hypotheses, and improve coverage after evidence-led analysis.
+### Completed
+- PT-2026-001 validated end-to-end against live lab telemetry
+- PT-2026-002 validated end-to-end against live lab telemetry
+- PT-2026-003 validated end-to-end against live lab telemetry
+- Sigma linting, conversion, and fixture testing implemented
+- Splunk live validation workflow implemented
+- public-safe validation evidence and investigation documentation published
 
-## Status model
+## Next detection coverage
 
-Investigation and DFIR capability maturity uses only:
+### Phase 1 — Windows persistence / execution expansion
+- **T1053.005 Scheduled Task/Job**
+  - Acceptance: scenario, Sigma rule, fixtures, and live validation record committed
+- **T1543.003 Windows Service**
+  - Acceptance: scenario, Sigma rule, fixtures, and live validation record committed
+- **Account or group modification**
+  - Acceptance: one low-risk scenario with positive/negative tests and sanitized evidence
+- **Safe credential-access simulation**
+  - Acceptance: one bounded scenario demonstrating telemetry + detection without unsafe secrets handling
+- **Network or DNS behavior**
+  - Acceptance: one scenario tying host behavior to network-oriented detection content
+- **One multi-stage attack chain**
+  - Acceptance: at least two linked techniques with cross-artifact validation evidence
 
-- **Planned** — scope and acceptance criteria exist; implementation is not evidence-backed.
-- **Installed** — required tooling or collection capability is available but not verified end to end.
-- **Verified** — the workflow has been exercised successfully with reviewable evidence.
-- **Live validated** — the workflow has been exercised against approved live lab activity with sanitized, traceable results.
+### Phase 2 — Detection platform maturity
+- **Field normalization improvements**
+  - Acceptance: documented reduction in raw-XML-only matching for live Splunk queries
+- **Durable Splunk saved searches / alerts**
+  - Acceptance: saved search objects defined, documented, and verified in the lab
+- **Standardized validation latency**
+  - Acceptance: live validation records contain computed ingestion/detection latency fields
+- **Detection quality scoring**
+  - Acceptance: rules carry a consistent quality rubric or scorecard
+- **ATT&CK coverage reporting**
+  - Acceptance: repo-derived coverage report generated from current scenarios and rules
+- **Rule versioning and regression tests**
+  - Acceptance: changes to validated rules can be compared and regression-tested automatically
 
-This model does not change Sigma-native lifecycle values or existing detection validation statuses.
+### Phase 3 — DFIR expansion
+- **Velociraptor collections**
+  - Acceptance: repeatable collection workflows linked to at least one validated scenario
+- **Windows event-log triage**
+  - Acceptance: documented analysis path from raw Windows events to detection evidence
+- **Timeline generation**
+  - Acceptance: at least one case study includes structured timeline output
+- **Disk artifact review**
+  - Acceptance: one scenario includes file-system artifact handling beyond process/event evidence
+- **Memory-forensics workflow**
+  - Acceptance: documented, safe, and reproducible memory workflow for future scenarios
 
-## Current evidence-backed foundation
-
-- twelve existing Windows purple-team scenarios have published live-validation status
-- endpoint investigation notes exist for PT-2026-001 through PT-2026-012
-- Sigma linting, conversion, fixture testing, and Splunk live-validation workflows remain operational
-- public-safe validation records and case-study material demonstrate evidence traceability
-- raw evidence remains private; the repository stores sanitized derivatives and documentation
-
-## Investigation case roadmap
-
-Every case below remains **Planned** until its stated acceptance criteria are complete and backed by traceable evidence. A scenario, installed tool, draft narrative, or AI-generated analysis does not advance the status by itself.
-
-### MAY-IR-001 PowerShell
-
-**Status: Planned**
-
-Acceptance criteria:
-- define a scoped investigative question and competing hypotheses
-- create an evidence ledger referencing approved private sources
-- correlate PowerShell, process, persistence, and SIEM evidence
-- publish a timestamp-normalized sanitized timeline
-- distinguish observed facts, interpretation, and limitations
-- document response and detection-improvement opportunities
-
-Existing PT-2026-001 and DFIR-2026-001 material may support this case, but the MAY-IR case is not complete until the investigation-led record meets these criteria.
-
-### MAY-IR-002 Scheduled Task
-
-**Status: Planned**
-
-Acceptance criteria:
-- reconstruct Scheduled Task creation, execution, modification, and cleanup where evidenced
-- correlate task metadata with process and event-log records
-- test malicious and benign administrative explanations
-- publish sanitized findings and a source-cited timeline
-- derive and validate detection opportunities without treating a rule match as proof
-
-### MAY-IR-003 credential abuse/lateral movement
-
-**Status: Planned**
-
-Acceptance criteria:
-- use bounded, approved lab activity without real credentials or secret exposure
-- correlate authentication, endpoint, identity, and available network evidence
-- distinguish credential use, account compromise, and administrator activity
-- document affected scope, containment logic, and unresolved visibility gaps
-- publish only sanitized derivatives; raw authentication evidence remains private
-
-### MAY-IR-004 AD privilege escalation
-
-**Status: Planned**
-
-Acceptance criteria:
-- document a controlled directory privilege change or escalation path
-- preserve authoritative identity and directory-change sources
-- correlate principal, session, group or role, host, and timestamp context
-- evaluate benign change-control explanations
-- publish a defensible attack-path narrative and detection recommendations
-
-### MAY-IR-005 full Windows DFIR
-
-**Status: Planned**
-
-Acceptance criteria:
-- document authorization, scope, acquisition decisions, custody, and integrity checks
-- perform targeted endpoint acquisition using a repeatable workflow
-- produce a multi-source normalized timeline
-- analyze relevant event, registry, file-system, execution, persistence, and identity artifacts
-- include memory triage only if the capability has reached the required maturity and collection is justified
-- state root cause or explain why evidence cannot establish it
-- publish a complete sanitized case study with response and prevention recommendations
-
-## Capability roadmap
-
-### Endpoint DFIR
-
-- targeted forensic acquisition — **Planned**
-- reusable Windows timeline workflow — **Planned**
-- disk and execution-artifact analysis — **Planned**
-- memory acquisition and triage — **Planned**
-- public sanitization and public-safe derivation — **Verified**
-- end-to-end private evidence handling — **Installed** pending a completed case that verifies ledger, integrity, lineage, and source/working-copy controls
-
-### Identity and Active Directory
-
-- authentication and session correlation — **Planned**
-- credential-abuse investigation workflow — **Planned**
-- privilege and group-change reconstruction — **Planned**
-- endpoint and identity timeline correlation — **Planned**
-
-### Network
-
-- DNS and connection pivots supporting endpoint cases — **Planned**
-- documented packet or flow collection boundary — **Planned**
-- cross-host timeline correlation — **Planned**
-
-### Cloud
-
-AWS is an adjacent future cloud range. No AWS provisioning is included or implied in the current work.
-
-- approved cloud evidence dataset and custody model — **Planned**
-- CloudTrail and IAM investigation workflow — **Planned**
-- first evidence-backed AWS case study — **Planned**
-- Azure and GCP investigation content — **Planned**
-
-## Detection engineering as a supporting capability
-
-Preserve and continue the existing detection program:
-
-- field normalization improvements
-- durable Splunk saved searches and alerts
-- standardized validation latency
-- detection quality scoring
-- ATT&CK coverage reporting
-- rule versioning and regression tests
-- generated-versus-canonical content separation
-
-Detection acceptance continues to use the repository's existing rule, fixture, conversion, and live-validation controls. Investigation maturity statuses do not replace those controls.
+### Phase 4 — Cloud expansion
+- **AWS investigation content**
+  - Acceptance: one validated cloud-oriented case study or detection workflow
+- **Azure investigation content**
+  - Acceptance: one structured Azure-focused detection or hunt artifact set
+- **GCP investigation content**
+  - Acceptance: one structured GCP-focused detection or hunt artifact set
+- **Cloud detection validation**
+  - Acceptance: at least one cloud detection includes fixture or replay-based validation
 
 ## Portfolio acceptance goals
-
-- a visitor can identify the investigative question, evidence, timeline, reasoning, and outcome of each completed case
-- every material conclusion traces to an evidence identifier or sanitized source artifact
-- raw evidence, credentials, acquisitions, and sensitive infrastructure details remain private
-- AI output is disclosed when material, independently validated, and never treated as evidence
-- a detection engineer can still trace scenario -> rule -> query -> fixture -> live evidence
-- existing detection, purple-team, automation, and URL structure remain intact
-- Planned work is not presented as implemented, verified, or live validated
+- a visitor can understand the repo structure and current state quickly
+- a detection engineer can trace scenario -> rule -> query -> fixture -> live evidence
+- generated vs canonical content remains clearly separated
+- public-safe posture remains intact

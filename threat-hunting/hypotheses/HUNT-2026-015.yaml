@@ -1,0 +1,36 @@
+id: HUNT-2026-015
+title: Hunt for Mshta Child-Process Execution
+status: completed
+hypothesis: If delivered HTML application content proxies execution, process telemetry
+  should show mshta spawning a command shell or script interpreter.
+attack:
+- T1218.005
+required_data:
+- Sysmon Event ID 1 process creation
+- current endpoint telemetry in SIEM
+- private OpenCTI indicator or ATT&CK relationship input
+- bounded controlled-validation timestamps
+target_systems:
+- approved-windows-victim
+baseline_query: mshta-child-process-baseline
+hunt_query: suspicious-mshta-child-process
+investigation_pivots:
+- parent and child process lineage
+- command-line transfer or execution behavior
+- destination metadata and adjacent PowerShell activity
+known_legitimate_activity:
+- approved certificate administration
+- legacy HTML applications
+- controlled security validation
+success_criteria:
+- No uncontrolled mshta child-process chains in the 30-day baseline
+- Endpoint prevention evidence is visible for the exact Atomic, child-lineage evidence
+  is visible for modified and campaign positives, and three mshta-adjacent controls remain quiet
+detection_opportunity: Correlate behavior and process lineage rather than active IOC
+  strings, lab filenames, or scenario markers.
+results:
+- Mshta child-process baseline contained zero uncontrolled matches across 30 days.
+- The modified positive and campaign matched; the exact inline Atomic was prevented
+  before child creation.
+conclusion: Use endpoint prevention events and mshta child-process telemetry as complementary
+  controls.

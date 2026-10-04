@@ -1,0 +1,28 @@
+title: Suspicious PowerShell Web Download to File
+id: 4f18fcd8-8a39-4aa2-a71d-9b247d3ea475
+status: test
+description: Detects PowerShell web retrieval that writes remote content to a local file.
+references:
+  - https://attack.mitre.org/techniques/T1105/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1105/T1105.yaml
+author: mell0wx
+logsource:
+  product: windows
+  category: ps_script
+detection:
+  selection_webclient:
+    ScriptBlockText|contains|all:
+      - 'WebClient'
+      - 'DownloadFile'
+  selection_iwr:
+    ScriptBlockText|contains|all:
+      - 'Invoke-WebRequest'
+      - 'OutFile'
+  condition: selection_webclient or selection_iwr
+falsepositives:
+  - Approved software deployment or administration scripts that retrieve files
+  - Controlled security validation activity
+date: 2026-08-03
+level: medium
+tags:
+  - attack.t1105

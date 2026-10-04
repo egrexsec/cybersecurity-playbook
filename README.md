@@ -2,18 +2,15 @@
 
 [![Detection validation](https://github.com/egrexsec/cybersecurity-playbook/actions/workflows/detection-validation.yml/badge.svg)](https://github.com/egrexsec/cybersecurity-playbook/actions/workflows/detection-validation.yml)
 
-An **investigation-led technical portfolio** that reconstructs approved lab activity through evidence handling, forensic reasoning, timelines, and public-safe case documentation.
+A **lab-validated purple-team and detection-engineering repository** that turns controlled attack simulations into tested Sigma rules, platform-specific queries, threat-hunting artifacts, investigation documentation, and reusable validation evidence.
 
-Detection engineering, purple-team validation, threat hunting, and automation remain first-class supporting capabilities: they create investigative leads, test hypotheses, and turn completed analysis into reusable Sigma rules, platform queries, fixtures, and validation evidence.
+Designed to showcase **evidence-backed security engineering skills** through repeatable validation, artifact traceability, and public-safe technical depth.
 
 ## Explore
 
 - [Validated PowerShell Detection Lifecycle v1](detections/packs/validated-powershell-lifecycle-v1/README.md)
-- [Investigation portfolio](investigations/README.md)
-- [DFIR capability library](dfir/README.md)
 - [Validation status](#current-validation-status)
 - [What this repository is](#what-this-repository-is)
-- [Investigation lifecycle](#investigation-lifecycle)
 - [Detection lifecycle](#detection-lifecycle)
 - [Repository map](#repository-map)
 - [Quick-start validation](#quick-start-validation)
@@ -40,6 +37,10 @@ Detection engineering, purple-team validation, threat hunting, and automation re
 | PT-2026-011 | T1218.010 | Regsvr32 proxy execution | Sigma + Splunk evidence | **Live validated** |
 | PT-2026-012 | T1569.002 | Service-launched command execution | Sigma + Splunk evidence | **Live validated** |
 | PT-2026-013 | T1546.003 | Permanent WMI event subscription creation | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-014 | T1105 | PowerShell web ingress transfer | Sigma + Splunk evidence | **Live validated** |
+| PT-2026-015 | T1218.005 | Mshta child-process proxy execution | Sigma + Splunk + Defender evidence | **Live validated with prevention control** |
+
+Detection Cycle 1 also adds three completed threat hunts and a loopback-only benign HTA campaign that correlated T1105 to T1218.005 in three seconds. See [Detection Cycle 1](docs/current-state/DETECTION_CYCLE_1.md).
 
 **Meaning of statuses in this repo**
 - **Live validated**: replayed in the Mayuri lab with positive/negative evidence and cleanup confirmation.
@@ -51,20 +52,10 @@ Detection engineering, purple-team validation, threat hunting, and automation re
 
 This repository is the **content and evidence companion** to **DetLab-DAC**.
 
-- `cybersecurity-playbook` stores investigation methods and case records alongside reusable scenarios, Sigma rules, generated queries, fixtures, hunts, and validation records.
+- `cybersecurity-playbook` stores the reusable authored content: scenarios, Sigma rules, generated queries, fixtures, hunts, investigations, and validation records.
 - **DetLab-DAC** is the companion platform/workflow that can consume, display, or operationalize this content.
 
 This repository is **not** a standalone SIEM product, not a production detection deployment framework, and not a replacement for environment-specific engineering review.
-
-Raw evidence, full forensic acquisitions, credentials, and sensitive infrastructure details remain private. Public artifacts are sanitized derivatives with enough provenance to review the method and reasoning. AI output is not evidence and must be independently validated against source artifacts.
-
-AWS is an adjacent future cloud range. No AWS provisioning is performed or implied by the current repository content.
-
-## Investigation lifecycle
-
-The portfolio uses one canonical [21-step investigation lifecycle](docs/workflows/investigation-lifecycle.md), from scenario definition and environment preparation through triage, scoping, evidence acquisition, timeline reconstruction, endpoint/identity/network analysis, root cause, persistence, lateral movement, resource access, response recommendations, telemetry and detection lessons, sanitized reporting, and restoration. The [evidence-handling workflow](docs/workflows/evidence-handling.md) and expanded [investigation template](templates/investigation-template.md) support that lifecycle rather than defining alternatives.
-
-Investigation and DFIR capabilities use **Planned**, **Installed**, **Verified**, and **Live validated** as maturity statuses. These do not replace Sigma-native rule lifecycle values or the existing detection validation statuses above.
 
 ## Detection lifecycle
 
@@ -114,9 +105,6 @@ positive + negative]
 | `detections/validation/` | Human-readable validation summaries | Human-authored Markdown | Linked to fixtures and live validation JSON |
 | `tests/fixtures/` | Positive/negative rule fixtures | Sanitized JSON fixtures | Offline fixture test harness |
 | `automation/` | Validation and orchestration tooling | Python + PowerShell | Repo-side command execution and content validation |
-| `investigations/` | Domain-organized investigation records and indexes | Human-authored Markdown | Evidence-led review with sanitized source references |
-| `dfir/` | Reusable acquisition, timeline, memory, and evidence-handling methods | Human-authored Markdown | Capability maturity: Planned / Installed / Verified / Live validated |
-| `docs/workflows/` | Investigation and validation operating workflows | Human-authored Markdown | Documentation and completed-case review |
 | `docs/current-state/` | Program status, readiness, timeline, portfolio metrics | Human-authored Markdown | Updated from repo/lab evidence |
 | `docs/detection-engineering/` | Detection engineering implementation notes | Human-authored Markdown | Documentation-only |
 | `docs/data-sources/` | Source-system and field-mapping notes | Human-authored Markdown | Documentation-only |
@@ -142,9 +130,6 @@ python3 automation/validators/check_markdown.py
 ## Current capabilities
 
 Implemented today:
-- investigation domain indexes and a reusable investigation lifecycle
-- public-safe evidence-handling and case-documentation standards
-- endpoint investigation records linked to live-validated Windows scenarios
 - schema validation for scenarios and hunt hypotheses
 - Sigma metadata linting
 - Sigma conversion to Splunk and Elastic outputs
@@ -164,25 +149,17 @@ Be explicit about current limits:
 - Splunk live validation currently relies on **raw XML matching** in places where normalized fields/CIM remain incomplete
 - durable Splunk saved searches / alerts are **not yet verified as deployed objects**
 - current live coverage is concentrated on **Windows endpoint execution and persistence behaviors**
-- full forensic acquisition, timeline, identity, network, cloud, and memory capabilities remain **Planned** unless their indexes state otherwise
-- AWS remains an adjacent future cloud range; **no AWS environment is provisioned by this repository**
-- raw evidence remains private, so public case material is necessarily a sanitized derivative
+- broader DFIR, cloud, network, and memory-forensics coverage remains incomplete
 - this repository is **not** a production deployment platform
 
 ## Case study
 
-Start with the published end-to-end PowerShell case study, then review the additive domain indexes:
+Start with the end-to-end PowerShell case study:
 - [PowerShell Encoded Command Case Study](case-studies/powershell-encoded-command/README.md)
-- [Windows case studies](case-studies/windows/README.md)
-- [Active Directory case studies](case-studies/active-directory/README.md)
-- [AWS case studies](case-studies/aws/README.md)
 
 ## What this project demonstrates
 
 This repository demonstrates evidence-backed security engineering skills in:
-- investigation scoping and hypothesis-driven analysis
-- evidence handling, provenance, and public-safe reporting
-- forensic acquisition and timeline methodology
 - detection engineering
 - purple-team validation
 - threat hunting
@@ -196,8 +173,6 @@ This repository demonstrates evidence-backed security engineering skills in:
 ## Additional repository documentation
 
 - [Roadmap](ROADMAP.md)
-- [Investigations](investigations/README.md)
-- [DFIR capability library](dfir/README.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Current program status](docs/current-state/PURPLE_TEAM_PROGRAM_STATUS.md)
