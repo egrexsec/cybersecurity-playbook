@@ -12,3 +12,8 @@ The files here document the environment, readiness assessments, validation progr
 - New portfolio work should not depend on Mayuri being available.
 
 Current repository status is tracked under [docs/current-state](../../current-state/).
+
+
+## Final preserved milestones
+
+The archive includes the final Mayuri-era Detection Cycle 1 material covering PT-2026-014 (T1105), PT-2026-015 (T1218.005), three completed threat hunts, and the bounded benign campaign used to correlate download-to-execution behavior.
