@@ -41,9 +41,10 @@ Detection engineering, purple-team validation, threat hunting, and automation re
 | PT-2026-012 | T1569.002 | Service-launched command execution | Sigma + Splunk evidence | **Live validated** |
 
 **Meaning of statuses in this repo**
-- **Live validated**: replayed in the Mayuri lab with positive/negative evidence and cleanup confirmation.
+- **Live validated**: exercised against approved live lab activity with positive/negative evidence and cleanup confirmation. Historical Mayuri validation records retain this status even though the Mayuri environment was decommissioned in October 2026.
 - **Fixture tested**: validated offline against sanitized positive/negative fixtures only.
 - **Conversion supported**: Sigma successfully converts to a backend target, but no live backend validation exists yet.
+- **Verified**: exercised successfully against an approved dataset or bounded lab workflow with reviewable evidence, but not necessarily against a live owned environment.
 - **Planned / partially ready**: documented or scaffolded, but not yet validated to the same standard.
 
 ## What this repository is
@@ -57,7 +58,7 @@ This repository is **not** a standalone SIEM product, not a production detection
 
 Raw evidence, full forensic acquisitions, credentials, and sensitive infrastructure details remain private. Public artifacts are sanitized derivatives with enough provenance to review the method and reasoning. AI output is not evidence and must be independently validated against source artifacts.
 
-AWS is an adjacent future cloud range. No AWS provisioning is performed or implied by the current repository content.
+AWS is now an active investigation domain in this portfolio. The Flaws2.cloud Defender track provides a verified CloudTrail/IAM investigation workflow using AWS CLI, PowerShell, jq, and a bounded public training dataset. This repository does not provision a standing AWS lab environment.
 
 ## Investigation lifecycle
 
@@ -75,7 +76,7 @@ The current implemented workflow is:
 4. Sigma rule development
 5. Splunk and Elastic query generation
 6. positive and negative fixture testing
-7. live replay validation in the Mayuri lab
+7. live or dataset-backed validation in an approved environment
 8. hunt, investigation, and validation record publication
 
 ```mermaid
@@ -109,7 +110,7 @@ positive + negative]
 | `detections/sigma/` | Canonical authored Sigma rules | Human-authored YAML | Sigma lint + conversion + fixtures + live validation where available |
 | `detections/generated/` | Backend-specific generated output | Generated SPL/EQL | Regenerated from canonical Sigma; do not edit by hand |
 | `detections/packs/` | Versioned portfolio-ready lifecycle manifests | Deterministic JSON + documentation | Source/artifact hashes + fixtures + CI staleness check |
-| `detections/validation/live/` | Sanitized lab execution records | Generated JSON evidence | Parsed in repo validation; sourced from Mayuri lab runs |
+| `detections/validation/live/` | Sanitized historical live-execution records | Generated JSON evidence | Parsed in repo validation; existing records were sourced from Mayuri lab runs before decommissioning |
 | `detections/validation/` | Human-readable validation summaries | Human-authored Markdown | Linked to fixtures and live validation JSON |
 | `tests/fixtures/` | Positive/negative rule fixtures | Sanitized JSON fixtures | Offline fixture test harness |
 | `automation/` | Validation and orchestration tooling | Python + PowerShell | Repo-side command execution and content validation |
@@ -164,7 +165,7 @@ Be explicit about current limits:
 - durable Splunk saved searches / alerts are **not yet verified as deployed objects**
 - current live coverage is concentrated on **Windows endpoint execution and persistence behaviors**
 - full forensic acquisition, timeline, identity, network, cloud, and memory capabilities remain **Planned** unless their indexes state otherwise
-- AWS remains an adjacent future cloud range; **no AWS environment is provisioned by this repository**
+- AWS investigation capability is **Verified** through the Flaws2.cloud Defender workflow, but **no standing AWS environment is provisioned by this repository**
 - raw evidence remains private, so public case material is necessarily a sanitized derivative
 - this repository is **not** a production deployment platform
 
@@ -175,6 +176,8 @@ Start with the published end-to-end PowerShell case study, then review the addit
 - [Windows case studies](case-studies/windows/README.md)
 - [Active Directory case studies](case-studies/active-directory/README.md)
 - [AWS case studies](case-studies/aws/README.md)
+- [Flaws2.cloud Defender case study](case-studies/aws/flaws2-defender/README.md)
+- [Learning labs](learning-labs/README.md)
 
 ## What this project demonstrates
 
@@ -199,6 +202,6 @@ This repository demonstrates evidence-backed security engineering skills in:
 - [DFIR capability library](dfir/README.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
-- [Current program status](docs/current-state/PURPLE_TEAM_PROGRAM_STATUS.md)
+- [Historical Mayuri program status](docs/history/mayuri/PURPLE_TEAM_PROGRAM_STATUS.md)
 - [Portfolio metrics](docs/current-state/PORTFOLIO_METRICS.md)
 - [DetLab Detection Content Specification v1](docs/detection-content-spec-v1.md)
